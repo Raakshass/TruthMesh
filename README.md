@@ -116,7 +116,7 @@ TruthMesh builds a **hallucination topography** — a reliability map across 3 m
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/TruthMesh.git
+git clone https://github.com/Raakshass/TruthMesh.git
 cd TruthMesh
 
 # Create virtual environment

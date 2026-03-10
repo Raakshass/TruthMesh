@@ -25,8 +25,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     pipelineBreadcrumb.textContent = `Execution: ${data.query_id.substring(0, 8)}`;
                     pipelineId.textContent = `#${data.query_id.substring(0, 6)}`;
 
-                    // Show cached results in terminal
-                    if (data.log) {
+                    // If query is complete, restore the full pipeline state
+                    if (data.complete) {
+                        // Activate all 8 pipeline step nodes
+                        STEPS.forEach(step => activateStepNode(step));
+                        pipelineCompletion.textContent = '100% Complete';
+                        progressLine.style.width = '100%';
+                    }
+
+                    // Show pipeline log in terminal
+                    if (data.log && data.log.length > 0) {
                         terminalOutput.innerHTML = '';
                         data.log.forEach(line => addTerminalLine(line.type, line.text));
                     }
