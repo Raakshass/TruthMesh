@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Database (regenerated at startup)
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Gemini agent artifacts
+.gemini/
+
+# Stitch assets (design tool exports)
+stitch_assets/
+
+# Presentation (separate deliverable)
+presentation.html
+
+# Submission PDF
+*.pdf
