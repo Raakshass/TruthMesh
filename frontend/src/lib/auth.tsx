@@ -21,11 +21,7 @@ interface AuthState {
 const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>({
-    username: "Admin",
-    role: "Admin",
-    organization: "Demo Mode",
-  });
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,11 +30,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (username: string, password: string) => {
-    // No-op for demo
+    // Instantly bypass login with a mock admin user
+    setUser({
+      username: username || "Admin",
+      role: "Admin"
+    });
   };
 
   const logout = () => {
-    // No-op for demo
+    setUser(null);
   };
 
   return (
