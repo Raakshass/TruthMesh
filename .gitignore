@@ -8,6 +8,10 @@ dist/
 build/
 .eggs/
 
+# Node / Frontend
+node_modules/
+frontend/dist/
+
 # Environment
 .env
 .venv/
