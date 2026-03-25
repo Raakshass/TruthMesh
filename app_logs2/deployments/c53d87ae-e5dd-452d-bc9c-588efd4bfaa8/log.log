@@ -1,0 +1,155 @@
+2026-03-24T18:01:27.6067471Z,Updating submodules.,0e9aaf94-0b81-4126-b4af-397722f37cee,0
+2026-03-24T18:01:28.8026219Z,Preparing deployment for commit id 'c53d87ae-e'.,00c724d0-84be-416c-9755-e2a7a30dfebf,0
+2026-03-24T18:01:29.2345773Z,PreDeployment: context.CleanOutputPath False,0b9d557f-a10f-47e7-8e4f-674997e4846b,0
+2026-03-24T18:01:29.4009736Z,PreDeployment: context.OutputPath /home/site/wwwroot,762f7a66-d40e-4d79-b273-e976be43ea4c,0
+2026-03-24T18:01:29.5953362Z,Repository path is /tmp/zipdeploy/extracted,fd5e0c38-c5eb-48b3-bd57-916c29373d47,0
+2026-03-24T18:01:29.7918028Z,Running oryx build...,2c89f91c-b90b-4504-8d15-621007aaf81b,0
+	2026-03-24T18:01:29.8280926Z,Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.11 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8de89cf5fb1beee --compress-destination-dir | tee /tmp/oryx-build.log,,0
+	2026-03-24T18:01:35.1790489Z,Operation performed by Microsoft Oryx&comma; https://github.com/Microsoft/Oryx,,0
+	2026-03-24T18:01:35.2655755Z,You can report issues at https://github.com/Microsoft/Oryx/issues,,0
+	2026-03-24T18:01:35.3225350Z,,,0
+	2026-03-24T18:01:35.3977942Z,Oryx Version: 0.2.20260204.1+0fdbe200b286be083841ff7fa201c6c2316dc6b9&comma; Commit: 0fdbe200b286be083841ff7fa201c6c2316dc6b9&comma; ReleaseTagName: 20260204.1,,0
+	2026-03-24T18:01:35.4369836Z,,,0
+	2026-03-24T18:01:35.5104862Z,Build Operation ID: 090915fd02d9c783,,0
+	2026-03-24T18:01:35.5527871Z,Repository Commit : c53d87ae-e5dd-452d-bc9c-588efd4bfaa8,,0
+	2026-03-24T18:01:35.6004073Z,OS Type           : bullseye,,0
+	2026-03-24T18:01:35.6638723Z,Image Type        : githubactions,,0
+	2026-03-24T18:01:35.7699878Z,,,0
+	2026-03-24T18:01:35.7935465Z,Primary SDK Storage URL: https://oryx-cdn.microsoft.io,,0
+	2026-03-24T18:01:35.8931356Z,Backup SDK Storage URL: ,,0
+	2026-03-24T18:01:35.9263353Z,Detecting platforms...,,0
+	2026-03-24T18:01:35.9615235Z,External SDK provider is enabled.,,0
+	2026-03-24T18:01:35.9928753Z,Requesting metadata for platform python from external SDK provider,,0
+	2026-03-24T18:01:38.7567384Z,Requesting metadata for platform python from external SDK provider,,0
+	2026-03-24T18:01:41.1005728Z,Detected following platforms:,,0
+	2026-03-24T18:01:41.1775136Z,  python: 3.11.15,,0
+	2026-03-24T18:01:41.1906195Z,Requesting metadata for platform python from external SDK provider,,0
+	2026-03-24T18:01:43.8813898Z,Version '3.11.15' of platform 'python' is not installed. Generating script to install it...,,0
+	2026-03-24T18:01:44.4963925Z,,,0
+	2026-03-24T18:01:44.5927908Z,Using intermediate directory '/tmp/8de89cf5fb1beee'.,,0
+	2026-03-24T18:01:44.6399056Z,,,0
+	2026-03-24T18:01:44.6776078Z,Copying files to the intermediate directory...,,0
+	2026-03-24T18:01:44.7722928Z,Copying files to intermediate directory done in 0 sec(s).,,0
+	2026-03-24T18:01:44.8458664Z,,,0
+	2026-03-24T18:01:44.8865707Z,Source directory     : /tmp/8de89cf5fb1beee,,0
+	2026-03-24T18:01:45.0455430Z,Destination directory: /home/site/wwwroot,,0
+	2026-03-24T18:01:45.1196216Z,,,0
+	2026-03-24T18:01:45.1695605Z,Installing platform...,,0
+	2026-03-24T18:01:45.2148523Z,,,0
+	2026-03-24T18:01:45.2512778Z,Downloading and extracting 'python' version '3.11.15' to '/tmp/oryx/platforms/python/3.11.15'...,,0
+	2026-03-24T18:01:45.3173610Z,Detected image debian flavor: bullseye.,,0
+	2026-03-24T18:01:45.3721262Z,Skipping download of python version 3.11.15 as it is available in external sdk provider cache...,,0
+	2026-03-24T18:01:45.4173151Z,Extracting contents...,,0
+	2026-03-24T18:02:09.9658983Z,Successfully extracted python version 3.11.15 from external sdk provider cache...,,0
+	2026-03-24T18:02:10.1623512Z,,,0
+	2026-03-24T18:02:10.3622893Z,image detector file exists&comma; platform is python..,,0
+	2026-03-24T18:02:10.5531801Z,OS detector file exists&comma; OS is bullseye..,,0
+	2026-03-24T18:02:10.6304961Z,Platform installation done in 26 sec(s).,,0
+	2026-03-24T18:02:10.9046809Z,Running build script snippets...,,0
+	2026-03-24T18:02:10.9812344Z,Python Version: /tmp/oryx/platforms/python/3.11.15/bin/python3.11,,0
+	2026-03-24T18:02:11.0338362Z,Creating directory for command manifest file if it does not exist,,0
+	2026-03-24T18:02:11.0898375Z,Removing existing manifest file,,0
+	2026-03-24T18:02:11.1794040Z,Python Virtual Environment: antenv,,0
+	2026-03-24T18:02:11.2513285Z,Creating virtual environment...,,0
+	2026-03-24T18:02:11.3385116Z,Executing: /tmp/oryx/platforms/python/3.11.15/bin/python3.11 -m venv antenv --copies --system-site-packages,,0
+	2026-03-24T18:02:47.9722956Z,Activating virtual environment...,,0
+	2026-03-24T18:02:48.0598227Z,Fast build is enabled,,0
+	2026-03-24T18:02:48.1333919Z,Installing uv...,,0
+	2026-03-24T18:02:51.9745947Z,Collecting uv,,0
+	2026-03-24T18:02:52.2919068Z,  Using cached uv-0.11.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB),,0
+	2026-03-24T18:02:52.3061340Z,Using cached uv-0.11.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (24.5 MB),,0
+	2026-03-24T18:02:53.4004452Z,Installing collected packages: uv,,0
+	2026-03-24T18:02:55.0809011Z,Successfully installed uv-0.11.0,,0
+	2026-03-24T18:02:55.7286081Z,,,1
+	2026-03-24T18:02:55.7835101Z,[notice] A new release of pip is available: 24.0 -> 26.0.1,,1
+	2026-03-24T18:02:55.8327638Z,[notice] To update&comma; run: pip install --upgrade pip,,1
+	2026-03-24T18:02:56.5912222Z,Running uv pip install...,,0
+	2026-03-24T18:03:14.4986516Z,Using Python 3.11.15 environment at: antenv,,0
+	2026-03-24T18:03:14.5966091Z,Resolved 50 packages in 2.38s,,0
+	2026-03-24T18:03:14.6443923Z,Downloading cryptography (4.0MiB),,0
+	2026-03-24T18:03:14.6986995Z,Downloading uvloop (3.6MiB),,0
+	2026-03-24T18:03:14.7788953Z,Downloading pydantic-core (2.0MiB),,0
+	2026-03-24T18:03:14.8359468Z, Downloaded pydantic-core,,0
+	2026-03-24T18:03:14.8956344Z, Downloaded uvloop,,0
+	2026-03-24T18:03:14.9510101Z, Downloaded cryptography,,0
+	2026-03-24T18:03:15.0184713Z,Prepared 50 packages in 2.54s,,0
+	2026-03-24T18:03:15.0501400Z,Installed 50 packages in 471ms,,0
+	2026-03-24T18:03:15.1179776Z,Bytecode compiled 2229 files in 11.99s,,0
+	2026-03-24T18:03:15.1637459Z, + aiosqlite==0.20.0,,0
+	2026-03-24T18:03:15.2419938Z, + annotated-types==0.7.0,,0
+	2026-03-24T18:03:15.2802192Z, + anyio==4.13.0,,0
+	2026-03-24T18:03:15.3251975Z, + apscheduler==3.10.4,,0
+	2026-03-24T18:03:15.3842057Z, + bcrypt==5.0.0,,0
+	2026-03-24T18:03:15.4343077Z, + certifi==2026.2.25,,0
+	2026-03-24T18:03:15.4921995Z, + cffi==2.0.0,,0
+	2026-03-24T18:03:15.5316196Z, + click==8.3.1,,0
+	2026-03-24T18:03:15.6087492Z, + cryptography==44.0.0,,0
+	2026-03-24T18:03:15.6871729Z, + deprecated==1.3.1,,0
+	2026-03-24T18:03:15.7657076Z, + distro==1.9.0,,0
+	2026-03-24T18:03:15.8913362Z, + ecdsa==0.19.1,,0
+	2026-03-24T18:03:15.9287469Z, + fastapi==0.115.6,,0
+	2026-03-24T18:03:15.9957127Z, + gunicorn==22.0.0,,0
+	2026-03-24T18:03:16.0630223Z, + h11==0.16.0,,0
+	2026-03-24T18:03:16.1317991Z, + httpcore==1.0.9,,0
+	2026-03-24T18:03:16.2213571Z, + httptools==0.7.1,,0
+	2026-03-24T18:03:16.2660717Z, + httpx==0.28.1,,0
+	2026-03-24T18:03:16.2982417Z, + idna==3.11,,0
+	2026-03-24T18:03:16.3457764Z, + jinja2==3.1.5,,0
+	2026-03-24T18:03:16.4047234Z, + jiter==0.13.0,,0
+	2026-03-24T18:03:16.4630330Z, + limits==5.8.0,,0
+	2026-03-24T18:03:16.5228989Z, + markupsafe==3.0.3,,0
+	2026-03-24T18:03:16.6081325Z, + openai==1.59.5,,0
+	2026-03-24T18:03:16.6694415Z, + packaging==26.0,,0
+	2026-03-24T18:03:16.7098779Z, + passlib==1.7.4,,0
+	2026-03-24T18:03:16.7648800Z, + pyasn1==0.6.3,,0
+	2026-03-24T18:03:16.8224888Z, + pycparser==3.0,,0
+	2026-03-24T18:03:16.8766604Z, + pydantic==2.12.5,,0
+	2026-03-24T18:03:17.0010302Z, + pydantic-core==2.41.5,,0
+	2026-03-24T18:03:17.0567648Z, + python-dotenv==1.0.1,,0
+	2026-03-24T18:03:17.1248600Z, + python-jose==3.3.0,,0
+	2026-03-24T18:03:17.2216107Z, + python-multipart==0.0.19,,0
+	2026-03-24T18:03:17.2666577Z, + pytz==2026.1.post1,,0
+	2026-03-24T18:03:17.3311676Z, + pyyaml==6.0.3,,0
+	2026-03-24T18:03:17.3598700Z, + rsa==4.9.1,,0
+	2026-03-24T18:03:17.4196725Z, + six==1.17.0,,0
+	2026-03-24T18:03:17.4774282Z, + slowapi==0.1.9,,0
+	2026-03-24T18:03:17.5413187Z, + sniffio==1.3.1,,0
+	2026-03-24T18:03:17.7795192Z, + sse-starlette==2.2.1,,0
+	2026-03-24T18:03:17.8429178Z, + starlette==0.41.3,,0
+	2026-03-24T18:03:17.9040847Z, + tqdm==4.67.3,,0
+	2026-03-24T18:03:17.9512592Z, + typing-extensions==4.15.0,,0
+	2026-03-24T18:03:18.0108776Z, + typing-inspection==0.4.2,,0
+	2026-03-24T18:03:18.0550306Z, + tzlocal==5.3.1,,0
+	2026-03-24T18:03:18.1071716Z, + uvicorn==0.34.0,,0
+	2026-03-24T18:03:18.1744971Z, + uvloop==0.22.1,,0
+	2026-03-24T18:03:18.2029626Z, + watchfiles==1.1.1,,0
+	2026-03-24T18:03:18.2812822Z, + websockets==16.0,,0
+	2026-03-24T18:03:18.3552443Z, + wrapt==2.1.2,,0
+	2026-03-24T18:03:18.4198179Z,uv pip install done in 27 sec(s).,,0
+	2026-03-24T18:03:18.4799153Z,Not a vso image&comma; so not writing build commands,,0
+	2026-03-24T18:03:18.5429491Z,Build script snippets done in 64 sec(s).,,0
+	2026-03-24T18:03:18.6754943Z,Preparing output...,,0
+	2026-03-24T18:03:18.8002452Z,Compressing source directory directly to destination (optimized path)...,,0
+	2026-03-24T18:03:18.8666380Z,Using zstd for compression,,0
+	2026-03-24T18:03:25.6036311Z,Copied the compressed output to '/home/site/wwwroot',,0
+	2026-03-24T18:03:25.7240077Z,Direct compression with zstd done in 11 sec(s).,,0
+	2026-03-24T18:03:25.7781584Z,,,0
+	2026-03-24T18:03:25.8306890Z,Removing existing manifest file,,0
+	2026-03-24T18:03:25.8812934Z,Creating a manifest file...,,0
+	2026-03-24T18:03:25.9463432Z,Manifest file created.,,0
+	2026-03-24T18:03:25.9747762Z,Copying .ostype to manifest output directory.,,0
+	2026-03-24T18:03:25.9997937Z,,,0
+	2026-03-24T18:03:26.0142794Z,Total execution done in 101 sec(s).,,0
+2026-03-24T18:03:27.0572503Z,Running post deployment command(s)...,8a6b3d67-1b63-4eea-b055-f228a443bdc5,0
+2026-03-24T18:03:27.2354401Z,,371912cd-efaf-4a9b-b59d-f0c358cc030c,0
+2026-03-24T18:03:27.4278695Z,Generating summary of Oryx build,606da38e-b55a-416a-975f-e6bc7205149f,0
+2026-03-24T18:03:27.6276298Z,Parsing the build logs,553ff8f7-01ac-46dc-931a-a697d359a3f5,0
+2026-03-24T18:03:27.8026790Z,Found 0 issue(s),9918b9ef-af2f-4b95-99d0-2b5d8c318e50,0
+2026-03-24T18:03:28.0003767Z,,36adb90b-55f3-40c9-9d8b-296631d3f4c0,0
+2026-03-24T18:03:28.1876594Z,Build Summary :,b8faff22-791c-484c-bf79-29930598c876,0
+2026-03-24T18:03:28.3766742Z,===============,d9c4cd8e-6f36-42fc-b0cb-5a1ca8c98a5b,0
+2026-03-24T18:03:28.5804347Z,Errors (0),8a178877-c506-4d7e-a049-721ceba426ac,0
+2026-03-24T18:03:28.8570562Z,Warnings (0),9d281920-baaa-4be6-ab74-f13e93f60505,0
+2026-03-24T18:03:29.0429763Z,,03bedee7-8329-4c3f-a291-24701e703571,0
+2026-03-24T18:03:29.2641658Z,Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path,87545cec-551a-4d46-9f86-7d6f411c16e1,0
+2026-03-24T18:03:29.5226035Z,Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy,6932f8e8-0748-49d2-984c-d5aabd0cce94,0

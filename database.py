@@ -1,9 +1,36 @@
 """Database layer for TruthMesh — SQLite with async access."""
 import aiosqlite
 import json
+import logging
+from typing import Optional
+from cryptography.fernet import Fernet
 from config import Config
 
 DB_PATH = Config.DB_PATH
+
+try:
+    cipher_suite = Fernet(Config.FIELD_ENCRYPTION_KEY) if Config.FIELD_ENCRYPTION_KEY else None
+    if not cipher_suite:
+        logging.warning("FIELD_ENCRYPTION_KEY not set. Storing data in PLAINTEXT. Do not use in production.")
+except Exception as e:
+    logging.error(f"Failed to initialize encryption: {e}")
+    cipher_suite = None
+
+def encrypt_val(val: str) -> str:
+    if not val or not cipher_suite:
+        return val
+    try:
+        return cipher_suite.encrypt(val.encode('utf-8')).decode('utf-8')
+    except Exception:
+        return val
+
+def decrypt_val(val: str) -> str:
+    if not val or not cipher_suite:
+        return val
+    try:
+        return cipher_suite.decrypt(val.encode('utf-8')).decode('utf-8')
+    except Exception:
+        return val
 
 
 async def get_db():
@@ -69,7 +96,27 @@ async def init_db():
                 domain TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                hashed_password TEXT NOT NULL,
+                role TEXT NOT NULL DEFAULT 'Viewer',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         """)
+        
+        # Ensure user_id column exists on query_log and verification_history for existing DBs
+        try:
+            await db.execute("ALTER TABLE query_log ADD COLUMN user_id INTEGER;")
+        except Exception:
+            pass  # Column already exists
+            
+        try:
+            await db.execute("ALTER TABLE verification_history ADD COLUMN user_id INTEGER;")
+        except Exception:
+            pass
+            
         await db.commit()
 
 
@@ -118,28 +165,33 @@ async def log_verification(query_id: str, query_text: str, claim: str,
                            verdict: str, confidence: float, domain: str,
                            model_used: str):
     """Log a verification result."""
+    encrypted_claim = encrypt_val(claim)
+    encrypted_query_text = encrypt_val(query_text) if query_text else None
+    
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
             """INSERT INTO verification_history
                (query_id, query_text, claim, claim_type, source, source_detail,
                 verdict, confidence, domain, model_used)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (query_id, query_text, claim, claim_type, source, source_detail,
+            (query_id, encrypted_query_text, encrypted_claim, claim_type, source, source_detail,
              verdict, confidence, domain, model_used)
         )
         await db.commit()
 
 
 async def log_query(query_id: str, query_text: str, domain_vector: dict,
-                    routed_model: str, routing_reason: str, cached: bool = False):
+                    routed_model: str, routing_reason: str, cached: bool = False,
+                    user_id: Optional[int] = None):
     """Log a query."""
+    encrypted_text = encrypt_val(query_text)
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
             """INSERT INTO query_log
-               (query_id, query_text, domain_vector, routed_model, routing_reason, cached)
-               VALUES (?, ?, ?, ?, ?, ?)""",
-            (query_id, query_text, json.dumps(domain_vector), routed_model,
-             routing_reason, 1 if cached else 0)
+               (query_id, query_text, domain_vector, routed_model, routing_reason, cached, user_id)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (query_id, encrypted_text, json.dumps(domain_vector), routed_model,
+             routing_reason, 1 if cached else 0, user_id)
         )
         await db.commit()
 
@@ -186,15 +238,50 @@ async def get_self_audit_stats():
         return dict(row)
 
 
-async def get_recent_queries(limit: int = 10):
-    """Get recent queries for the dashboard."""
+async def get_recent_queries(user_id: Optional[int] = None, limit: int = 10, is_admin: bool = False):
+    """Get recent queries for the dashboard. If not admin, only get user's queries."""
     async with aiosqlite.connect(DB_PATH) as db:
         db.row_factory = aiosqlite.Row
-        cursor = await db.execute(
-            """SELECT query_id, query_text, routed_model, overall_trust_score,
-                      cached, created_at, domain_vector
-               FROM query_log ORDER BY created_at DESC LIMIT ?""",
-            (limit,)
-        )
+        
+        query = """SELECT query_id, query_text, routed_model, overall_trust_score,
+                          cached, created_at, domain_vector 
+                   FROM query_log"""
+        params = []
+        
+        if not is_admin and user_id is not None:
+            query += " WHERE user_id = ?"
+            params.append(user_id)
+            
+        query += " ORDER BY created_at DESC LIMIT ?"
+        params.append(limit)
+        
+        cursor = await db.execute(query, tuple(params))
         rows = await cursor.fetchall()
-        return [dict(row) for row in rows]
+        
+        result = []
+        for row in rows:
+            row_dict = dict(row)
+            row_dict["query_text"] = decrypt_val(row_dict["query_text"])
+            result.append(row_dict)
+        return result
+
+
+# --- User Management ---
+
+async def get_user_by_username(username: str):
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT * FROM users WHERE username = ?", (username,))
+        row = await cursor.fetchone()
+        return dict(row) if row else None
+
+
+async def create_user(username: str, hashed_password: str, role: str = "Viewer"):
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(
+            "INSERT INTO users (username, hashed_password, role) VALUES (?, ?, ?)",
+            (username, hashed_password, role)
+        )
+        await db.commit()
+        return cursor.lastrowid
+

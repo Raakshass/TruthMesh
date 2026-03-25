@@ -108,31 +108,32 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     line-height: 1.6;
+    color: #cbd5e1 !important;
 }
 
 .terminal-line-time {
-    color: rgba(60, 131, 246, 0.7);
+    color: rgba(60, 131, 246, 0.7) !important;
 }
 
 .terminal-line-info {
-    color: #cbd5e1;
+    color: #cbd5e1 !important;
 }
 
 .terminal-line-claim {
-    color: #4ade80;
+    color: #4ade80 !important;
 }
 
 .terminal-line-meta {
-    color: #64748b;
+    color: #64748b !important;
     font-style: italic;
 }
 
 .terminal-line-error {
-    color: #ef4444;
+    color: #ef4444 !important;
 }
 
 .terminal-line-processing {
-    color: #00f3ff;
+    color: #00f3ff !important;
 }
 
 /* -- Topography Chart Tooltip -- */

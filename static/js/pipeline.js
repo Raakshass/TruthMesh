@@ -45,9 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const TERMINAL_COLORS = {
+        time: 'rgba(60, 131, 246, 0.85)',
+        info: '#cbd5e1',
+        claim: '#4ade80',
+        meta: '#64748b',
+        error: '#ef4444',
+        processing: '#00f3ff',
+    };
+
     function addTerminalLine(type, text) {
         const div = document.createElement('div');
         div.className = `terminal-line-${type || 'info'}`;
+        div.style.color = TERMINAL_COLORS[type] || '#cbd5e1';
         div.textContent = text;
         terminalOutput.appendChild(div);
         terminalOutput.scrollTop = terminalOutput.scrollHeight;

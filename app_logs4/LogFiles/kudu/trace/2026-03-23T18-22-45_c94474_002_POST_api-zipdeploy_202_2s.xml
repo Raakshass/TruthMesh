@@ -1,0 +1,17 @@
+<step title="Incoming Request" date="2026-03-23T18:22:45.484" instance="c94474" url="/api/zipdeploy?isAsync=true" method="POST" type="request" pid="772,1,7" Accept="*/*" Host="truthmeshsjain.scm.azurewebsites.net" User-Agent="AZURECLI/2.84.0" Accept-Encoding="gzip, deflate, zstd" Authorization="Bas..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="324999" x-ms-client-request-id="1673e1f2-26e5-11f1-a2fc-505a65c7f3b3" x-ms-artifact-checksum="2e19c442b31128dfad1d17006b447346172c9276a25bcdd10ad7b85e3fc3ce35" X-ARR-LOG-ID="1673e1f2-26e5-11f1-a2fc-505a65c7f3b3" CLIENT-IP="103.37.201.186:38856" X-SITE-DEPLOYMENT-ID="truthmeshsjain" WAS-DEFAULT-HOSTNAME="truthmeshsjain.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true" X-Client-IP="103.37.201.186" X-Client-Port="38856" >
+  <step title="ZipPushDeploy" date="2026-03-23T18:22:46.224" >
+    <step title="ZipDeploy. Extract zip. Remote build." date="2026-03-23T18:22:46.235" /><!-- duration: 5ms -->
+    <step title="None repository commit" date="2026-03-23T18:22:46.251" >
+      <step title="Commit id: 4b80e8ba-c626-461b-b2e6-4dbdf13ce0c6" date="2026-03-23T18:22:46.259" Message="N/A" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 4ms -->
+    </step><!-- duration: 16ms -->
+    <step title="Starting PushDeployAsync" date="2026-03-23T18:22:46.271" /><!-- duration: 8ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/aeab3777-d6f2-4247-abb3-c780103285fb.zip" date="2026-03-23T18:22:46.296" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/aeab3777-d6f2-4247-abb3-c780103285fb.zip" date="2026-03-23T18:22:46.301" /><!-- duration: 4ms -->
+    </step><!-- duration: 109ms -->
+    <step title="Start deployment in the background" date="2026-03-23T18:22:46.462" >
+      <step title="Acquiring Deployment Lock" date="2026-03-23T18:22:46.504" /><!-- duration: 11ms -->
+      <step title="Acquired Deployment Lock" date="2026-03-23T18:22:46.661" /><!-- duration: 4ms -->
+    </step><!-- duration: 426ms -->
+  </step><!-- duration: 747ms -->
+  <step title="Outgoing response" date="2026-03-23T18:22:47.112" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 54ms -->
+</step><!-- duration: 1691ms -->
