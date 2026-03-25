@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* ── Precision Architect Design Tokens ─────────────────────────── */
+@theme {
+  --color-primary: #003ec7;
+  --color-primary-container: #0052ff;
+  --color-on-primary: #ffffff;
+
+  --color-surface: #faf8ff;
+  --color-surface-dim: #d2d9f4;
+  --color-container-lowest: #ffffff;
+  --color-container-low: #f2f3ff;
+  --color-container: #eaedff;
+  --color-container-high: #e2e7ff;
+  --color-container-highest: #dae2fd;
+
+  --color-on-surface: #131b2e;
+  --color-on-surface-variant: #434656;
+  --color-outline: #737688;
+  --color-outline-variant: #c3c5d9;
+
+  --color-secondary: #515f74;
+  --color-tertiary: #005479;
+  --color-error: #ba1a1a;
+
+  --color-inverse-surface: #283044;
+  --color-inverse-primary: #b7c4ff;
+
+  --color-trust-high: #003ec7;
+  --color-trust-medium: #eab308;
+  --color-trust-low: #ef4444;
+  --color-trust-pass: #22c55e;
+
+  --font-display: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --shadow-ambient: 0 8px 32px rgba(19, 27, 46, 0.06);
+  --shadow-ambient-lg: 0 12px 48px rgba(19, 27, 46, 0.08);
+  --shadow-glow: 0 0 20px rgba(0, 82, 255, 0.2);
+  --shadow-glow-sm: 0 0 10px rgba(0, 82, 255, 0.15);
+}
+
+/* ── Base Resets ───────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-display);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-outline-variant);
+  border-radius: 100px;
+}
+
+/* ── Terminal Styling ─────────────────────────────────────────── */
+.terminal-body {
+  background: #0f172a;
+  font-family: var(--font-mono);
+}
+
+.terminal-line-info { color: #94a3b8; }
+.terminal-line-time { color: #64748b; }
+.terminal-line-processing { color: var(--color-primary-container); }
+.terminal-line-meta { color: #475569; }
+.terminal-line-error { color: #f87171; }
+.terminal-line-success { color: #4ade80; }

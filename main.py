@@ -95,6 +95,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
         "https://truthmeshsjain.azurewebsites.net",
     ],
     allow_methods=["GET", "POST"],
@@ -118,6 +120,13 @@ async def add_security_headers(request, call_next):
     return response
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Serve React production build if available
+import pathlib
+_react_dist = pathlib.Path(__file__).parent / "frontend" / "dist"
+if _react_dist.exists():
+    app.mount("/assets", StaticFiles(directory=str(_react_dist / "assets")), name="react-assets")
+
 templates = Jinja2Templates(directory="templates")
 
 
@@ -128,10 +137,6 @@ async def health():
     """Lightweight health endpoint for deployment smoke tests."""
     return JSONResponse({"status": "ok", "demo_mode": Config.DEMO_MODE})
 
-
-@app.get("/login", response_class=HTMLResponse)
-async def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
 
 @app.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -160,23 +165,30 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @app.get("/logout")
 async def logout():
-    response = RedirectResponse(url="/login", status_code=302)
+    response = JSONResponse({"status": "logged_out"})
     response.delete_cookie("access_token")
     return response
 
 
-# ── Page Routes ──────────────────────────────────────────────────────────
+# ── JSON API Routes (for React SPA) ──────────────────────────────────────
 
-@app.get("/", response_class=HTMLResponse)
-async def dashboard(request: Request, user: dict = Depends(get_current_user)):
-    """Main dashboard page."""
+@app.get("/api/me")
+async def api_me(user: dict = Depends(get_current_user)):
+    """Get current user info."""
+    return JSONResponse({
+        "username": user["username"],
+        "role": user["role"],
+        "user_id": user["user_id"],
+    })
+
+@app.get("/api/dashboard")
+async def api_dashboard(user: dict = Depends(get_current_user)):
+    """Dashboard data as JSON."""
     topography = await get_topography_data()
     audit_stats = await get_self_audit_stats()
     recent = await get_recent_queries(5)
     demo_queries = get_demo_queries()
-
-    return templates.TemplateResponse("dashboard.html", {
-        "request": request,
+    return JSONResponse({
         "topography": topography,
         "audit_stats": audit_stats,
         "recent_queries": recent,
@@ -184,31 +196,15 @@ async def dashboard(request: Request, user: dict = Depends(get_current_user)):
         "models": Config.MODELS,
         "domains": Config.DOMAINS,
         "demo_mode": Config.DEMO_MODE,
-        "nav_active": "dashboard",
     })
 
-
-@app.get("/pipeline", response_class=HTMLResponse)
-async def pipeline_page(request: Request, user: dict = Depends(require_role(["Admin", "Analyst", "Viewer"]))):
-    """Pipeline monitoring page."""
-    topography = await get_topography_data()
-    return templates.TemplateResponse("pipeline.html", {
-        "request": request,
-        "topography": topography,
-        "demo_mode": Config.DEMO_MODE,
-        "nav_active": "pipeline",
-    })
-
-
-@app.get("/audit", response_class=HTMLResponse)
-async def audit_page(request: Request, user: dict = Depends(require_role(["Admin", "Auditor", "Analyst"]))):
-    """Audit log page."""
+@app.get("/api/audit")
+async def api_audit(user: dict = Depends(get_current_user)):
+    """Audit log data as JSON."""
     recent_raw = await get_recent_queries(user_id=user["user_id"], limit=50, is_admin=user["role"] == "Admin" or user["role"] == "Auditor")
-    # Transform to audit format expected by template
     audit_data = []
     for r in recent_raw:
         trust = r.get("overall_trust_score") or 0
-        # Extract primary domain from domain_vector
         domain = "general"
         dv = r.get("domain_vector")
         if dv:
@@ -224,41 +220,31 @@ async def audit_page(request: Request, user: dict = Depends(require_role(["Admin
             "model": r.get("routed_model", "Unknown"),
             "trust_score": trust,
         })
-
-    # Compute aggregate stats
     if audit_data:
         trusts = [d["trust_score"] for d in audit_data]
-        avg_trust = round(sum(trusts) / len(trusts) * 100) if trusts else 0
+        avg_trust = sum(trusts) / len(trusts) if trusts else 0
         failed = sum(1 for t in trusts if t < 0.5)
-        hallucination_rate = round(failed / len(trusts) * 100, 1) if trusts else 0
+        hallucination_rate = failed / len(trusts) if trusts else 0
     else:
         avg_trust = 0
         hallucination_rate = 0
-
-    return templates.TemplateResponse("audit.html", {
-        "request": request,
+    return JSONResponse({
         "audit_data": audit_data,
         "avg_trust": avg_trust,
         "hallucination_rate": hallucination_rate,
-        "demo_mode": Config.DEMO_MODE,
-        "nav_active": "audit",
     })
 
-
-@app.get("/settings", response_class=HTMLResponse)
-async def settings_page(request: Request, user: dict = Depends(require_role(["Admin"]))):
-    """Settings / configurator page."""
+@app.get("/api/settings")
+async def api_settings(user: dict = Depends(get_current_user)):
+    """Settings data as JSON."""
     models = [
         {"name": "GPT-4o", "description": "High accuracy, 120ms avg latency"},
         {"name": "Claude-3.5-Sonnet", "description": "Nuanced reasoning, 140ms avg latency"},
         {"name": "GPT-4o-mini", "description": "Cost-efficient, 60ms avg latency"},
     ]
-    return templates.TemplateResponse("settings.html", {
-        "request": request,
+    return JSONResponse({
         "models": models,
         "threshold": 0.85,
-        "demo_mode": Config.DEMO_MODE,
-        "nav_active": "settings",
     })
 
 
@@ -622,3 +608,21 @@ async def api_verify_stream(request: Request, query_id: str):
 async def api_demo_queries():
     """Get list of available demo queries."""
     return JSONResponse({"queries": get_demo_queries()})
+
+
+# ── SPA Catch-All (must be LAST) ─────────────────────────────────────────
+
+from fastapi.responses import FileResponse
+
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    """Serve React SPA for all non-API routes."""
+    react_index = _react_dist / "index.html"
+    if _react_dist.exists() and react_index.exists():
+        # Check if request is for a static asset in dist/
+        asset = _react_dist / full_path
+        if asset.exists() and asset.is_file():
+            return FileResponse(str(asset))
+        return FileResponse(str(react_index))
+    # Fallback to Jinja2 templates during transition
+    return templates.TemplateResponse("login.html", {"request": {}})
