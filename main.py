@@ -300,58 +300,6 @@ async def api_recent_query(user: dict = Depends(get_current_user)):
         except Exception:
             pass
 
-        # Build synthetic pipeline log for completed queries
-        log = []
-        if query_id:
-            log = [
-                {"type": "time", "text": f"[REPLAY] Pipeline execution for: {query_text[:80]}"},
-                {"type": "processing", "text": f">> SHIELD: Input screened — PASS"},
-                {"type": "info", "text": f">> CLASSIFY: Domain detected — {domain}"},
-                {"type": "info", "text": f">> ROUTE: Model selected — {routed_model} (topography O(1))"},
-                {"type": "info", "text": f">> LLM: Response generated via Azure OpenAI ({routed_model})"},
-                {"type": "processing", "text": f">> DECOMPOSE: Claims extracted from response"},
-                {"type": "info", "text": f">> VERIFY: 4-source concurrent verification complete"},
-                {"type": "info", "text": f">> CONSENSUS: Domain-weighted scoring applied"},
-                {"type": "processing", "text": f">> PROFILE: Topography updated (Bayesian posterior)"},
-                {"type": "processing", "text": f">> TRUST SCORE: {round(trust_score * 100) if trust_score else 'N/A'}%"},
-                {"type": "processing", "text": ">> PIPELINE COMPLETE"},
-            ]
-
-        return JSONResponse({
-            "query_id": query_id,
-            "query": query_text[:100],
-            "domain": domain,
-            "model": routed_model,
-            "trust_score": trust_score,
-            "complete": is_complete,
-    body = await request.json()
-    query_text = body.get("query", "").strip()
-
-    if not query_text:
-        return JSONResponse({"error": "Empty query"}, status_code=400)
-
-    query_id = str(uuid.uuid4())[:12]
-
-    # Step 1: Shield Agent
-    shield_result = await check_input(query_text)
-    if not shield_result["safe"]:
-        return JSONResponse({
-            "query_id": query_id,
-            "blocked": True,
-            "shield": shield_result
-        })
-
-    # Step 2: Check demo cache first
-    cached = get_cached_response(query_text)
-    is_cached = cached is not None
-
-    if is_cached:
-        domain_vector = cached["domain_vector"]
-        routing = cached["routing"]
-    else:
-        # Step 3: Domain Classification (live)
-        domain_vector = await classify_domain(query_text)
-        # Step 4: Hallucination-Aware Routing (live)
         routing_result = await route_query(domain_vector)
         routing = {
             "selected_model": routing_result["selected_model"],

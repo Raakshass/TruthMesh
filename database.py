@@ -41,8 +41,13 @@ async def get_db():
 
 
 async def init_db():
-    """Initialize database schema."""
+    """Initialize database schema with Production WAL mode."""
     async with aiosqlite.connect(DB_PATH) as db:
+        # Enable Write-Ahead Logging for high-concurrency production safely
+        await db.execute("PRAGMA journal_mode=WAL;")
+        await db.execute("PRAGMA synchronous=NORMAL;")
+        await db.execute("PRAGMA cache_size=-64000;") # 64MB cache
+        
         await db.executescript("""
             CREATE TABLE IF NOT EXISTS topography_scores (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,6 +108,16 @@ async def init_db():
                 hashed_password TEXT NOT NULL,
                 role TEXT NOT NULL DEFAULT 'Viewer',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS ground_truth_repository (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                claim TEXT UNIQUE NOT NULL,
+                expected_verdict TEXT NOT NULL,
+                domain TEXT NOT NULL,
+                source_dataset TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                last_validated_at TIMESTAMP
             );
         """)
         
@@ -236,6 +251,58 @@ async def get_self_audit_stats():
         )
         row = await cursor.fetchone()
         return dict(row)
+
+async def ingest_ground_truth(claims: list) -> int:
+    """Ingest a batch of ground truth claims."""
+    inserted = 0
+    async with aiosqlite.connect(DB_PATH) as db:
+        for c in claims:
+            try:
+                await db.execute(
+                    """INSERT INTO ground_truth_repository 
+                       (claim, expected_verdict, domain, source_dataset)
+                       VALUES (?, ?, ?, ?)""",
+                    (c["claim"], c["expected_verdict"], c["domain"], c["source_dataset"])
+                )
+                inserted += 1
+            except aiosqlite.IntegrityError:
+                pass  # Skip duplicates
+        await db.commit()
+    return inserted
+
+async def get_ground_truth_claim(claim: str) -> Optional[dict]:
+    """Retrieve a single claim's exact match from the Ground Truth Repository."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute(
+            "SELECT * FROM ground_truth_repository WHERE claim = ?",
+            (claim,)
+        )
+        row = await cursor.fetchone()
+        return dict(row) if row else None
+
+async def get_due_ground_truth_claims(limit: int = 50) -> list:
+    """Get claims that have never been validated or were validated > 7 days ago."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute(
+            """SELECT * FROM ground_truth_repository 
+               WHERE last_validated_at IS NULL 
+                  OR last_validated_at <= datetime('now', '-7 days')
+               ORDER BY RANDOM() LIMIT ?""",
+            (limit,)
+        )
+        rows = await cursor.fetchall()
+        return [dict(row) for row in rows]
+
+async def update_ground_truth_validation(claim_id: int):
+    """Mark a ground truth claim as validated."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "UPDATE ground_truth_repository SET last_validated_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (claim_id,)
+        )
+        await db.commit()
 
 
 async def get_recent_queries(user_id: Optional[int] = None, limit: int = 10, is_admin: bool = False):

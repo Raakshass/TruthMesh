@@ -1,8 +1,15 @@
+@description('Location for all resources.')
 param location string = resourceGroup().location
-param appName string = 'truthmesh-${uniqueString(resourceGroup().id)}'
-param sku string = 'B1' // Basic tier for economical Hackathon production
 
-// Log Analytics Workspace
+@description('Base name for resources.')
+param appName string = 'truthmesh-${uniqueString(resourceGroup().id)}'
+
+@description('The GitHub Container Registry image to deploy.')
+param dockerImage string = 'ghcr.io/raakshass/truthmesh:latest'
+
+var keyVaultName = 'kv-${substring(uniqueString(resourceGroup().id), 0, 10)}'
+
+// 1. Log Analytics Workspace
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: '${appName}-logs'
   location: location
@@ -13,7 +20,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10
   }
 }
 
-// Application Insights
+// 2. Application Insights
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: '${appName}-ai'
   location: location
@@ -24,7 +31,21 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-// App Service Plan
+// 3. Azure Key Vault
+resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
+  name: keyVaultName
+  location: location
+  properties: {
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    tenantId: subscription().tenantId
+    enableRbacAuthorization: true
+  }
+}
+
+// 4. App Service Plan (Linux)
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   name: '${appName}-plan'
   location: location
@@ -33,21 +54,23 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
     reserved: true
   }
   sku: {
-    name: sku
-    tier: 'Basic'
+    name: 'B1'
+    tier: 'Basic' // Economical for student credits
   }
 }
 
-// Web App
+// 5. Web App for Containers
 resource webApp 'Microsoft.Web/sites@2022-09-01' = {
   name: appName
   location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'PYTHON|3.11'
-      appCommandLine: 'gunicorn -k uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000 -w 4 main:app'
+      linuxFxVersion: 'DOCKER|${dockerImage}'
       alwaysOn: true
       appSettings: [
         {
@@ -59,35 +82,39 @@ resource webApp 'Microsoft.Web/sites@2022-09-01' = {
           value: appInsights.properties.ConnectionString
         }
         {
-          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
-          value: 'true'
+          name: 'AZURE_KEY_VAULT_URL'
+          value: keyVault.properties.vaultUri
         }
-        {
-          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
-          value: 'true'
-        }
-        // Environment variables required by our application
         {
           name: 'ENVIRONMENT'
           value: 'production'
         }
-        // These should ideally be in KeyVault, but for now we secure them in AppSettings
+        // CRITICAL: Enables persistent /home mapping for SQLite WAL across Container Restarts
+        {
+          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
+          value: 'true'
+        }
         {
           name: 'DB_PATH'
-          value: '/home/data/truthmesh.db' // Persistent storage on App Service
-        }
-        {
-          name: 'JWT_SECRET_KEY'
-          value: 'REPLACE_ME_WITH_SECURE_KEY' // Will be overridden via CLI during auth setup
-        }
-        {
-          name: 'ENCRYPTION_KEY'
-          value: 'REPLACE_ME_WITH_SECURE_KEY' // Will be overridden via CLI during auth setup
+          value: '/home/data/truthmesh.db'
         }
       ]
     }
   }
 }
 
+// 6. Key Vault Role Assignment for Web App Managed Identity
+var roleDefinitionId = resourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(keyVault.id, webApp.id, roleDefinitionId)
+  scope: keyVault
+  properties: {
+    roleDefinitionId: roleDefinitionId
+    principalId: webApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 output webAppName string = webApp.name
 output webAppHostName string = webApp.properties.defaultHostName
+output keyVaultUri string = keyVault.properties.vaultUri

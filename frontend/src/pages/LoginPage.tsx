@@ -28,16 +28,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Left: Hero with 3D Network Graph */}
-      <div className="relative hidden flex-[1.5] items-center overflow-hidden lg:flex">
+    <div className="relative flex min-h-screen bg-surface">
+      {/* Full Background 3D Network Graph */}
+      <div className="absolute inset-0 z-0">
         <NetworkScene className="absolute inset-0" />
+      </div>
 
+      {/* Left: Hero Text */}
+      <div className="relative z-10 hidden flex-[1.5] flex-col justify-center p-16 lg:flex">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-          className="relative z-10 max-w-[520px] p-16"
+          className="max-w-[520px]"
         >
           <h1 className="text-[3.5rem] font-black leading-[1.1] tracking-tight text-white">
             TruthMesh
@@ -59,7 +62,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right: Login Form */}
-      <div className="flex flex-1 items-center justify-center bg-surface p-6 lg:p-12">
+      <div className="relative z-10 flex flex-1 items-center justify-center p-6 lg:p-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

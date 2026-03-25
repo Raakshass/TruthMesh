@@ -20,6 +20,10 @@ class Config:
     AZURE_CONTENT_SAFETY_KEY = os.getenv("AZURE_CONTENT_SAFETY_KEY", "")
     AZURE_CONTENT_SAFETY_ENDPOINT = os.getenv("AZURE_CONTENT_SAFETY_ENDPOINT", "")
 
+    # TruthMesh New Verification Integrations
+    GOOGLE_FACTCHECK_API_KEY = os.getenv("GOOGLE_FACTCHECK_API_KEY", "")
+    WOLFRAM_APP_ID = os.getenv("WOLFRAM_APP_ID", "")
+
     # App
     FIELD_ENCRYPTION_KEY = os.getenv("FIELD_ENCRYPTION_KEY", "")
     DEMO_MODE = os.getenv("DEMO_MODE", "true").lower() == "true"

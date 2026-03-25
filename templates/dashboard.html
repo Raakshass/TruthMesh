@@ -1,255 +1,256 @@
 {% extends "_base.html" %}
 
 {% block title %}Analysis Dashboard{% endblock %}
-{% block subtitle %}Analysis Dashboard{% endblock %}
 
 {% block head %}{% endblock %}
 
 {% block content %}
-<div class="max-w-[1440px] mx-auto p-6 grid grid-cols-12 gap-6">
+<div class="max-w-[1400px] mx-auto grid grid-cols-12 gap-5">
 
-    <!-- LEFT COLUMN: Query & Scenarios -->
-    <aside class="col-span-12 lg:col-span-3 space-y-5">
+    <!-- ═══ LEFT COLUMN: Query & Scenarios ═══ -->
+    <aside class="col-span-12 lg:col-span-3 space-y-4">
 
         <!-- Query Input -->
-        <section class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-            <h3 class="font-bold text-sm text-slate-800 uppercase tracking-wider mb-4">Analyze Query</h3>
+        <div class="tm-card">
+            <h3 class="text-[11px] font-bold uppercase tracking-widest mb-3" style="color: #434656;">Analyze Query</h3>
             <form id="queryForm" onsubmit="return false;">
                 <textarea id="queryInput" rows="3"
-                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none"
+                    class="w-full p-3 rounded-lg text-sm font-display resize-none outline-none transition-all"
+                    style="background: #faf8ff; color: #131b2e; border: 1.5px solid #c3c5d9;"
+                    onfocus="this.style.borderColor='#003ec7'; this.style.boxShadow='0 0 0 3px rgba(0,82,255,0.12)'"
+                    onblur="this.style.borderColor='#c3c5d9'; this.style.boxShadow='none'"
                     placeholder="Enter a claim or question to verify..."></textarea>
-                <button id="submitBtn" type="submit"
-                    class="w-full mt-3 py-2.5 bg-primary text-white rounded-lg text-sm font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-md neon-glow flex items-center justify-center gap-2">
+                <button id="submitBtn" type="submit" class="tm-btn-primary w-full mt-3 flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
                     <span class="material-symbols-outlined text-sm">search_check</span>
                     Analyze
                 </button>
             </form>
-        </section>
+        </div>
 
         <!-- Demo Scenarios -->
-        <section class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-sm text-slate-800 uppercase tracking-wider">Demo Scenarios</h3>
-                <span class="material-symbols-outlined text-slate-400 text-sm">science</span>
+        <div class="tm-card">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[11px] font-bold uppercase tracking-widest" style="color: #434656;">Demo Scenarios</h3>
+                <span class="material-symbols-outlined text-sm" style="color: #c3c5d9;">science</span>
             </div>
-            <div class="space-y-2" id="demoScenarios">
-                <button
-                    class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all cursor-pointer text-left"
+            <div class="space-y-1.5" id="demoScenarios">
+                <button class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer text-left"
+                    style="background: #f2f3ff;" onmouseover="this.style.background='#eaedff'" onmouseout="this.style.background='#f2f3ff'"
                     data-query="What are the drug interactions between metformin and lisinopril?">
-                    <span class="material-symbols-outlined text-rose-500">stethoscope</span>
+                    <span class="material-symbols-outlined" style="color: #ba1a1a;">stethoscope</span>
                     <div class="flex-1">
-                        <p class="text-sm font-bold text-slate-900">Medical</p>
-                        <p class="text-[10px] text-slate-500">Drug Interaction Analysis</p>
+                        <p class="text-sm font-bold" style="color: #131b2e;">Medical</p>
+                        <p class="text-[10px]" style="color: #737688;">Drug Interaction Analysis</p>
                     </div>
-                    <span class="material-symbols-outlined text-slate-300 text-xs">arrow_forward_ios</span>
+                    <span class="material-symbols-outlined text-xs" style="color: #c3c5d9;">arrow_forward_ios</span>
                 </button>
-                <button
-                    class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all cursor-pointer text-left"
+                <button class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer text-left"
+                    style="background: #f2f3ff;" onmouseover="this.style.background='#eaedff'" onmouseout="this.style.background='#f2f3ff'"
                     data-query="What are the key precedents in Indian contract law for force majeure?">
-                    <span class="material-symbols-outlined text-indigo-500">balance</span>
+                    <span class="material-symbols-outlined" style="color: #003ec7;">balance</span>
                     <div class="flex-1">
-                        <p class="text-sm font-semibold text-slate-700">Legal</p>
-                        <p class="text-[10px] text-slate-400">Force Majeure Precedents</p>
+                        <p class="text-sm font-semibold" style="color: #131b2e;">Legal</p>
+                        <p class="text-[10px]" style="color: #737688;">Force Majeure Precedents</p>
                     </div>
                 </button>
-                <button
-                    class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all cursor-pointer text-left"
+                <button class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer text-left"
+                    style="background: #f2f3ff;" onmouseover="this.style.background='#eaedff'" onmouseout="this.style.background='#f2f3ff'"
                     data-query="What is the current Basel III capital adequacy ratio requirement?">
-                    <span class="material-symbols-outlined text-emerald-500">account_balance</span>
+                    <span class="material-symbols-outlined" style="color: #005479;">account_balance</span>
                     <div class="flex-1">
-                        <p class="text-sm font-semibold text-slate-700">Finance</p>
-                        <p class="text-[10px] text-slate-400">Basel III Capital Ratios</p>
+                        <p class="text-sm font-semibold" style="color: #131b2e;">Finance</p>
+                        <p class="text-[10px]" style="color: #737688;">Basel III Capital Ratios</p>
                     </div>
                 </button>
-                <button
-                    class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all cursor-pointer text-left"
+                <button class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer text-left"
+                    style="background: #f2f3ff;" onmouseover="this.style.background='#eaedff'" onmouseout="this.style.background='#f2f3ff'"
                     data-query="What are the legal implications of AI-generated medical diagnoses in India?">
-                    <span class="material-symbols-outlined text-cyan-500">science</span>
+                    <span class="material-symbols-outlined" style="color: #005479;">science</span>
                     <div class="flex-1">
-                        <p class="text-sm font-semibold text-slate-700">AI + Law</p>
-                        <p class="text-[10px] text-slate-400">Cross-Domain Analysis</p>
+                        <p class="text-sm font-semibold" style="color: #131b2e;">AI + Law</p>
+                        <p class="text-[10px]" style="color: #737688;">Cross-Domain Analysis</p>
                     </div>
                 </button>
-                <button
-                    class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-all cursor-pointer text-left"
+                <button class="demo-btn w-full flex items-center gap-3 p-3 rounded-lg transition-all cursor-pointer text-left"
+                    style="background: #f2f3ff;" onmouseover="this.style.background='#eaedff'" onmouseout="this.style.background='#f2f3ff'"
                     data-query="Is GPT-4 reliable for generating differential diagnoses in rare diseases?">
-                    <span class="material-symbols-outlined text-amber-600">menu_book</span>
+                    <span class="material-symbols-outlined" style="color: #515f74;">menu_book</span>
                     <div class="flex-1">
-                        <p class="text-sm font-semibold text-slate-700">AI Reliability</p>
-                        <p class="text-[10px] text-slate-400">Hallucination Risk Assessment</p>
+                        <p class="text-sm font-semibold" style="color: #131b2e;">AI Reliability</p>
+                        <p class="text-[10px]" style="color: #737688;">Hallucination Risk Assessment</p>
                     </div>
                 </button>
             </div>
-        </section>
+        </div>
 
         <!-- Pipeline Health -->
-        <section id="pipelineHealth"
-            class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl p-5 shadow-xl relative overflow-hidden">
+        <div id="pipelineHealth" class="rounded-xl p-5 relative overflow-hidden"
+             style="background: linear-gradient(135deg, #131b2e, #283044); color: white;">
             <div class="absolute top-0 right-0 p-4 opacity-10">
                 <span class="material-symbols-outlined text-6xl">security</span>
             </div>
-            <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Pipeline Health</h3>
+            <h3 class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color: #737688;">Pipeline Health</h3>
             <div class="flex items-end justify-between">
                 <div>
-                    <p class="text-3xl font-bold" id="pipelineStage">Idle</p>
-                    <p class="text-xs font-bold" id="pipelineStatus" style="color: #39ff14;">Ready for query</p>
+                    <p class="text-2xl font-extrabold" id="pipelineStage">Idle</p>
+                    <p class="text-xs font-bold" id="pipelineStatus" style="color: #b7c4ff;">Ready for query</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-xs text-slate-400 uppercase">Latency</p>
-                    <p class="text-sm font-mono" id="pipelineLatency" style="color: #00f3ff;">--</p>
+                    <p class="text-[10px] uppercase" style="color: #737688;">Latency</p>
+                    <p class="text-sm font-mono" id="pipelineLatency" style="color: #0052ff;">--</p>
                 </div>
             </div>
             <div class="mt-4 flex gap-1" id="pipelineSteps">
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="shield"></div>
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="classify"></div>
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="route"></div>
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="llm"></div>
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="decompose"></div>
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="verify"></div>
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="consensus"></div>
-                <div class="pipeline-step h-1.5 flex-1 rounded-full bg-slate-700" data-step="profile"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="shield"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="classify"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="route"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="llm"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="decompose"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="verify"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="consensus"></div>
+                <div class="pipeline-step h-1.5 flex-1 rounded-full" style="background: #434656;" data-step="profile"></div>
             </div>
-        </section>
+        </div>
     </aside>
 
-    <!-- CENTER COLUMN: Trust Hero + Results -->
-    <div class="col-span-12 lg:col-span-6 space-y-6">
+    <!-- ═══ CENTER COLUMN: Trust Hero + Results ═══ -->
+    <div class="col-span-12 lg:col-span-6 space-y-5">
 
         <!-- Trust Score Hero -->
-        <section id="trustHero"
-            class="bg-white rounded-xl p-8 shadow-sm border border-slate-100 flex items-center justify-between relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-            <div class="space-y-4">
+        <section id="trustHero" class="tm-card flex items-center justify-between relative overflow-hidden p-8">
+            <div class="absolute top-0 right-0 w-40 h-40 rounded-full -mr-20 -mt-20 blur-3xl" style="background: rgba(0,82,255,0.05);"></div>
+            <div class="space-y-3">
                 <div>
-                    <h2 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Overall Trust Score</h2>
-                    <p class="text-4xl font-extrabold text-slate-900 mt-1" id="trustLabel">Awaiting Query</p>
+                    <h2 class="text-[11px] font-bold uppercase tracking-widest" style="color: #737688;">Overall Trust Score</h2>
+                    <p class="text-3xl font-extrabold mt-1" id="trustLabel" style="color: #131b2e;">Awaiting Query</p>
                 </div>
                 <div class="flex items-center gap-4" id="trustMeta" style="display:none;">
-                    <div
-                        class="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-600 rounded-full text-xs font-bold border border-green-100">
+                    <div class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
+                         style="background: #e2e7ff; color: #003ec7;">
                         <span class="material-symbols-outlined text-xs">trending_up</span>
                         <span id="trustDelta">--</span>
                     </div>
-                    <div class="text-xs text-slate-400" id="trustNodes">Validated by 4 sources</div>
+                    <div class="text-xs" id="trustNodes" style="color: #737688;">Validated by 4 sources</div>
                 </div>
             </div>
             <div class="relative flex items-center justify-center" id="trustCircle" style="opacity: 0.3;">
                 <svg class="size-32 transform -rotate-90">
-                    <circle class="text-slate-100" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor"
-                        stroke-width="8"></circle>
-                    <circle id="trustArc" class="text-primary" cx="64" cy="64" fill="transparent" r="56"
-                        stroke="currentColor" stroke-dasharray="351.8" stroke-dashoffset="351.8" stroke-width="8"
+                    <circle cx="64" cy="64" fill="transparent" r="56" stroke="#eaedff" stroke-width="8"></circle>
+                    <circle id="trustArc" cx="64" cy="64" fill="transparent" r="56" stroke="#003ec7"
+                        stroke-dasharray="351.8" stroke-dashoffset="351.8" stroke-width="8"
                         style="transition: stroke-dashoffset 1s ease-out;"></circle>
                 </svg>
-                <span class="absolute text-2xl font-black text-slate-900" id="trustPercent">--%</span>
+                <span class="absolute text-2xl font-black" id="trustPercent" style="color: #131b2e;">--%</span>
             </div>
         </section>
 
         <!-- AI Response -->
         <section id="responseSection" class="hidden animate-fade-up">
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+            <div class="tm-card">
                 <div class="flex items-center gap-2 mb-3">
-                    <span class="material-symbols-outlined text-primary text-sm">smart_toy</span>
-                    <h3 class="font-bold text-sm text-slate-800">AI Response</h3>
-                    <span class="text-[10px] font-mono text-slate-400 ml-auto" id="responseModel">--</span>
+                    <span class="material-symbols-outlined text-sm" style="color: #003ec7;">smart_toy</span>
+                    <h3 class="font-bold text-sm" style="color: #131b2e;">AI Response</h3>
+                    <span class="text-[10px] font-mono ml-auto" style="color: #737688;" id="responseModel">--</span>
                 </div>
-                <p class="text-sm text-slate-700 leading-relaxed" id="responseText"></p>
+                <p class="text-sm leading-relaxed" id="responseText" style="color: #434656;"></p>
             </div>
         </section>
 
         <!-- Routing Decision -->
         <section id="routingSection" class="hidden animate-fade-up">
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="material-symbols-outlined text-primary text-sm">alt_route</span>
-                    <h3 class="font-bold text-sm text-slate-800">Routing Decision</h3>
+            <div class="tm-card">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-sm" style="color: #003ec7;">alt_route</span>
+                    <h3 class="font-bold text-sm" style="color: #131b2e;">Routing Decision</h3>
                 </div>
                 <div id="routingContent"></div>
             </div>
         </section>
 
         <!-- Claim Verification Feed -->
-        <section id="claimFeed" class="space-y-4 hidden">
+        <section id="claimFeed" class="space-y-3 hidden">
             <div class="flex items-center justify-between">
-                <h3 class="font-bold text-slate-800">Claim Verification Feed</h3>
+                <h3 class="font-bold" style="color: #131b2e;">Claim Verification Feed</h3>
                 <div class="flex gap-2">
-                    <button class="px-3 py-1 text-xs font-bold rounded bg-white border border-slate-200 shadow-sm"
-                        onclick="filterClaims('all')">All</button>
-                    <button class="px-3 py-1 text-xs font-bold rounded bg-slate-100 text-slate-500"
-                        onclick="filterClaims('fail')">Failed Only</button>
+                    <button class="px-3 py-1 text-xs font-bold rounded-md shadow-ambient"
+                            style="background: #ffffff; color: #131b2e;" onclick="filterClaims('all')">All</button>
+                    <button class="px-3 py-1 text-xs font-bold rounded-md"
+                            style="background: #f2f3ff; color: #737688;" onclick="filterClaims('fail')">Failed Only</button>
                 </div>
             </div>
             <div id="claimCards"></div>
         </section>
     </div>
 
-    <!-- RIGHT COLUMN: Heatmap & Audit -->
-    <aside class="col-span-12 lg:col-span-3 space-y-6">
+    <!-- ═══ RIGHT COLUMN: Heatmap & Audit ═══ -->
+    <aside class="col-span-12 lg:col-span-3 space-y-5">
 
         <!-- Hallucination Heatmap -->
-        <section class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-            <h3 class="font-bold text-sm text-slate-800 uppercase tracking-wider mb-4">Hallucination Heatmap</h3>
+        <div class="tm-card">
+            <h3 class="text-[11px] font-bold uppercase tracking-widest mb-3" style="color: #434656;">Hallucination Heatmap</h3>
             <div class="relative" style="height: 200px;">
                 <canvas id="topographyChart"></canvas>
             </div>
-            <div class="mt-3 flex justify-between text-[10px] text-slate-400 font-bold uppercase">
+            <div class="mt-3 flex justify-between text-[9px] font-bold uppercase" style="color: #c3c5d9;">
                 <span>Low Noise</span>
                 <span>High Risk</span>
             </div>
-        </section>
+        </div>
 
         <!-- Self-Audit Engine -->
-        <section class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-            <h3 class="font-bold text-sm text-slate-800 uppercase tracking-wider mb-4">Self-Audit Engine</h3>
-            <div class="space-y-4" id="auditBars">
+        <div class="tm-card">
+            <h3 class="text-[11px] font-bold uppercase tracking-widest mb-3" style="color: #434656;">Self-Audit Engine</h3>
+            <div class="space-y-3" id="auditBars">
                 <div class="flex flex-col gap-1">
-                    <div class="flex justify-between text-xs font-bold text-slate-600">
+                    <div class="flex justify-between text-xs font-bold" style="color: #434656;">
                         <span>Data Integrity</span>
                         <span id="auditIntegrity">--</span>
                     </div>
-                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-1.5 w-full rounded-full overflow-hidden" style="background: #eaedff;">
                         <div class="h-full rounded-full transition-all duration-700" id="auditIntegrityBar"
-                            style="width: 0%; background: #39ff14;"></div>
+                             style="width: 0%; background: linear-gradient(90deg, #003ec7, #0052ff);"></div>
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <div class="flex justify-between text-xs font-bold text-slate-600">
+                    <div class="flex justify-between text-xs font-bold" style="color: #434656;">
                         <span>Reasoning Consistency</span>
                         <span id="auditConsistency">--</span>
                     </div>
-                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div class="h-full bg-primary rounded-full transition-all duration-700" id="auditConsistencyBar"
-                            style="width: 0%;"></div>
+                    <div class="h-1.5 w-full rounded-full overflow-hidden" style="background: #eaedff;">
+                        <div class="h-full rounded-full transition-all duration-700" id="auditConsistencyBar"
+                             style="width: 0%; background: #003ec7;"></div>
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <div class="flex justify-between text-xs font-bold text-slate-600">
+                    <div class="flex justify-between text-xs font-bold" style="color: #434656;">
                         <span>Source Diversity</span>
                         <span id="auditDiversity">--</span>
                     </div>
-                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-1.5 w-full rounded-full overflow-hidden" style="background: #eaedff;">
                         <div class="h-full rounded-full transition-all duration-700" id="auditDiversityBar"
-                            style="width: 0%; background: #bc13fe;"></div>
+                             style="width: 0%; background: #005479;"></div>
                     </div>
                 </div>
             </div>
             <button id="runAuditBtn"
-                class="w-full mt-5 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-slate-800 transition-colors">
+                class="w-full mt-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all"
+                style="background: #131b2e; color: white;"
+                onmouseover="this.style.background='#283044'" onmouseout="this.style.background='#131b2e'">
                 Run Self-Audit
             </button>
-            <div id="auditResult" class="hidden mt-4 p-3 bg-slate-50 rounded-lg border border-slate-200 text-center">
-                <p class="text-3xl font-black text-slate-900" id="auditAccuracy">--</p>
-                <p class="text-[10px] text-slate-500 mt-1" id="auditDetail">Ground-truth claims verified</p>
+            <div id="auditResult" class="hidden mt-3 p-3 rounded-lg text-center" style="background: #f2f3ff;">
+                <p class="text-3xl font-black" id="auditAccuracy" style="color: #131b2e;">--</p>
+                <p class="text-[10px] mt-1" id="auditDetail" style="color: #737688;">Ground-truth claims verified</p>
             </div>
-        </section>
+        </div>
 
         <!-- Real-time Entropy -->
-        <div class="p-4 bg-sky-50 border border-sky-100 rounded-xl">
+        <div class="p-4 rounded-xl" style="background: #e2e7ff;">
             <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-sky-500">waves</span>
+                <span class="material-symbols-outlined" style="color: #003ec7;">waves</span>
                 <div>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase">Real-time Entropy</p>
-                    <p class="text-lg font-bold text-slate-900" id="entropyValue">0.024 bits/claim</p>
+                    <p class="text-[10px] font-bold uppercase" style="color: #737688;">Real-time Entropy</p>
+                    <p class="text-lg font-bold" id="entropyValue" style="color: #131b2e;">0.024 bits/claim</p>
                 </div>
             </div>
         </div>
@@ -264,7 +265,6 @@
 <script src="/static/js/topography.js"></script>
 <script src="/static/js/app.js"></script>
 <script>
-    // Auto-initialize heatmap on page load
     document.addEventListener('DOMContentLoaded', () => {
         refreshTopography();
     });

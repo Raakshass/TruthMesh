@@ -1,109 +1,290 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TruthMesh - Authentication</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            bg: '#0B0F19',
-                            card: '#111827',
-                            border: '#1F2937'
-                        },
-                        brand: {
-                            blue: '#3B82F6',
-                            purple: '#8B5CF6'
-                        }
-                    }
-                }
-            }
+    <title>TruthMesh — Sign In</title>
+    <meta name="description" content="TruthMesh: Self-Auditing Hallucination Topography Engine — Secure Authentication">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; display: flex; }
+
+        /* ── Left Panel: Hero with Network Graph ─────── */
+        .hero-panel {
+            flex: 1.5;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
         }
-    </script>
+        .hero-panel canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 520px;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            line-height: 1.1;
+        }
+        .hero-content .subtitle {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #b7c4ff;
+            margin-top: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+        .hero-content .tagline {
+            font-size: 0.875rem;
+            color: rgba(183, 196, 255, 0.6);
+            margin-top: 1.25rem;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+        .hero-content .trust-bar {
+            margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: rgba(183, 196, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .trust-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #0052ff;
+            box-shadow: 0 0 8px rgba(0, 82, 255, 0.6);
+        }
+
+        /* ── Right Panel: Login Form ─────────────────── */
+        .form-panel {
+            flex: 1;
+            background: #faf8ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            background: #ffffff;
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(19, 27, 46, 0.06);
+        }
+        .login-card h2 {
+            font-size: 1.375rem;
+            font-weight: 800;
+            color: #131b2e;
+            letter-spacing: -0.02em;
+        }
+        .login-card .sub {
+            font-size: 0.8125rem;
+            color: #434656;
+            margin-top: 0.25rem;
+        }
+        .form-group {
+            margin-top: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: #434656;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.375rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #ffffff;
+            border: 1.5px solid #c3c5d9;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            color: #131b2e;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #003ec7;
+            box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.12);
+        }
+        .form-group input::placeholder { color: #c3c5d9; }
+        .btn-signin {
+            width: 100%;
+            margin-top: 1.75rem;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #003ec7 0%, #0052ff 100%);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-signin:hover {
+            box-shadow: 0 0 20px rgba(0, 82, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-signin:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .demo-box {
+            margin-top: 1.25rem;
+            padding: 0.75rem;
+            background: #eaedff;
+            border-radius: 0.375rem;
+            text-align: center;
+        }
+        .demo-box p {
+            font-size: 0.6875rem;
+            color: #434656;
+        }
+        .demo-box code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            color: #003ec7;
+            font-weight: 600;
+        }
+        .error-msg {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.625rem 0.75rem;
+            background: #ffdad6;
+            color: #93000a;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .error-msg.show { display: block; }
+        .footer-text {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.6875rem;
+            color: #737688;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .hero-panel { flex: none; min-height: 250px; padding: 2rem; }
+            .hero-content h1 { font-size: 2rem; }
+            .form-panel { flex: 1; padding: 1.5rem; }
+        }
+
+        /* Loading spinner */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner {
+            display: inline-block;
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+    </style>
 </head>
-<body class="bg-dark-bg text-gray-300 min-h-screen flex items-center justify-center">
+<body>
 
-    <div class="w-full max-w-md bg-dark-card border border-dark-border rounded-xl p-8 shadow-2xl">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-purple tracking-tight mb-2">TruthMesh</h1>
-            <p class="text-sm text-gray-400">Secure Medical & Financial Intelligence</p>
-        </div>
-
-        <form id="loginForm" class="space-y-6">
-            <div id="error-msg" class="hidden bg-red-900/50 border border-red-500/50 text-red-200 p-3 rounded-lg text-sm text-center">
-                Invalid credentials or access denied.
+    <!-- ── Hero Panel with Network Graph Canvas ─────── -->
+    <div class="hero-panel" id="heroPanel">
+        <canvas id="network-graph-canvas"></canvas>
+        <div class="hero-content">
+            <h1>TruthMesh</h1>
+            <p class="subtitle">Self-Auditing Hallucination<br>Topography Engine</p>
+            <p class="tagline">Real-time LLM verification. Domain-aware routing. Multi-source consensus scoring. Built for high-stakes AI applications.</p>
+            <div class="trust-bar">
+                <span class="trust-dot"></span>
+                Trusted by researchers & enterprises
             </div>
-
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-400 mb-2">Username</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-user text-gray-500"></i>
-                    </div>
-                    <input type="text" id="username" name="username" required
-                        class="w-full pl-10 bg-dark-bg border border-dark-border rounded-lg py-3 px-4 text-white focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors">
-                </div>
-            </div>
-
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-400 mb-2">Password</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-lock text-gray-500"></i>
-                    </div>
-                    <input type="password" id="password" name="password" required
-                        class="w-full pl-10 bg-dark-bg border border-dark-border rounded-lg py-3 px-4 text-white focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple transition-colors">
-                </div>
-            </div>
-
-            <button type="submit"
-                class="w-full bg-gradient-to-r from-brand-blue to-brand-purple text-white font-semibold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2 focus:ring-offset-dark-card flex items-center justify-center space-x-2">
-                <span>Authenticate</span>
-                <i class="fas fa-arrow-right text-sm"></i>
-            </button>
-        </form>
-
-        <div class="mt-8 text-center text-xs text-gray-500">
-            <p>Protected by TruthMesh Identity Core.</p>
-            <p class="mt-1">Demo access: <span class="font-mono text-gray-400">admin / truthmesh123</span> or <span class="font-mono text-gray-400">demo / demo123</span></p>
         </div>
     </div>
 
+    <!-- ── Login Form Panel ─────────────────────────── -->
+    <div class="form-panel">
+        <div class="login-card">
+            <h2>Welcome back</h2>
+            <p class="sub">Sign in to your account</p>
+
+            <div id="error-msg" class="error-msg">
+                Invalid credentials or access denied.
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter username" autocomplete="username" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter password" autocomplete="current-password" />
+                </div>
+                <button type="submit" class="btn-signin" id="signinBtn">Sign In</button>
+            </form>
+
+            <div class="demo-box">
+                <p>Demo credentials: <code>admin / truthmesh123</code></p>
+                <p style="margin-top: 2px;">or <code>demo / demo123</code></p>
+            </div>
+
+            <p class="footer-text">New here? Contact your administrator for access.</p>
+        </div>
+    </div>
+
+    <!-- Network Graph Animation -->
+    <script src="/static/js/network-graph.js"></script>
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = e.target.querySelector('button');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+            const btn = document.getElementById('signinBtn');
+            const originalText = btn.textContent;
+            btn.innerHTML = '<span class="spinner"></span>';
             btn.disabled = true;
-            
+            document.getElementById('error-msg').classList.remove('show');
+
             const formData = new URLSearchParams(new FormData(e.target));
-            
+
             try {
                 const response = await fetch('/token', {
                     method: 'POST',
-                    body: formData, // URL encoded as required by OAuth2PasswordRequestForm
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
+                    body: formData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 });
 
                 if (response.ok) {
                     window.location.href = '/';
                 } else {
-                    document.getElementById('error-msg').classList.remove('hidden');
+                    document.getElementById('error-msg').classList.add('show');
                 }
             } catch (err) {
                 console.error(err);
-                document.getElementById('error-msg').classList.remove('hidden');
+                document.getElementById('error-msg').classList.add('show');
             } finally {
-                btn.innerHTML = originalText;
+                btn.textContent = originalText;
                 btn.disabled = false;
             }
         });

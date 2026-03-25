@@ -1,12 +1,13 @@
 /* ── App Shell: Sidebar + Main Content ────────────────────────────── */
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 
 export function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <div className="min-h-screen bg-surface">

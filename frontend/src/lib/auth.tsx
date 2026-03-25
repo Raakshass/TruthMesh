@@ -21,40 +21,24 @@ interface AuthState {
 const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>({
+    username: "Admin",
+    role: "Admin",
+    organization: "Demo Mode",
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Try to restore session from existing token
   useEffect(() => {
-    const token = sessionStorage.getItem("tm_token");
-    if (token) {
-      getMe()
-        .then(setUser)
-        .catch(() => sessionStorage.removeItem("tm_token"))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+    // Disabled token verification for hackathon demo access
   }, []);
 
   const login = async (username: string, password: string) => {
-    setError(null);
-    try {
-      await apiLogin(username, password);
-      const me = await getMe();
-      setUser(me);
-    } catch {
-      setError("Invalid credentials or access denied.");
-      throw new Error("Login failed");
-    }
+    // No-op for demo
   };
 
   const logout = () => {
-    sessionStorage.removeItem("tm_token");
-    setUser(null);
-    // Also clear httpOnly cookie
-    fetch("/logout", { credentials: "include" });
+    // No-op for demo
   };
 
   return (
