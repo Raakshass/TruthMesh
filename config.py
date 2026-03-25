@@ -21,6 +21,7 @@ class Config:
     AZURE_CONTENT_SAFETY_ENDPOINT = os.getenv("AZURE_CONTENT_SAFETY_ENDPOINT", "")
 
     # App
+    FIELD_ENCRYPTION_KEY = os.getenv("FIELD_ENCRYPTION_KEY", "")
     DEMO_MODE = os.getenv("DEMO_MODE", "true").lower() == "true"
     DB_PATH = os.getenv("DB_PATH", "truthmesh.db")
 

@@ -1,0 +1,71 @@
+name: Production Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: truthmeshsjain
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest flake8 bandit
+          
+      - name: Security Scan
+        run: bandit -r . -ll -ii -x ./venv
+        
+      - name: Lint with Flake8
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      # Run tests (Commented until tests are written)
+      # - name: Run Pytest
+      #   run: pytest tests/
+
+      - name: Package Application
+        run: |
+          # Build a clean source distribution, stripping local dev files
+          zip -r app.zip . -x "*.git*" "*.env*" "venv/*" "tests/*" "*.pytest_cache*" "*.vscode*" "*.idea*" "*.dockerignore" "Dockerfile" "infra/*"
+          
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-app
+          path: app.zip
+
+  deploy-to-azure:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: python-app
+
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: app.zip

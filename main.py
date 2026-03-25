@@ -2,22 +2,39 @@
 
 A Self-Auditing Hallucination Topography Engine.
 """
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import asyncio
 import json
 import uuid
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI, Request, Form, Depends, HTTPException, status
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from sse_starlette.sse import EventSourceResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from config import Config
 from database import (
     init_db, get_topography_data, get_self_audit_stats,
-    get_recent_queries, log_query, update_query_trust
+    get_recent_queries, log_query, update_query_trust,
+    get_user_by_username, create_user
 )
+from auth import (
+    get_current_user, require_role, get_password_hash,
+    create_access_token, verify_password, ACCESS_TOKEN_EXPIRE_MINUTES, timedelta
+)
+from jobs import scheduler
+from monitoring import logger
 from seed_data import seed_topography, seed_self_audit_claims
 from demo_cache import get_cached_response, get_demo_queries
 from pipeline.domain_classifier import classify_domain
@@ -42,7 +59,24 @@ async def lifespan(app: FastAPI):
         print("[STARTUP] Database seeded with baseline topography data")
     else:
         print(f"[STARTUP] Loaded {len(data)} existing topography scores")
+        
+    # Check if admin user exists, else create default
+    admin = await get_user_by_username("admin")
+    if not admin:
+        hashed = get_password_hash("truthmesh123")
+        await create_user("admin", hashed, role="Admin")
+        print("[STARTUP] Default admin user created (admin / truthmesh123)")
+        
+    viewer = await get_user_by_username("demo")
+    if not viewer:
+        hashed = get_password_hash("demo123")
+        await create_user("demo", hashed, role="Viewer")
+        logger.info("[STARTUP] Default demo user created (demo / demo123)")
+        
+    scheduler.start()
+    logger.info("[STARTUP] Background data governance scheduler started")
     yield
+    scheduler.shutdown()
 
 
 app = FastAPI(
@@ -52,14 +86,89 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://truthmeshsjain.azurewebsites.net",
+    ],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type"],
+    allow_credentials=True,
+)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=[
+    "localhost", "127.0.0.1",
+    "truthmeshsjain.azurewebsites.net",
+    "*.azurewebsites.net",  # Azure health probes and SCM
+])
+
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    # Basic CSP to allow tailwind CDN and inline styles/scripts for demo purposes
+    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.tailwindcss.com cdn.jsdelivr.net cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com; font-src 'self' cdnjs.cloudflare.com fonts.gstatic.com; connect-src 'self' ws: wss:;"
+    return response
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+
+# ── Auth Routes ──────────────────────────────────────────────────────────
+
+@app.get("/health")
+async def health():
+    """Lightweight health endpoint for deployment smoke tests."""
+    return JSONResponse({"status": "ok", "demo_mode": Config.DEMO_MODE})
+
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@app.post("/token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = await get_user_by_username(form_data.username)
+    if not user or not verify_password(form_data.password, user["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user["username"], "role": user["role"], "uid": user["id"]},
+        expires_delta=access_token_expires
+    )
+    
+    response = JSONResponse({"access_token": access_token, "token_type": "bearer"})
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        samesite="lax",
+    )
+    return response
+
+@app.get("/logout")
+async def logout():
+    response = RedirectResponse(url="/login", status_code=302)
+    response.delete_cookie("access_token")
+    return response
 
 
 # ── Page Routes ──────────────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
-async def dashboard(request: Request):
+async def dashboard(request: Request, user: dict = Depends(get_current_user)):
     """Main dashboard page."""
     topography = await get_topography_data()
     audit_stats = await get_self_audit_stats()
@@ -80,7 +189,7 @@ async def dashboard(request: Request):
 
 
 @app.get("/pipeline", response_class=HTMLResponse)
-async def pipeline_page(request: Request):
+async def pipeline_page(request: Request, user: dict = Depends(require_role(["Admin", "Analyst", "Viewer"]))):
     """Pipeline monitoring page."""
     topography = await get_topography_data()
     return templates.TemplateResponse("pipeline.html", {
@@ -92,9 +201,9 @@ async def pipeline_page(request: Request):
 
 
 @app.get("/audit", response_class=HTMLResponse)
-async def audit_page(request: Request):
+async def audit_page(request: Request, user: dict = Depends(require_role(["Admin", "Auditor", "Analyst"]))):
     """Audit log page."""
-    recent_raw = await get_recent_queries(50)
+    recent_raw = await get_recent_queries(user_id=user["user_id"], limit=50, is_admin=user["role"] == "Admin" or user["role"] == "Auditor")
     # Transform to audit format expected by template
     audit_data = []
     for r in recent_raw:
@@ -137,7 +246,7 @@ async def audit_page(request: Request):
 
 
 @app.get("/settings", response_class=HTMLResponse)
-async def settings_page(request: Request):
+async def settings_page(request: Request, user: dict = Depends(require_role(["Admin"]))):
     """Settings / configurator page."""
     models = [
         {"name": "GPT-4o", "description": "High accuracy, 120ms avg latency"},
@@ -156,7 +265,7 @@ async def settings_page(request: Request):
 # ── API Routes ───────────────────────────────────────────────────────────
 
 @app.get("/api/topography")
-async def api_topography():
+async def api_topography(user: dict = Depends(get_current_user)):
     """Get topography heatmap data."""
     data = await get_topography_data()
     return JSONResponse({"topography": data, "models": Config.MODELS, "domains": Config.DOMAINS})
@@ -185,16 +294,16 @@ async def api_self_audit_alias():
 
 
 @app.get("/api/recent-query")
-async def api_recent_query():
+async def api_recent_query(user: dict = Depends(get_current_user)):
     """Get the most recent query for pipeline page."""
-    recent = await get_recent_queries(1)
+    recent = await get_recent_queries(user_id=user["user_id"], limit=1, is_admin=user["role"] == "Admin")
     if recent:
         q = recent[0]
         query_id = q.get("query_id", "")
         query_text = q.get("query_text", "")
         routed_model = q.get("routed_model", "GPT-4o")
         trust_score = q.get("overall_trust_score")
-        is_complete = q.get("verification_complete", 0) == 1
+        is_complete = q.get("verification_complete", 0) == 1 or trust_score is not None
         
         # Parse domain vector
         domain = "General"
@@ -207,7 +316,7 @@ async def api_recent_query():
 
         # Build synthetic pipeline log for completed queries
         log = []
-        if is_complete and query_id:
+        if query_id:
             log = [
                 {"type": "time", "text": f"[REPLAY] Pipeline execution for: {query_text[:80]}"},
                 {"type": "processing", "text": f">> SHIELD: Input screened — PASS"},
@@ -235,7 +344,8 @@ async def api_recent_query():
 
 
 @app.post("/api/query")
-async def api_query(request: Request):
+@limiter.limit("10/minute")
+async def api_query(request: Request, user: dict = Depends(get_current_user)):
     """Process a query through the full TruthMesh pipeline.
 
     Returns immediate routing decision, then streams verification via SSE.
@@ -283,7 +393,8 @@ async def api_query(request: Request):
         domain_vector=domain_vector,
         routed_model=routing["selected_model"],
         routing_reason=routing["reason"],
-        cached=is_cached
+        cached=is_cached,
+        user_id=user["user_id"]
     )
 
     # Return initial response (routing decision)
