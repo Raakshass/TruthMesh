@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (username: string, password: string) => {
     // Instantly bypass login with a mock admin user
     setUser({
+      user_id: 1,
       username: username || "Admin",
       role: "Admin"
     });
