@@ -306,6 +306,28 @@ export default function DashboardPage() {
           )}
         </AnimatePresence>
 
+        {/* Empty State Onboarding */}
+        <AnimatePresence>
+          {!stream.responseText && stream.status !== "streaming" && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex flex-col items-center justify-center rounded-xl border border-dashed border-outline-variant/30 bg-transparent py-20 text-center"
+            >
+              <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-container-high text-outline">
+                <Search size={20} />
+              </div>
+              <h3 className="mb-2 text-sm font-bold text-on-surface">
+                Awaiting Hypothesis
+              </h3>
+              <p className="max-w-xs text-xs leading-relaxed text-on-surface-variant">
+                Select a demo scenario from the panel or type your own claim to initiate the verification pipeline.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Claim Verification Feed */}
         <AnimatePresence>
           {stream.verifications.length > 0 && (
@@ -350,22 +372,29 @@ export default function DashboardPage() {
                     </span>
                   </div>
                   <p className="text-sm text-on-surface-variant">{v.claim}</p>
-                  <div className="mt-3 flex gap-2">
-                    {v.sources.map((src, j) => (
-                      <span
-                        key={j}
-                        className="rounded-md px-2 py-0.5 text-[9px] font-mono font-bold"
-                        style={{
-                          background:
-                            src.verdict === "pass" ? "#dcfce7" : "#fee2e2",
-                          color:
-                            src.verdict === "pass" ? "#166534" : "#991b1b",
-                        }}
-                      >
-                        {src.source}:{" "}
-                        {Math.round(src.confidence * 100)}%
-                      </span>
-                    ))}
+                  
+                  {/* Citations Block */}
+                  <div className="mt-4 border-t border-outline-variant/20 pt-3">
+                    <h4 className="mb-2 text-[10px] font-bold uppercase tracking-widest text-outline">Evidentiary Sources</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {v.sources.map((src, j) => (
+                        <a
+                          key={j}
+                          href={src.source_detail || "#"}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[10px] font-mono font-bold transition-transform hover:-translate-y-0.5"
+                          style={{
+                            background: src.verdict === "pass" ? "#dcfce7" : src.verdict === "fail" ? "#fee2e2" : "#f1f5f9",
+                            color: src.verdict === "pass" ? "#166534" : src.verdict === "fail" ? "#991b1b" : "#475569",
+                            border: `1px solid ${src.verdict === "pass" ? "#bbf7d0" : src.verdict === "fail" ? "#fecaca" : "#e2e8f0"}`
+                          }}
+                        >
+                          <BookOpen size={10} />
+                          {src.source}: {Math.round(src.confidence * 100)}%
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
               ))}

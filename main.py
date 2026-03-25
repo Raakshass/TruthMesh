@@ -324,18 +324,6 @@ async def api_recent_query(user: dict = Depends(get_current_user)):
             "model": routed_model,
             "trust_score": trust_score,
             "complete": is_complete,
-            "log": log,
-        })
-    return JSONResponse({"query_id": None})
-
-
-@app.post("/api/query")
-@limiter.limit("10/minute")
-async def api_query(request: Request, user: dict = Depends(get_current_user)):
-    """Process a query through the full TruthMesh pipeline.
-
-    Returns immediate routing decision, then streams verification via SSE.
-    """
     body = await request.json()
     query_text = body.get("query", "").strip()
 
