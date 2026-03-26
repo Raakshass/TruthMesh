@@ -11,6 +11,7 @@ Sources:
 import httpx
 import json
 import re
+import os
 import urllib.parse
 from config import Config
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
@@ -34,12 +35,12 @@ DOMAIN_SITES = {
     "History": "site:britannica.com OR site:nationalarchives.gov.uk",
 }
 
-# Source Weights
+# Source Weights (Enterprise Configuration via Azure AI Search)
 SOURCE_WEIGHTS = {
-    "Medical": {"pubmed": 0.40, "bing": 0.20, "cross_model": 0.20, "factcheck": 0.10, "wolfram": 0.10},
+    "Medical": {"ai_search": 0.50, "pubmed": 0.15, "bing": 0.15, "cross_model": 0.10, "wolfram": 0.10},
     "Legal": {"bing": 0.40, "factcheck": 0.30, "cross_model": 0.30},
     "Finance": {"bing": 0.30, "wolfram": 0.30, "factcheck": 0.20, "cross_model": 0.20},
-    "Science": {"wikidata": 0.30, "bing": 0.25, "wolfram": 0.25, "cross_model": 0.20},
+    "Science": {"wikidata": 0.30, "ai_search": 0.25, "bing": 0.20, "wolfram": 0.15, "cross_model": 0.10},
     "History": {"wikidata": 0.40, "bing": 0.30, "factcheck": 0.20, "cross_model": 0.10},
     "General": {"factcheck": 0.35, "bing": 0.35, "cross_model": 0.20, "wikidata": 0.10}
 }
@@ -71,6 +72,45 @@ async def evaluate_entailment(claim: str, evidence: str, openai_client) -> dict:
     except Exception as e:
         print(f"[NLI] Error: {e}")
         return {"verdict": "inconclusive", "confidence": 0.3, "reasoning": "NLI pipeline error"}
+
+
+async def verify_ai_search(claim: str, domain: str, openai_client) -> dict:
+    """Enterprise RAG: Semantic Vector search across Azure AI Search indexed datasets."""
+    try:
+        endpoint = os.getenv("AI_SEARCH_ENDPOINT")
+        key = os.getenv("AI_SEARCH_KEY")
+        if not endpoint or not key:
+             return _mock_result("ai_search", claim, domain)
+             
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await fetch_with_backoff(client, "POST",
+                f"{endpoint}/indexes/knowledge-base/docs/search?api-version=2023-11-01",
+                headers={"api-key": key, "Content-Type": "application/json"},
+                json={
+                    "search": claim,
+                    "queryType": "semantic",
+                    "semanticConfiguration": "default",
+                    "top": 3
+                }
+            )
+            data = resp.json()
+            docs = data.get("value", [])
+            
+            if not docs:
+                return {"source": "ai_search", "source_detail": "Azure AI Search (Semantic)", "verdict": "inconclusive", "confidence": 0.3, "evidence_snippet": "No semantic vectors matched."}
+                
+            snippets = " ".join(d.get("content", "") for d in docs)
+            nli_result = await evaluate_entailment(claim, snippets, openai_client)
+            return {
+                "source": "ai_search",
+                "source_detail": f"Azure AI Semantic RAG ({domain})",
+                "verdict": nli_result.get("verdict", "inconclusive"),
+                "confidence": float(nli_result.get("confidence", 0.75)),
+                "evidence_snippet": nli_result.get("reasoning", snippets[:150])
+            }
+    except Exception as e:
+        print(f"[VERIFIER/AI_SEARCH] Error: {e}")
+        return _mock_result("ai_search", claim, domain)
 
 
 async def verify_pubmed(claim: str, openai_client) -> dict:
@@ -326,6 +366,8 @@ async def verify_claim(claim: str, claim_type: str, domain: str,
     weights = SOURCE_WEIGHTS.get(domain, SOURCE_WEIGHTS["General"])
     tasks = []
     
+    if "ai_search" in weights:
+        tasks.append(verify_ai_search(claim, domain, openai_client))
     if "pubmed" in weights:
         tasks.append(verify_pubmed(claim, openai_client))
     if "bing" in weights:

@@ -59,7 +59,44 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
   }
 }
 
-// 5. Web App for Containers
+// 5. Azure Cosmos DB (Serverless MongoDB API)
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
+  name: 'db-${substring(uniqueString(resourceGroup().id), 0, 10)}'
+  location: location
+  kind: 'MongoDB'
+  properties: {
+    databaseAccountOfferType: 'Standard'
+    locations: [
+      {
+        locationName: location
+        failoverPriority: 0
+      }
+    ]
+    capabilities: [
+      {
+        name: 'EnableServerless'
+      }
+    ]
+    apiProperties: {
+      serverVersion: '4.2'
+    }
+  }
+}
+
+// 6. Azure AI Search
+resource aiSearch 'Microsoft.Search/searchServices@2022-09-01' = {
+  name: 'search-${substring(uniqueString(resourceGroup().id), 0, 10)}'
+  location: location
+  sku: {
+    name: 'basic'
+  }
+  properties: {
+    replicaCount: 1
+    partitionCount: 1
+  }
+}
+
+// 7. Web App for Containers
 resource webApp 'Microsoft.Web/sites@2022-09-01' = {
   name: appName
   location: location
@@ -89,21 +126,24 @@ resource webApp 'Microsoft.Web/sites@2022-09-01' = {
           name: 'ENVIRONMENT'
           value: 'production'
         }
-        // CRITICAL: Enables persistent /home mapping for SQLite WAL across Container Restarts
         {
-          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
-          value: 'true'
+          name: 'COSMOS_DB_CONNECTION_STRING'
+          value: cosmosDbAccount.listConnectionStrings().connectionStrings[0].connectionString
         }
         {
-          name: 'DB_PATH'
-          value: '/home/data/truthmesh.db'
+          name: 'AI_SEARCH_ENDPOINT'
+          value: 'https://${aiSearch.name}.search.windows.net'
+        }
+        {
+          name: 'AI_SEARCH_KEY'
+          value: aiSearch.listAdminKeys().primaryKey
         }
       ]
     }
   }
 }
 
-// 6. Key Vault Role Assignment for Web App Managed Identity
+// 8. Key Vault Role Assignment for Web App Managed Identity
 var roleDefinitionId = resourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(keyVault.id, webApp.id, roleDefinitionId)

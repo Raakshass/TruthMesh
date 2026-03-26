@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: 'truthmeshsjain' # Update if using a different Web App Name
+  AZURE_WEBAPP_NAME: ${{ vars.AZURE_WEBAPP_NAME }} # Updated by Enterprise IaC Script output
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 

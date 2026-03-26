@@ -5,7 +5,8 @@ jinja2
 httpx
 openai
 python-dotenv
-aiosqlite
+motor
+azure-search-documents
 sse-starlette
 slowapi
 cryptography
