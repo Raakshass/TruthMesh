@@ -16,3 +16,4 @@ python-jose[cryptography]
 python-multipart
 apscheduler
 azure-monitor-opentelemetry
+tenacity
