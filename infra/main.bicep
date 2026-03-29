@@ -138,6 +138,10 @@ resource webApp 'Microsoft.Web/sites@2022-09-01' = {
           name: 'AI_SEARCH_KEY'
           value: aiSearch.listAdminKeys().primaryKey
         }
+        {
+          name: 'JWT_SECRET_KEY'
+          value: guid(resourceGroup().id, deployment().name, 'JWT_SECRET_KEY')
+        }
       ]
     }
   }

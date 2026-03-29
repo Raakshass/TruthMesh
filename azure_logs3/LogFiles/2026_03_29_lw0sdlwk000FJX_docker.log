@@ -1,0 +1,684 @@
+2026-03-29T21:29:44.0297423Z State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-03-29T21:29:47.8729609Z State: Starting, Action: StartingMsiContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-03-29T21:30:02.0999680Z State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-03-29T21:30:02.1202022Z Container start method called.
+2026-03-29T21:30:02.1213933Z State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image ghcr.io/raakshass/truthmesh:latest for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T21:30:02.1216852Z Establishing network.
+2026-03-29T21:30:02.1398701Z Pulling image: ghcr.io/raakshass/truthmesh:latest.
+2026-03-29T21:30:08.2865394Z Container pull image failed with reason: ImagePullFailure. Revert by terminate.
+2026-03-29T21:30:08.3175627Z Container is terminating. Grace period: 5 seconds.
+2026-03-29T21:30:08.3257364Z Container spec TerminationMessagePolicy  path 
+2026-03-29T21:30:08.3282008Z Container is terminated. Total time elapsed: 10 ms.
+2026-03-29T21:30:08.3286889Z Site container: truthmesh-qktpe5frtvy5w terminated during site startup.
+2026-03-29T21:30:08.3389957Z State: Stopping, Action: CancellingStartup, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:30:08.4488578Z State: Stopping, Action: CancellingStartup, LastError: ImageNotFoundFailure, LastErrorTimestamp: 03/29/2026 21:30:08, LastErrorDetails: Failed to pull image: ghcr.io/raakshass/truthmesh:latest. Image pull failed because the image was not found. Check the registry to ensure the image is present or check for any misspellings., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:30:08.4765404Z Failed to start site. Revert by stopping site.
+2026-03-29T21:30:08.5400781Z State: Stopping, Action: StoppingSite, LastError: ImageNotFoundFailure, LastErrorTimestamp: 03/29/2026 21:30:08, LastErrorDetails: Failed to pull image: ghcr.io/raakshass/truthmesh:latest. Image pull failed because the image was not found. Check the registry to ensure the image is present or check for any misspellings., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:30:08.5501134Z State: Stopping, Action: StoppingSiteContainers, LastError: ImageNotFoundFailure, LastErrorTimestamp: 03/29/2026 21:30:08, LastErrorDetails: Failed to pull image: ghcr.io/raakshass/truthmesh:latest. Image pull failed because the image was not found. Check the registry to ensure the image is present or check for any misspellings., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:30:08.5581795Z Site: truthmesh-qktpe5frtvy5w stopped.
+2026-03-29T21:32:49.159Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"manifest unknown"}
+
+2026-03-29T21:32:49.168Z WARN  - Image pull failed. Defaulting to local copy if present.
+2026-03-29T21:32:49.190Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2026-03-29T21:32:55.505Z INFO  - Stopping site truthmesh-qktpe5frtvy5w because it failed during startup.
+yer
+2026-03-29T21:31:32.569Z INFO  - abe88181250c Pulling fs layer
+2026-03-29T21:31:33.756Z INFO  - f970e76dab9a Downloading 158KB / 6MB
+2026-03-29T21:31:33.787Z INFO  - abe88181250c Downloading 462KB / 21MB
+2026-03-29T21:31:33.877Z INFO  - 4f4fb700ef54 Downloading 32B / 32B
+2026-03-29T21:31:33.878Z INFO  - 4f4fb700ef54 Verifying Checksum
+2026-03-29T21:31:33.879Z INFO  - 4f4fb700ef54 Download complete
+2026-03-29T21:31:33.989Z INFO  - 9d1bc1ee7cb7 Downloading 830KB / 20MB
+2026-03-29T21:31:34.101Z INFO  - f970e76dab9a Downloading 1MB / 6MB
+2026-03-29T21:31:34.209Z INFO  - f970e76dab9a Downloading 1MB / 6MB
+2026-03-29T21:31:34.251Z INFO  - abe88181250c Downloading 1MB / 21MB
+2026-03-29T21:31:34.270Z INFO  - 9d1bc1ee7cb7 Downloading 2MB / 20MB
+2026-03-29T21:31:34.373Z INFO  - 9d1bc1ee7cb7 Downloading 2MB / 20MB
+2026-03-29T21:31:34.393Z INFO  - f970e76dab9a Downloading 2MB / 6MB
+2026-03-29T21:31:34.483Z INFO  - 9d1bc1ee7cb7 Downloading 4MB / 20MB
+2026-03-29T21:31:34.532Z INFO  - f970e76dab9a Downloading 3MB / 6MB
+2026-03-29T21:31:34.613Z INFO  - f970e76dab9a Downloading 5MB / 6MB
+2026-03-29T21:31:34.743Z INFO  - f970e76dab9a Downloading 5MB / 6MB
+2026-03-29T21:31:34.772Z INFO  - 9d1bc1ee7cb7 Downloading 5MB / 20MB
+2026-03-29T21:31:34.773Z INFO  - abe88181250c Downloading 5MB / 21MB
+2026-03-29T21:31:34.896Z INFO  - abe88181250c Downloading 5MB / 21MB
+2026-03-29T21:31:35.026Z INFO  - f970e76dab9a Verifying Checksum
+2026-03-29T21:31:35.035Z INFO  - f970e76dab9a Download complete
+2026-03-29T21:31:35.097Z INFO  - abe88181250c Downloading 6MB / 21MB
+2026-03-29T21:31:35.439Z INFO  - f970e76dab9a Extracting 192KB / 6MB
+2026-03-29T21:31:35.537Z INFO  - abe88181250c Downloading 9MB / 21MB
+2026-03-29T21:31:35.538Z INFO  - 9d1bc1ee7cb7 Downloading 11MB / 20MB
+2026-03-29T21:31:36.031Z INFO  - f970e76dab9a Extracting 1MB / 6MB
+2026-03-29T21:31:36.051Z INFO  - 9d1bc1ee7cb7 Downloading 14MB / 20MB
+2026-03-29T21:31:36.060Z INFO  - abe88181250c Downloading 10MB / 21MB
+2026-03-29T21:31:36.124Z INFO  - f970e76dab9a Extracting 2MB / 6MB
+2026-03-29T21:31:36.273Z INFO  - abe88181250c Downloading 11MB / 21MB
+2026-03-29T21:31:36.305Z INFO  - 9d1bc1ee7cb7 Downloading 15MB / 20MB
+2026-03-29T21:31:36.454Z INFO  - abe88181250c Downloading 12MB / 21MB
+2026-03-29T21:31:36.576Z INFO  - f970e76dab9a Extracting 2MB / 6MB
+2026-03-29T21:31:36.635Z INFO  - abe88181250c Downloading 12MB / 21MB
+2026-03-29T21:31:36.706Z INFO  - 9d1bc1ee7cb7 Downloading 17MB / 20MB
+2026-03-29T21:31:36.755Z INFO  - f970e76dab9a Extracting 3MB / 6MB
+2026-03-29T21:31:36.796Z INFO  - 9d1bc1ee7cb7 Downloading 18MB / 20MB
+2026-03-29T21:31:36.887Z INFO  - abe88181250c Downloading 13MB / 21MB
+2026-03-29T21:31:36.937Z INFO  - 9d1bc1ee7cb7 Verifying Checksum
+2026-03-29T21:31:36.937Z INFO  - 9d1bc1ee7cb7 Download complete
+2026-03-29T21:31:37.167Z INFO  - f970e76dab9a Extracting 3MB / 6MB
+2026-03-29T21:31:37.168Z INFO  - abe88181250c Downloading 15MB / 21MB
+2026-03-29T21:31:37.219Z INFO  - abe88181250c Downloading 16MB / 21MB
+2026-03-29T21:31:37.770Z INFO  - abe88181250c Downloading 17MB / 21MB
+2026-03-29T21:31:38.206Z INFO  - f970e76dab9a Extracting 5MB / 6MB
+2026-03-29T21:31:38.424Z INFO  - abe88181250c Downloading 17MB / 21MB
+2026-03-29T21:31:38.649Z INFO  - abe88181250c Downloading 17MB / 21MB
+2026-03-29T21:31:38.669Z INFO  - f970e76dab9a Extracting 6MB / 6MB
+2026-03-29T21:31:38.860Z INFO  - abe88181250c Downloading 18MB / 21MB
+2026-03-29T21:31:38.988Z INFO  - f970e76dab9a Extracting 6MB / 6MB
+2026-03-29T21:31:39.270Z INFO  - f970e76dab9a Pull complete
+2026-03-29T21:31:39.312Z INFO  - abe88181250c Verifying Checksum
+2026-03-29T21:31:39.352Z INFO  - abe88181250c Download complete
+2026-03-29T21:31:39.352Z INFO  - 4f4fb700ef54 Extracting 32B / 32B
+2026-03-29T21:31:39.371Z INFO  - 4f4fb700ef54 Extracting 32B / 32B
+2026-03-29T21:31:39.501Z INFO  - 4f4fb700ef54 Pull complete
+2026-03-29T21:31:40.941Z INFO  - 9d1bc1ee7cb7 Extracting 2MB / 20MB
+2026-03-29T21:31:41.765Z INFO  - 9d1bc1ee7cb7 Extracting 3MB / 20MB
+2026-03-29T21:31:42.569Z INFO  - 9d1bc1ee7cb7 Extracting 4MB / 20MB
+2026-03-29T21:31:44.249Z INFO  - 9d1bc1ee7cb7 Extracting 6MB / 20MB
+2026-03-29T21:31:44.562Z INFO  - 9d1bc1ee7cb7 Extracting 6MB / 20MB
+2026-03-29T21:31:46.374Z INFO  - 9d1bc1ee7cb7 Extracting 7MB / 20MB
+2026-03-29T21:31:47.075Z INFO  - 9d1bc1ee7cb7 Extracting 8MB / 20MB
+2026-03-29T21:31:47.450Z INFO  - 9d1bc1ee7cb7 Extracting 9MB / 20MB
+2026-03-29T21:31:47.923Z INFO  - 9d1bc1ee7cb7 Extracting 9MB / 20MB
+2026-03-29T21:31:48.425Z INFO  - 9d1bc1ee7cb7 Extracting 10MB / 20MB
+2026-03-29T21:31:48.473Z INFO  - 9d1bc1ee7cb7 Extracting 11MB / 20MB
+2026-03-29T21:31:49.059Z INFO  - 9d1bc1ee7cb7 Extracting 12MB / 20MB
+2026-03-29T21:31:49.271Z INFO  - 9d1bc1ee7cb7 Extracting 12MB / 20MB
+2026-03-29T21:31:50.708Z INFO  - 9d1bc1ee7cb7 Extracting 14MB / 20MB
+2026-03-29T21:31:50.919Z INFO  - 9d1bc1ee7cb7 Extracting 14MB / 20MB
+2026-03-29T21:31:51.754Z INFO  - 9d1bc1ee7cb7 Extracting 15MB / 20MB
+2026-03-29T21:31:52.397Z INFO  - 9d1bc1ee7cb7 Extracting 17MB / 20MB
+2026-03-29T21:31:53.596Z INFO  - 9d1bc1ee7cb7 Extracting 20MB / 20MB
+2026-03-29T21:31:53.747Z INFO  - 9d1bc1ee7cb7 Pull complete
+2026-03-29T21:31:56.725Z INFO  - abe88181250c Extracting 448KB / 21MB
+2026-03-29T21:31:59.992Z INFO  - abe88181250c Extracting 1MB / 21MB
+2026-03-29T21:32:00.244Z INFO  - abe88181250c Extracting 2MB / 21MB
+2026-03-29T21:32:00.660Z INFO  - abe88181250c Extracting 5MB / 21MB
+2026-03-29T21:32:00.799Z INFO  - abe88181250c Extracting 6MB / 21MB
+2026-03-29T21:32:01.342Z INFO  - abe88181250c Extracting 7MB / 21MB
+2026-03-29T21:32:01.718Z INFO  - abe88181250c Extracting 7MB / 21MB
+2026-03-29T21:32:01.831Z INFO  - abe88181250c Extracting 8MB / 21MB
+2026-03-29T21:32:02.334Z INFO  - abe88181250c Extracting 9MB / 21MB
+2026-03-29T21:32:02.434Z INFO  - abe88181250c Extracting 10MB / 21MB
+2026-03-29T21:32:02.744Z INFO  - abe88181250c Extracting 10MB / 21MB
+2026-03-29T21:32:02.985Z INFO  - abe88181250c Extracting 11MB / 21MB
+2026-03-29T21:32:03.215Z INFO  - abe88181250c Extracting 12MB / 21MB
+2026-03-29T21:32:03.438Z INFO  - abe88181250c Extracting 12MB / 21MB
+2026-03-29T21:32:03.969Z INFO  - abe88181250c Extracting 13MB / 21MB
+2026-03-29T21:32:04.653Z INFO  - abe88181250c Extracting 14MB / 21MB
+2026-03-29T21:32:06.058Z INFO  - abe88181250c Extracting 17MB / 21MB
+2026-03-29T21:32:06.564Z INFO  - abe88181250c Extracting 20MB / 21MB
+2026-03-29T21:32:06.943Z INFO  - abe88181250c Extracting 20MB / 21MB
+2026-03-29T21:32:07.195Z INFO  - abe88181250c Extracting 21MB / 21MB
+2026-03-29T21:32:07.357Z INFO  - abe88181250c Extracting 21MB / 21MB
+2026-03-29T21:32:07.589Z INFO  - abe88181250c Extracting 21MB / 21MB
+2026-03-29T21:32:07.860Z INFO  - abe88181250c Pull complete
+2026-03-29T21:32:08.716Z INFO  -  Digest: sha256:c8a19e7d1568e433e2e2d4418e176becce1cffa6386bb79242f5c64d9550bb88
+2026-03-29T21:32:08.775Z INFO  -  Status: Downloaded newer image for mcr.microsoft.com/appsvc/msitokenservice:stage4
+2026-03-29T21:32:08.865Z INFO  - Pull Image successful, Time taken: 39 Seconds
+2026-03-29T21:32:13.609Z INFO  - Starting container for site
+2026-03-29T21:32:13.617Z INFO  - docker run -d --expose=8081 --name truthmesh-qktpe5frtvy5w_0_fabb15eb_msiProxy -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=truthmesh-qktpe5frtvy5w.azurewebsites.net -e WEBSITE_INSTANCE_ID=245d3a60ee797bb0440fcba44d0786977f5b4ea366bcd459b9be1921a3a8ea5e mcr.microsoft.com/appsvc/msitokenservice:stage4 
+2026-03-29T21:32:13.619Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2026-03-29T21:33:36.362Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"manifest unknown"}
+
+2026-03-29T21:33:36.392Z WARN  - Image pull failed. Defaulting to local copy if present.
+2026-03-29T21:33:36.431Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2026-03-29T21:33:43.282Z INFO  - Stopping site truthmesh-qktpe5frtvy5w because it failed during startup.
+026-03-29T21:33:12.159Z INFO  - Starting container for site
+2026-03-29T21:33:12.166Z INFO  - docker run -d --expose=8081 --name truthmesh-qktpe5frtvy5w_0_4cc047e1_msiProxy -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=truthmesh-qktpe5frtvy5w.azurewebsites.net -e WEBSITE_INSTANCE_ID=245d3a60ee797bb0440fcba44d0786977f5b4ea366bcd459b9be1921a3a8ea5e mcr.microsoft.com/appsvc/msitokenservice:stage4 
+2026-03-29T21:33:12.167Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2026-03-29T21:34:15.242Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"manifest unknown"}
+
+2026-03-29T21:34:15.245Z WARN  - Image pull failed. Defaulting to local copy if present.
+2026-03-29T21:34:15.247Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2026-03-29T21:34:20.931Z INFO  - Stopping site truthmesh-qktpe5frtvy5w because it failed during startup.
+026-03-29T21:33:56.308Z INFO  - Starting container for site
+2026-03-29T21:33:56.309Z INFO  - docker run -d --expose=8081 --name truthmesh-qktpe5frtvy5w_0_3a733694_msiProxy -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=truthmesh-qktpe5frtvy5w.azurewebsites.net -e WEBSITE_INSTANCE_ID=245d3a60ee797bb0440fcba44d0786977f5b4ea366bcd459b9be1921a3a8ea5e mcr.microsoft.com/appsvc/msitokenservice:stage4 
+2026-03-29T21:33:56.310Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2026-03-29T21:34:48.008Z INFO  - latest Pulling from raakshass/truthmesh
+2026-03-29T21:34:48.009Z INFO  - 3dc06da507ff Pulling fs layer
+2026-03-29T21:34:48.010Z INFO  - b1a20e2fae4c Pulling fs layer
+2026-03-29T21:34:48.010Z INFO  - a6d1911b36ac Pulling fs layer
+2026-03-29T21:34:48.011Z INFO  - e3c59d77c03e Pulling fs layer
+2026-03-29T21:34:48.012Z INFO  - 13ac2dc0209f Pulling fs layer
+2026-03-29T21:34:48.013Z INFO  - 31cd3e8dbc8a Pulling fs layer
+2026-03-29T21:34:48.018Z INFO  - 325b75a30944 Pulling fs layer
+2026-03-29T21:34:48.019Z INFO  - 0bc329e817ca Pulling fs layer
+2026-03-29T21:34:48.020Z INFO  - 2dac175522d9 Pulling fs layer
+2026-03-29T21:34:48.021Z INFO  - 41f6a274ec24 Pulling fs layer
+2026-03-29T21:34:48.028Z INFO  - 8e6acd9077df Pulling fs layer
+2026-03-29T21:34:48.469Z INFO  - e3c59d77c03e Downloading 249B / 249B
+2026-03-29T21:34:48.470Z INFO  - e3c59d77c03e Verifying Checksum
+2026-03-29T21:34:48.471Z INFO  - e3c59d77c03e Download complete
+2026-03-29T21:34:48.671Z INFO  - b1a20e2fae4c Downloading 896KB / 1MB
+2026-03-29T21:34:48.685Z INFO  - a6d1911b36ac Downloading 768KB / 11MB
+2026-03-29T21:34:48.703Z INFO  - 13ac2dc0209f Downloading 1KB / 1KB
+2026-03-29T21:34:48.704Z INFO  - 13ac2dc0209f Verifying Checksum
+2026-03-29T21:34:48.704Z INFO  - 13ac2dc0209f Download complete
+2026-03-29T21:34:48.705Z INFO  - b1a20e2fae4c Verifying Checksum
+2026-03-29T21:34:48.709Z INFO  - b1a20e2fae4c Download complete
+2026-03-29T21:34:48.729Z INFO  - 31cd3e8dbc8a Downloading 93B / 93B
+2026-03-29T21:34:48.730Z INFO  - 31cd3e8dbc8a Verifying Checksum
+2026-03-29T21:34:48.731Z INFO  - 31cd3e8dbc8a Download complete
+2026-03-29T21:34:48.791Z INFO  - a6d1911b36ac Downloading 3MB / 11MB
+2026-03-29T21:34:48.851Z INFO  - 2dac175522d9 Downloading 110KB / 1MB
+2026-03-29T21:34:48.862Z INFO  - 8e6acd9077df Downloading 158KB / 1MB
+2026-03-29T21:34:48.963Z INFO  - 41f6a274ec24 Downloading 397KB / 397KB
+2026-03-29T21:34:48.981Z INFO  - 2dac175522d9 Downloading 302KB / 1MB
+2026-03-29T21:34:48.982Z INFO  - 41f6a274ec24 Verifying Checksum
+2026-03-29T21:34:48.983Z INFO  - 41f6a274ec24 Download complete
+2026-03-29T21:34:49.003Z INFO  - 2dac175522d9 Downloading 1MB / 1MB
+2026-03-29T21:34:49.021Z INFO  - a6d1911b36ac Downloading 6MB / 11MB
+2026-03-29T21:34:49.042Z INFO  - 2dac175522d9 Verifying Checksum
+2026-03-29T21:34:49.043Z INFO  - 2dac175522d9 Download complete
+2026-03-29T21:34:49.044Z INFO  - 8e6acd9077df Verifying Checksum
+2026-03-29T21:34:49.051Z INFO  - 8e6acd9077df Download complete
+2026-03-29T21:34:49.073Z INFO  - 0bc329e817ca Downloading 1MB / 33MB
+2026-03-29T21:34:49.142Z INFO  - 3dc06da507ff Downloading 2MB / 29MB
+2026-03-29T21:34:49.174Z INFO  - 0bc329e817ca Downloading 2MB / 33MB
+2026-03-29T21:34:49.283Z INFO  - 0bc329e817ca Downloading 2MB / 33MB
+2026-03-29T21:34:49.395Z INFO  - 3dc06da507ff Downloading 4MB / 29MB
+2026-03-29T21:34:49.413Z INFO  - 0bc329e817ca Downloading 3MB / 33MB
+2026-03-29T21:34:49.415Z INFO  - a6d1911b36ac Downloading 9MB / 11MB
+2026-03-29T21:34:49.455Z INFO  - 325b75a30944 Downloading 750KB / 4MB
+2026-03-29T21:34:49.474Z INFO  - 3dc06da507ff Downloading 6MB / 29MB
+2026-03-29T21:34:49.514Z INFO  - 0bc329e817ca Downloading 4MB / 33MB
+2026-03-29T21:34:49.534Z INFO  - a6d1911b36ac Verifying Checksum
+2026-03-29T21:34:49.535Z INFO  - a6d1911b36ac Download complete
+2026-03-29T21:34:49.567Z INFO  - 325b75a30944 Downloading 1MB / 4MB
+2026-03-29T21:34:49.604Z INFO  - 3dc06da507ff Downloading 7MB / 29MB
+2026-03-29T21:34:49.777Z INFO  - 325b75a30944 Downloading 1MB / 4MB
+2026-03-29T21:34:49.878Z INFO  - 0bc329e817ca Downloading 9MB / 33MB
+2026-03-29T21:34:49.897Z INFO  - 325b75a30944 Downloading 2MB / 4MB
+2026-03-29T21:34:49.939Z INFO  - 3dc06da507ff Downloading 12MB / 29MB
+2026-03-29T21:34:50.019Z INFO  - 325b75a30944 Downloading 3MB / 4MB
+2026-03-29T21:34:50.139Z INFO  - 3dc06da507ff Downloading 15MB / 29MB
+2026-03-29T21:34:50.139Z INFO  - 325b75a30944 Downloading 4MB / 4MB
+2026-03-29T21:34:50.140Z INFO  - 325b75a30944 Verifying Checksum
+2026-03-29T21:34:50.147Z INFO  - 325b75a30944 Download complete
+2026-03-29T21:34:50.249Z INFO  - 0bc329e817ca Downloading 13MB / 33MB
+2026-03-29T21:34:50.461Z INFO  - 0bc329e817ca Downloading 16MB / 33MB
+2026-03-29T21:34:50.580Z INFO  - 0bc329e817ca Downloading 17MB / 33MB
+2026-03-29T21:34:50.641Z INFO  - 3dc06da507ff Downloading 18MB / 29MB
+2026-03-29T21:34:50.780Z INFO  - 3dc06da507ff Downloading 20MB / 29MB
+2026-03-29T21:34:50.782Z INFO  - 0bc329e817ca Downloading 19MB / 33MB
+2026-03-29T21:34:50.992Z INFO  - 3dc06da507ff Downloading 23MB / 29MB
+2026-03-29T21:34:51.082Z INFO  - 3dc06da507ff Downloading 24MB / 29MB
+2026-03-29T21:34:51.113Z INFO  - 0bc329e817ca Downloading 23MB / 33MB
+2026-03-29T21:34:51.213Z INFO  - 3dc06da507ff Downloading 25MB / 29MB
+2026-03-29T21:34:51.305Z INFO  - 3dc06da507ff Downloading 27MB / 29MB
+2026-03-29T21:34:51.325Z INFO  - 0bc329e817ca Downloading 28MB / 33MB
+2026-03-29T21:34:51.384Z INFO  - 3dc06da507ff Verifying Checksum
+2026-03-29T21:34:51.384Z INFO  - 3dc06da507ff Download complete
+2026-03-29T21:34:51.766Z INFO  - 0bc329e817ca Verifying Checksum
+2026-03-29T21:34:51.766Z INFO  - 0bc329e817ca Download complete
+2026-03-29T21:34:52.481Z INFO  - 3dc06da507ff Extracting 3MB / 29MB
+2026-03-29T21:34:53.346Z INFO  - 3dc06da507ff Extracting 10MB / 29MB
+2026-03-29T21:34:54.030Z INFO  - 3dc06da507ff Extracting 12MB / 29MB
+2026-03-29T21:34:54.270Z INFO  - 3dc06da507ff Extracting 14MB / 29MB
+2026-03-29T21:34:54.511Z INFO  - 3dc06da507ff Extracting 15MB / 29MB
+2026-03-29T21:34:54.764Z INFO  - 3dc06da507ff Extracting 17MB / 29MB
+2026-03-29T21:34:56.577Z INFO  - 3dc06da507ff Extracting 27MB / 29MB
+2026-03-29T21:34:57.098Z INFO  - 3dc06da507ff Extracting 28MB / 29MB
+2026-03-29T21:34:57.513Z INFO  - 3dc06da507ff Pull complete
+2026-03-29T21:34:57.541Z INFO  - b1a20e2fae4c Extracting 32KB / 1MB
+2026-03-29T21:34:57.793Z INFO  - b1a20e2fae4c Extracting 640KB / 1MB
+2026-03-29T21:34:57.853Z INFO  - b1a20e2fae4c Extracting 736KB / 1MB
+2026-03-29T21:34:57.944Z INFO  - b1a20e2fae4c Extracting 1MB / 1MB
+2026-03-29T21:34:57.994Z INFO  - b1a20e2fae4c Extracting 1MB / 1MB
+2026-03-29T21:34:58.045Z INFO  - b1a20e2fae4c Pull complete
+2026-03-29T21:34:58.707Z INFO  - a6d1911b36ac Extracting 2MB / 11MB
+2026-03-29T21:34:59.201Z INFO  - a6d1911b36ac Extracting 5MB / 11MB
+2026-03-29T21:34:59.986Z INFO  - a6d1911b36ac Extracting 9MB / 11MB
+2026-03-29T21:35:00.860Z INFO  - a6d1911b36ac Extracting 11MB / 11MB
+2026-03-29T21:35:01.093Z INFO  - a6d1911b36ac Pull complete
+2026-03-29T21:35:01.095Z INFO  - e3c59d77c03e Extracting 249B / 249B
+2026-03-29T21:35:01.152Z INFO  - e3c59d77c03e Extracting 249B / 249B
+2026-03-29T21:35:01.193Z INFO  - e3c59d77c03e Pull complete
+2026-03-29T21:35:01.195Z INFO  - 13ac2dc0209f Extracting 1KB / 1KB
+2026-03-29T21:35:01.304Z INFO  - 13ac2dc0209f Extracting 1KB / 1KB
+2026-03-29T21:35:01.346Z INFO  - 13ac2dc0209f Pull complete
+2026-03-29T21:35:01.355Z INFO  - 31cd3e8dbc8a Extracting 93B / 93B
+2026-03-29T21:35:01.366Z INFO  - 31cd3e8dbc8a Extracting 93B / 93B
+2026-03-29T21:35:01.386Z INFO  - 31cd3e8dbc8a Pull complete
+2026-03-29T21:35:01.515Z INFO  - 325b75a30944 Extracting 640KB / 4MB
+2026-03-29T21:35:01.758Z INFO  - 325b75a30944 Extracting 1MB / 4MB
+2026-03-29T21:35:01.848Z INFO  - 325b75a30944 Extracting 1MB / 4MB
+2026-03-29T21:35:01.949Z INFO  - 325b75a30944 Extracting 1MB / 4MB
+2026-03-29T21:35:03.085Z INFO  - 325b75a30944 Extracting 4MB / 4MB
+2026-03-29T21:35:03.356Z INFO  - 325b75a30944 Extracting 4MB / 4MB
+2026-03-29T21:35:03.609Z INFO  - 325b75a30944 Pull complete
+2026-03-29T21:35:04.140Z INFO  - 0bc329e817ca Extracting 704KB / 33MB
+2026-03-29T21:35:04.334Z INFO  - 0bc329e817ca Extracting 1MB / 33MB
+2026-03-29T21:35:04.634Z INFO  - 0bc329e817ca Extracting 2MB / 33MB
+2026-03-29T21:35:05.166Z INFO  - 0bc329e817ca Extracting 2MB / 33MB
+2026-03-29T21:35:05.349Z INFO  - 0bc329e817ca Extracting 4MB / 33MB
+2026-03-29T21:35:07.109Z INFO  - 0bc329e817ca Extracting 11MB / 33MB
+2026-03-29T21:35:07.775Z INFO  - 0bc329e817ca Extracting 13MB / 33MB
+2026-03-29T21:35:08.178Z INFO  - 0bc329e817ca Extracting 14MB / 33MB
+2026-03-29T21:35:08.629Z INFO  - 0bc329e817ca Extracting 14MB / 33MB
+2026-03-29T21:35:09.755Z INFO  - 0bc329e817ca Extracting 15MB / 33MB
+2026-03-29T21:35:10.340Z INFO  - 0bc329e817ca Extracting 16MB / 33MB
+2026-03-29T21:35:10.782Z INFO  - 0bc329e817ca Extracting 16MB / 33MB
+2026-03-29T21:35:10.992Z INFO  - 0bc329e817ca Extracting 17MB / 33MB
+2026-03-29T21:35:11.626Z INFO  - 0bc329e817ca Extracting 19MB / 33MB
+2026-03-29T21:35:11.626Z INFO  - 0bc329e817ca Extracting 19MB / 33MB
+2026-03-29T21:35:11.767Z INFO  - 0bc329e817ca Extracting 20MB / 33MB
+2026-03-29T21:35:12.440Z INFO  - 0bc329e817ca Extracting 22MB / 33MB
+2026-03-29T21:35:12.583Z INFO  - 0bc329e817ca Extracting 24MB / 33MB
+2026-03-29T21:35:13.195Z INFO  - 0bc329e817ca Extracting 25MB / 33MB
+2026-03-29T21:35:13.195Z INFO  - 0bc329e817ca Extracting 26MB / 33MB
+2026-03-29T21:35:13.650Z INFO  - 0bc329e817ca Extracting 26MB / 33MB
+2026-03-29T21:35:14.112Z INFO  - 0bc329e817ca Extracting 29MB / 33MB
+2026-03-29T21:35:14.171Z INFO  - 0bc329e817ca Extracting 30MB / 33MB
+2026-03-29T21:35:14.294Z INFO  - 0bc329e817ca Extracting 31MB / 33MB
+2026-03-29T21:35:14.445Z INFO  - 0bc329e817ca Extracting 31MB / 33MB
+2026-03-29T21:35:14.594Z INFO  - 0bc329e817ca Extracting 32MB / 33MB
+2026-03-29T21:35:14.716Z INFO  - 0bc329e817ca Extracting 33MB / 33MB
+2026-03-29T21:35:14.856Z INFO  - 0bc329e817ca Pull complete
+2026-03-29T21:35:15.107Z INFO  - 2dac175522d9 Extracting 448KB / 1MB
+2026-03-29T21:35:15.228Z INFO  - 2dac175522d9 Extracting 576KB / 1MB
+2026-03-29T21:35:15.408Z INFO  - 2dac175522d9 Extracting 992KB / 1MB
+2026-03-29T21:35:15.469Z INFO  - 2dac175522d9 Extracting 1MB / 1MB
+2026-03-29T21:35:15.577Z INFO  - 2dac175522d9 Pull complete
+2026-03-29T21:35:15.581Z INFO  - 41f6a274ec24 Extracting 32KB / 397KB
+2026-03-29T21:35:15.683Z INFO  - 41f6a274ec24 Extracting 320KB / 397KB
+2026-03-29T21:35:15.712Z INFO  - 41f6a274ec24 Extracting 397KB / 397KB
+2026-03-29T21:35:15.752Z INFO  - 41f6a274ec24 Extracting 397KB / 397KB
+2026-03-29T21:35:15.772Z INFO  - 41f6a274ec24 Pull complete
+2026-03-29T21:35:15.775Z INFO  - 8e6acd9077df Extracting 32KB / 1MB
+2026-03-29T21:35:15.902Z INFO  - 8e6acd9077df Extracting 128KB / 1MB
+2026-03-29T21:35:15.994Z INFO  - 8e6acd9077df Extracting 384KB / 1MB
+2026-03-29T21:35:16.254Z INFO  - 8e6acd9077df Extracting 960KB / 1MB
+2026-03-29T21:35:16.519Z INFO  - 8e6acd9077df Extracting 1MB / 1MB
+2026-03-29T21:35:16.650Z INFO  - 8e6acd9077df Extracting 1MB / 1MB
+2026-03-29T21:35:16.717Z INFO  - 8e6acd9077df Pull complete
+2026-03-29T21:35:16.778Z INFO  -  Digest: sha256:6eb5df8838b1eb4dc0fde306b0550a6bd9e8941fff57852f8932a13912e9a032
+2026-03-29T21:35:16.792Z INFO  -  Status: Downloaded newer image for ghcr.io/raakshass/truthmesh:latest
+2026-03-29T21:35:16.871Z INFO  - Pull Image successful, Time taken: 29 Seconds
+2026-03-29T21:35:17.783Z INFO  - Starting container for site
+2026-03-29T21:35:17.783Z INFO  - docker run -d --expose=8000 --name truthmesh-qktpe5frtvy5w_0_93adf4cb -e WEBSITE_USE_DIAGNOSTIC_SERVER=false -e WEBSITE_SITE_NAME=truthmesh-qktpe5frtvy5w -e WEBSITE_AUTH_ENABLED=False -e PORT=8000 -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=truthmesh-qktpe5frtvy5w.azurewebsites.net -e WEBSITE_INSTANCE_ID=245d3a60ee797bb0440fcba44d0786977f5b4ea366bcd459b9be1921a3a8ea5e ghcr.io/raakshass/truthmesh:latest 
+2026-03-29T21:35:17.790Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2026-03-29T21:35:21.269Z INFO  - Initiating warmup request to container truthmesh-qktpe5frtvy5w_0_93adf4cb_msiProxy for site truthmesh-qktpe5frtvy5w
+2026-03-29T21:35:21.382Z INFO  - Container truthmesh-qktpe5frtvy5w_0_93adf4cb_msiProxy for site truthmesh-qktpe5frtvy5w initialized successfully and is ready to serve requests.
+2026-03-29T21:35:21.382Z INFO  - Initiating warmup request to container truthmesh-qktpe5frtvy5w_0_93adf4cb for site truthmesh-qktpe5frtvy5w
+2026-03-29T21:35:46.482Z ERROR - Container truthmesh-qktpe5frtvy5w_0_93adf4cb for site truthmesh-qktpe5frtvy5w has exited, failing site start
+2026-03-29T21:35:46.526Z ERROR - Container truthmesh-qktpe5frtvy5w_0_93adf4cb didn't respond to HTTP pings on port: 8000. Failing site start. See container logs for debugging.
+2026-03-29T21:35:46.613Z INFO  - Stopping site truthmesh-qktpe5frtvy5w because it failed during startup.
+2026-03-29T21:37:53.2838174Z State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-03-29T21:37:56.1110261Z State: Starting, Action: StartingMsiContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-03-29T21:38:11.2672172Z State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-03-29T21:38:11.2675205Z Container start method called.
+2026-03-29T21:38:11.2675987Z State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image ghcr.io/raakshass/truthmesh:latest for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T21:38:11.2676931Z Establishing network.
+2026-03-29T21:38:11.2678023Z Pulling image: ghcr.io/raakshass/truthmesh:latest.
+2026-03-29T21:38:30.6924516Z Image ghcr.io/raakshass/truthmesh:latest is pulled from registry ghcr.io
+2026-03-29T21:38:30.6931718Z Container is starting.
+2026-03-29T21:38:30.7069833Z State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T21:38:30.7143808Z Establishing user namespace if not established already.
+2026-03-29T21:38:30.7159675Z Establishing network if not established already.
+2026-03-29T21:38:30.7162906Z Mounting volumes.
+2026-03-29T21:38:30.7173731Z Nested mountpoint 
+2026-03-29T21:38:30.7532854Z Nested mountpoint volatile/logs
+2026-03-29T21:38:30.8120599Z Nested mountpoint 
+2026-03-29T21:38:30.9327578Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for truthmesh-qktpe5frtvy5w. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-03-29T21:38:30.9330472Z Creating container.
+2026-03-29T21:38:30.9334697Z Creating pipes for streaming container io.
+2026-03-29T21:38:30.9336294Z Creating stdout named pipe at /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stdout_4d1283d813e942f9b03bfedfcc13d26f.
+2026-03-29T21:38:30.9349109Z Successfully created stdout named pipe at: /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stdout_4d1283d813e942f9b03bfedfcc13d26f.
+2026-03-29T21:38:30.9351613Z Opening named pipe /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stdout_4d1283d813e942f9b03bfedfcc13d26f for reading in non-blocking mode.
+2026-03-29T21:38:30.9353345Z Successfully opened named pipe: /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stdout_4d1283d813e942f9b03bfedfcc13d26f.
+2026-03-29T21:38:30.9354573Z Successfully removed non-blocking flag from /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stdout_4d1283d813e942f9b03bfedfcc13d26f.
+2026-03-29T21:38:30.9453512Z Creating stderr named pipe at /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stderr_e92ebb35388c4596a2175f66b7c57182.
+2026-03-29T21:38:30.9455379Z Successfully created stderr named pipe at: /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stderr_e92ebb35388c4596a2175f66b7c57182.
+2026-03-29T21:38:30.9456160Z Opening named pipe /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stderr_e92ebb35388c4596a2175f66b7c57182 for reading in non-blocking mode.
+2026-03-29T21:38:30.9457068Z Successfully opened named pipe: /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stderr_e92ebb35388c4596a2175f66b7c57182.
+2026-03-29T21:38:30.9457895Z Successfully removed non-blocking flag from /podr/container/pipe/bafe767f51b4_truthmesh-qktpe5frtvy5w/stderr_e92ebb35388c4596a2175f66b7c57182.
+2026-03-29T21:38:30.9551409Z Overriding PORT environment variable with port exposed by container image.
+2026-03-29T21:38:31.0761613Z Container image exposes ports: ContainerExposedPort { Port = 8000, Protocol = TCP }. Sanitized list of ports is: 8000. Resolved main port to 8000.
+2026-03-29T21:38:31.0839716Z Setting value of PORT variable to 8000
+2026-03-29T21:38:31.0845577Z Creating container with image: ghcr.io/raakshass/truthmesh:latest from registry: ghcr.io and fully qualified image name: ghcr.io/raakshass/truthmesh:latest
+2026-03-29T21:38:31.6076742Z Starting container: bafe767f51b4_truthmesh-qktpe5frtvy5w.
+2026-03-29T21:38:31.6721976Z Starting watchers and probes.
+2026-03-29T21:38:31.6942079Z Starting metrics collection.
+2026-03-29T21:38:31.7028674Z Container is running.
+2026-03-29T21:38:31.7030279Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T21:38:31.8443963Z Container start method finished after 20576 ms.
+2026-03-29T21:38:31.9636465Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T21:38:31.9639536Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-03-29T21:38:48.2432542Z Container has finished running with exit code: 1.
+2026-03-29T21:38:48.2510578Z Container is terminating. Grace period: 5 seconds.
+2026-03-29T21:38:48.2603270Z Stop and delete container. Retry count = 0
+2026-03-29T21:38:48.2952032Z Stopping container: bafe767f51b4_truthmesh-qktpe5frtvy5w.
+2026-03-29T21:38:48.3541296Z Deleting container: bafe767f51b4_truthmesh-qktpe5frtvy5w. Retry count = 0
+2026-03-29T21:38:48.5827062Z Container spec TerminationMessagePolicy  path 
+2026-03-29T21:38:48.5845503Z Container is terminated. Total time elapsed: 333 ms.
+2026-03-29T21:38:48.5850615Z Site container: truthmesh-qktpe5frtvy5w terminated during site startup.
+2026-03-29T21:38:48.5927242Z State: Stopping, Action: CancellingStartup, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:38:48.6637633Z Site startup probe failed after 16.688379 seconds.
+2026-03-29T21:38:48.9073857Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:38:48.9765475Z Failed to start site. Revert by stopping site.
+2026-03-29T21:38:48.9773581Z State: Stopping, Action: StoppingSite, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:38:49.0175351Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:38:49.0175848Z Site: truthmesh-qktpe5frtvy5w stopped.
+2026-03-29T21:38:49.0262034Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:38:50.1451879Z Site container: truthmesh-qktpe5frtvy5w_managedIdentity terminated during site startup.
+2026-03-29T21:38:50.1453478Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:38:50.3061658Z State: Stopping, Action: StoppingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:38:51.0412106Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 21:38:51 (UTC), DetailsLevel: ERR
+2026-03-29T21:38:51.3929278Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 21:38:51 (UTC), DetailsLevel: ERR
+2026-03-29T21:38:56.4965274Z State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 21:38:51 (UTC), DetailsLevel: ERR
+2026-03-29T21:38:58.9424861Z State: Starting, Action: StartingMsiContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 21:38:51 (UTC), DetailsLevel: ERR
+2026-03-29T21:39:08.9335063Z State: Starting, Action: StartingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 21:38:51 (UTC), DetailsLevel: ERR
+2026-03-29T21:39:08.9336070Z Container start method called.
+2026-03-29T21:39:08.9336541Z State: Starting, Action: PullingImage, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pulling image ghcr.io/raakshass/truthmesh:latest for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T21:39:08.9337337Z Establishing network.
+2026-03-29T21:39:08.9338245Z Pulling image: ghcr.io/raakshass/truthmesh:latest.
+2026-03-29T21:39:10.3488942Z Container is starting.
+2026-03-29T21:39:10.3490266Z State: Starting, Action: MountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Mounting volumes for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T21:39:10.3491429Z Establishing user namespace if not established already.
+2026-03-29T21:39:10.3494374Z Establishing network if not established already.
+2026-03-29T21:39:10.3495774Z Mounting volumes.
+2026-03-29T21:39:10.3497504Z Nested mountpoint 
+2026-03-29T21:39:10.3997069Z Nested mountpoint volatile/logs
+2026-03-29T21:39:10.4183809Z Nested mountpoint 
+2026-03-29T21:39:10.5207524Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for truthmesh-qktpe5frtvy5w. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-03-29T21:39:10.5208529Z Creating container.
+2026-03-29T21:39:10.5209355Z Creating pipes for streaming container io.
+2026-03-29T21:39:10.5210139Z Creating stdout named pipe at /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stdout_e366477bda6042eeb75e6a853312a879.
+2026-03-29T21:39:10.5212077Z Successfully created stdout named pipe at: /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stdout_e366477bda6042eeb75e6a853312a879.
+2026-03-29T21:39:10.5212833Z Opening named pipe /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stdout_e366477bda6042eeb75e6a853312a879 for reading in non-blocking mode.
+2026-03-29T21:39:10.5213685Z Successfully opened named pipe: /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stdout_e366477bda6042eeb75e6a853312a879.
+2026-03-29T21:39:10.5214378Z Successfully removed non-blocking flag from /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stdout_e366477bda6042eeb75e6a853312a879.
+2026-03-29T21:39:10.5489077Z Creating stderr named pipe at /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stderr_be71b29097db4ec6aaf4d7f255c8759f.
+2026-03-29T21:39:10.5497683Z Successfully created stderr named pipe at: /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stderr_be71b29097db4ec6aaf4d7f255c8759f.
+2026-03-29T21:39:10.5500129Z Opening named pipe /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stderr_be71b29097db4ec6aaf4d7f255c8759f for reading in non-blocking mode.
+2026-03-29T21:39:10.5501279Z Successfully opened named pipe: /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stderr_be71b29097db4ec6aaf4d7f255c8759f.
+2026-03-29T21:39:10.5502014Z Successfully removed non-blocking flag from /podr/container/pipe/de6afc7f6b6b_truthmesh-qktpe5frtvy5w/stderr_be71b29097db4ec6aaf4d7f255c8759f.
+2026-03-29T21:39:10.5503278Z Overriding PORT environment variable with port exposed by container image.
+2026-03-29T21:39:10.6098090Z Container image exposes ports: ContainerExposedPort { Port = 8000, Protocol = TCP }. Sanitized list of ports is: 8000. Resolved main port to 8000.
+2026-03-29T21:39:10.6099230Z Setting value of PORT variable to 8000
+2026-03-29T21:39:10.6101740Z Creating container with image: ghcr.io/raakshass/truthmesh:latest from registry: ghcr.io and fully qualified image name: ghcr.io/raakshass/truthmesh:latest
+2026-03-29T21:39:11.0778034Z Starting container: de6afc7f6b6b_truthmesh-qktpe5frtvy5w.
+2026-03-29T21:39:11.2154176Z Starting watchers and probes.
+2026-03-29T21:39:11.2249021Z Starting metrics collection.
+2026-03-29T21:39:11.2254639Z Container is running.
+2026-03-29T21:39:11.2262545Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T21:39:11.3547153Z Container start method finished after 2411 ms.
+2026-03-29T21:39:11.3555617Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T21:39:11.3555964Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-03-29T21:39:26.0133805Z Container has finished running with exit code: 3.
+2026-03-29T21:39:26.0135091Z Container is terminating. Grace period: 5 seconds.
+2026-03-29T21:39:26.0142487Z Stop and delete container. Retry count = 0
+2026-03-29T21:39:26.0143345Z Stopping container: de6afc7f6b6b_truthmesh-qktpe5frtvy5w.
+2026-03-29T21:39:26.0739393Z Deleting container: de6afc7f6b6b_truthmesh-qktpe5frtvy5w. Retry count = 0
+2026-03-29T21:39:26.4462696Z Container spec TerminationMessagePolicy  path 
+2026-03-29T21:39:26.4466617Z Container is terminated. Total time elapsed: 432 ms.
+2026-03-29T21:39:26.4467708Z Site container: truthmesh-qktpe5frtvy5w terminated during site startup.
+2026-03-29T21:39:26.4468773Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:38:48, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:39:26.4667667Z Site startup probe failed after 15.1022699 seconds.
+2026-03-29T21:39:26.6095994Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:39:26.6400202Z Failed to start site. Revert by stopping site.
+2026-03-29T21:39:26.6680555Z State: Stopping, Action: StoppingSite, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:39:26.6689471Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:39:26.6689683Z Site: truthmesh-qktpe5frtvy5w stopped.
+2026-03-29T21:39:26.6777803Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:39:27.8574227Z Site container: truthmesh-qktpe5frtvy5w_managedIdentity terminated during site startup.
+2026-03-29T21:39:27.8575147Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:39:27.9760355Z State: Stopping, Action: StoppingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T21:39:28.4897146Z Site: truthmesh-qktpe5frtvy5w will be blocked for 1 minutes till 03/29/2026 21:40:28
+2026-03-29T21:39:28.4909735Z State: Blocked, Action: StoppingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site: truthmesh-qktpe5frtvy5w will be blocked for 1 minutes till 03/29/2026 21:40:28, DetailsLevel: WARN
+2026-03-29T21:39:28.5196813Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 21:39:28 (UTC), DetailsLevel: WARN
+2026-03-29T21:39:28.7531445Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 21:39:28 (UTC), DetailsLevel: WARN
+2026-03-29T21:39:33.8224549Z State: Blocked, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 21:40:28, DetailsLevel: WARN
+2026-03-29T21:39:33.8224836Z Start site prohibitted because the site is being blocked.
+2026-03-29T21:39:38.9908059Z State: Blocked, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 21:40:28, DetailsLevel: WARN
+2026-03-29T21:39:38.9908318Z Start site prohibitted because the site is being blocked.
+2026-03-29T21:40:28.4836541Z Site: truthmesh-qktpe5frtvy5w is unblocked.
+2026-03-29T22:10:02.0657028Z State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 21:40:28, DetailsLevel: WARN
+2026-03-29T22:10:06.2428477Z State: Starting, Action: StartingMsiContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 21:40:28, DetailsLevel: WARN
+2026-03-29T22:10:22.8054555Z State: Starting, Action: StartingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 21:40:28, DetailsLevel: WARN
+2026-03-29T22:10:22.8331056Z Container start method called.
+2026-03-29T22:10:22.8332697Z State: Starting, Action: PullingImage, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pulling image ghcr.io/raakshass/truthmesh:latest for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:10:22.8340069Z Establishing network.
+2026-03-29T22:10:22.8342243Z Pulling image: ghcr.io/raakshass/truthmesh:latest.
+2026-03-29T22:10:24.0943730Z Container is starting.
+2026-03-29T22:10:24.0948722Z State: Starting, Action: MountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Mounting volumes for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:10:24.1027060Z Establishing user namespace if not established already.
+2026-03-29T22:10:24.1029022Z Establishing network if not established already.
+2026-03-29T22:10:24.1030420Z Mounting volumes.
+2026-03-29T22:10:24.1037655Z Nested mountpoint 
+2026-03-29T22:10:24.1242766Z Nested mountpoint volatile/logs
+2026-03-29T22:10:24.1931236Z Nested mountpoint 
+2026-03-29T22:10:24.3056744Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for truthmesh-qktpe5frtvy5w. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-03-29T22:10:24.3058667Z Creating container.
+2026-03-29T22:10:24.3144734Z Creating pipes for streaming container io.
+2026-03-29T22:10:24.3150222Z Creating stdout named pipe at /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stdout_92ad759001274bd184fa5236e0a852bf.
+2026-03-29T22:10:24.3156530Z Successfully created stdout named pipe at: /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stdout_92ad759001274bd184fa5236e0a852bf.
+2026-03-29T22:10:24.3161628Z Opening named pipe /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stdout_92ad759001274bd184fa5236e0a852bf for reading in non-blocking mode.
+2026-03-29T22:10:24.3166382Z Successfully opened named pipe: /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stdout_92ad759001274bd184fa5236e0a852bf.
+2026-03-29T22:10:24.3452993Z Successfully removed non-blocking flag from /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stdout_92ad759001274bd184fa5236e0a852bf.
+2026-03-29T22:10:24.3462027Z Creating stderr named pipe at /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stderr_adf362fd5b694e2aaef58d88e5dd3416.
+2026-03-29T22:10:24.3464206Z Successfully created stderr named pipe at: /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stderr_adf362fd5b694e2aaef58d88e5dd3416.
+2026-03-29T22:10:24.3465352Z Opening named pipe /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stderr_adf362fd5b694e2aaef58d88e5dd3416 for reading in non-blocking mode.
+2026-03-29T22:10:24.3545819Z Successfully opened named pipe: /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stderr_adf362fd5b694e2aaef58d88e5dd3416.
+2026-03-29T22:10:24.3546848Z Successfully removed non-blocking flag from /podr/container/pipe/2edde357a850_truthmesh-qktpe5frtvy5w/stderr_adf362fd5b694e2aaef58d88e5dd3416.
+2026-03-29T22:10:24.3548271Z Overriding PORT environment variable with port exposed by container image.
+2026-03-29T22:10:24.3971942Z Container image exposes ports: ContainerExposedPort { Port = 8000, Protocol = TCP }. Sanitized list of ports is: 8000. Resolved main port to 8000.
+2026-03-29T22:10:24.3975372Z Setting value of PORT variable to 8000
+2026-03-29T22:10:24.4045227Z Creating container with image: ghcr.io/raakshass/truthmesh:latest from registry: ghcr.io and fully qualified image name: ghcr.io/raakshass/truthmesh:latest
+2026-03-29T22:10:24.8405692Z Starting container: 2edde357a850_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:10:24.9088989Z Starting watchers and probes.
+2026-03-29T22:10:24.9184072Z Starting metrics collection.
+2026-03-29T22:10:24.9282780Z Container is running.
+2026-03-29T22:10:24.9287061Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:10:25.0504682Z Container start method finished after 2197 ms.
+2026-03-29T22:10:25.0691850Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:10:25.0692275Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-03-29T22:10:44.4082076Z Container has finished running with exit code: 3.
+2026-03-29T22:10:44.4095922Z Container is terminating. Grace period: 5 seconds.
+2026-03-29T22:10:44.4192614Z Stop and delete container. Retry count = 0
+2026-03-29T22:10:44.4200849Z Stopping container: 2edde357a850_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:10:44.4884996Z Deleting container: 2edde357a850_truthmesh-qktpe5frtvy5w. Retry count = 0
+2026-03-29T22:10:44.6911908Z Container spec TerminationMessagePolicy  path 
+2026-03-29T22:10:44.6923434Z Container is terminated. Total time elapsed: 282 ms.
+2026-03-29T22:10:44.6925476Z Site container: truthmesh-qktpe5frtvy5w terminated during site startup.
+2026-03-29T22:10:44.7205610Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 21:39:26, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:10:44.7347789Z Site startup probe failed after 19.6622109 seconds.
+2026-03-29T22:10:44.9262429Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:10:45.0051857Z Failed to start site. Revert by stopping site.
+2026-03-29T22:10:45.0058657Z State: Stopping, Action: StoppingSite, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:10:45.0147235Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:10:45.0147542Z Site: truthmesh-qktpe5frtvy5w stopped.
+2026-03-29T22:10:45.0448973Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:10:46.0390973Z Site container: truthmesh-qktpe5frtvy5w_managedIdentity terminated during site startup.
+2026-03-29T22:10:46.0395277Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:10:46.1185879Z State: Stopping, Action: StoppingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:10:46.5023958Z Site: truthmesh-qktpe5frtvy5w will be blocked for 1 minutes till 03/29/2026 22:11:46
+2026-03-29T22:10:46.5110537Z State: Blocked, Action: StoppingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site: truthmesh-qktpe5frtvy5w will be blocked for 1 minutes till 03/29/2026 22:11:46, DetailsLevel: WARN
+2026-03-29T22:10:46.5194840Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:10:46 (UTC), DetailsLevel: WARN
+2026-03-29T22:10:46.7628109Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:10:46 (UTC), DetailsLevel: WARN
+2026-03-29T22:11:46.5051012Z Site: truthmesh-qktpe5frtvy5w is unblocked.
+2026-03-29T22:43:25.5635016Z State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:10:46 (UTC), DetailsLevel: WARN
+2026-03-29T22:43:27.8590105Z State: Starting, Action: StartingMsiContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:10:46 (UTC), DetailsLevel: WARN
+2026-03-29T22:43:39.2639060Z State: Starting, Action: StartingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:10:46 (UTC), DetailsLevel: WARN
+2026-03-29T22:43:39.2832060Z Container start method called.
+2026-03-29T22:43:39.2833435Z State: Starting, Action: PullingImage, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pulling image ghcr.io/raakshass/truthmesh:latest for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:43:39.2835285Z Establishing network.
+2026-03-29T22:43:39.2836502Z Pulling image: ghcr.io/raakshass/truthmesh:latest.
+2026-03-29T22:43:40.6367730Z Container is starting.
+2026-03-29T22:43:40.6373319Z State: Starting, Action: MountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Mounting volumes for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:43:40.6381581Z Establishing user namespace if not established already.
+2026-03-29T22:43:40.6387755Z Establishing network if not established already.
+2026-03-29T22:43:40.6465450Z Mounting volumes.
+2026-03-29T22:43:40.6469801Z Nested mountpoint 
+2026-03-29T22:43:40.6770598Z Nested mountpoint volatile/logs
+2026-03-29T22:43:40.7196761Z Nested mountpoint 
+2026-03-29T22:43:40.7896010Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for truthmesh-qktpe5frtvy5w. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-03-29T22:43:40.7898835Z Creating container.
+2026-03-29T22:43:40.7899762Z Creating pipes for streaming container io.
+2026-03-29T22:43:40.7900669Z Creating stdout named pipe at /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stdout_23b058b4b112496ba1fd6d7c6476989d.
+2026-03-29T22:43:40.7902688Z Successfully created stdout named pipe at: /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stdout_23b058b4b112496ba1fd6d7c6476989d.
+2026-03-29T22:43:40.7903388Z Opening named pipe /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stdout_23b058b4b112496ba1fd6d7c6476989d for reading in non-blocking mode.
+2026-03-29T22:43:40.8395276Z Successfully opened named pipe: /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stdout_23b058b4b112496ba1fd6d7c6476989d.
+2026-03-29T22:43:40.8405174Z Successfully removed non-blocking flag from /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stdout_23b058b4b112496ba1fd6d7c6476989d.
+2026-03-29T22:43:40.8485645Z Creating stderr named pipe at /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stderr_4f64e438ea6943cb972e2954e00d9e54.
+2026-03-29T22:43:40.8488380Z Successfully created stderr named pipe at: /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stderr_4f64e438ea6943cb972e2954e00d9e54.
+2026-03-29T22:43:40.8491088Z Opening named pipe /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stderr_4f64e438ea6943cb972e2954e00d9e54 for reading in non-blocking mode.
+2026-03-29T22:43:40.8493412Z Successfully opened named pipe: /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stderr_4f64e438ea6943cb972e2954e00d9e54.
+2026-03-29T22:43:40.8495186Z Successfully removed non-blocking flag from /podr/container/pipe/aa49db78600f_truthmesh-qktpe5frtvy5w/stderr_4f64e438ea6943cb972e2954e00d9e54.
+2026-03-29T22:43:40.8497780Z Overriding PORT environment variable with port exposed by container image.
+2026-03-29T22:43:40.8918898Z Container image exposes ports: ContainerExposedPort { Port = 8000, Protocol = TCP }. Sanitized list of ports is: 8000. Resolved main port to 8000.
+2026-03-29T22:43:40.8982671Z Setting value of PORT variable to 8000
+2026-03-29T22:43:40.8984723Z Creating container with image: ghcr.io/raakshass/truthmesh:latest from registry: ghcr.io and fully qualified image name: ghcr.io/raakshass/truthmesh:latest
+2026-03-29T22:43:41.5047627Z Starting container: aa49db78600f_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:43:41.5763372Z Starting watchers and probes.
+2026-03-29T22:43:41.5835633Z Starting metrics collection.
+2026-03-29T22:43:41.6154938Z Container is running.
+2026-03-29T22:43:41.6158296Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:43:41.6972055Z Container start method finished after 2411 ms.
+2026-03-29T22:43:41.7348934Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:43:41.7447029Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-03-29T22:43:59.0679762Z Container has finished running with exit code: 3.
+2026-03-29T22:43:59.0694908Z Container is terminating. Grace period: 5 seconds.
+2026-03-29T22:43:59.0709705Z Stop and delete container. Retry count = 0
+2026-03-29T22:43:59.0722344Z Stopping container: aa49db78600f_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:43:59.1725688Z Deleting container: aa49db78600f_truthmesh-qktpe5frtvy5w. Retry count = 0
+2026-03-29T22:43:59.4358099Z Container spec TerminationMessagePolicy  path 
+2026-03-29T22:43:59.4559145Z Container is terminated. Total time elapsed: 384 ms.
+2026-03-29T22:43:59.4562287Z Site container: truthmesh-qktpe5frtvy5w terminated during site startup.
+2026-03-29T22:43:59.4568939Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:10:44, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:43:59.5358114Z Site startup probe failed after 17.7891282 seconds.
+2026-03-29T22:43:59.6780198Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:43:59.6992563Z Failed to start site. Revert by stopping site.
+2026-03-29T22:43:59.7076514Z State: Stopping, Action: StoppingSite, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:43:59.7093064Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:43:59.7093398Z Site: truthmesh-qktpe5frtvy5w stopped.
+2026-03-29T22:48:37.0039525Z State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 22:46:01, DetailsLevel: WARN
+2026-03-29T22:48:39.4568977Z State: Starting, Action: StartingMsiContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 22:46:01, DetailsLevel: WARN
+2026-03-29T22:48:53.9873873Z State: Starting, Action: StartingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site is blocked due to multiple, consecutive cold start failures. Site scheduled to be unblocked at 03/29/2026 22:46:01, DetailsLevel: WARN
+2026-03-29T22:48:53.9874916Z Container start method called.
+2026-03-29T22:48:53.9875283Z State: Starting, Action: PullingImage, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pulling image ghcr.io/raakshass/truthmesh:latest for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:48:53.9876090Z Establishing network.
+2026-03-29T22:48:53.9877215Z Pulling image: ghcr.io/raakshass/truthmesh:latest.
+2026-03-29T22:48:55.5533677Z Container is starting.
+2026-03-29T22:48:55.5542457Z State: Starting, Action: MountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Mounting volumes for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:48:55.5546474Z Establishing user namespace if not established already.
+2026-03-29T22:48:55.5552186Z Establishing network if not established already.
+2026-03-29T22:48:55.5646227Z Mounting volumes.
+2026-03-29T22:48:55.5649527Z Nested mountpoint 
+2026-03-29T22:48:55.5957486Z Nested mountpoint volatile/logs
+2026-03-29T22:48:55.6553922Z Nested mountpoint 
+2026-03-29T22:48:55.7047027Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for truthmesh-qktpe5frtvy5w. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-03-29T22:48:55.7048072Z Creating container.
+2026-03-29T22:48:55.7048833Z Creating pipes for streaming container io.
+2026-03-29T22:48:55.7049539Z Creating stdout named pipe at /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stdout_da0c2bb324b647b8b4a74b1c985dc263.
+2026-03-29T22:48:55.7051711Z Successfully created stdout named pipe at: /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stdout_da0c2bb324b647b8b4a74b1c985dc263.
+2026-03-29T22:48:55.7052406Z Opening named pipe /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stdout_da0c2bb324b647b8b4a74b1c985dc263 for reading in non-blocking mode.
+2026-03-29T22:48:55.7053282Z Successfully opened named pipe: /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stdout_da0c2bb324b647b8b4a74b1c985dc263.
+2026-03-29T22:48:55.7054040Z Successfully removed non-blocking flag from /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stdout_da0c2bb324b647b8b4a74b1c985dc263.
+2026-03-29T22:48:55.7349189Z Creating stderr named pipe at /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stderr_2749b17f982d45f89cf65142889e2895.
+2026-03-29T22:48:55.7354890Z Successfully created stderr named pipe at: /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stderr_2749b17f982d45f89cf65142889e2895.
+2026-03-29T22:48:55.7356531Z Opening named pipe /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stderr_2749b17f982d45f89cf65142889e2895 for reading in non-blocking mode.
+2026-03-29T22:48:55.7359218Z Successfully opened named pipe: /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stderr_2749b17f982d45f89cf65142889e2895.
+2026-03-29T22:48:55.7360137Z Successfully removed non-blocking flag from /podr/container/pipe/f82f61f05835_truthmesh-qktpe5frtvy5w/stderr_2749b17f982d45f89cf65142889e2895.
+2026-03-29T22:48:55.7362161Z Overriding PORT environment variable with port exposed by container image.
+2026-03-29T22:48:55.8053882Z Container image exposes ports: ContainerExposedPort { Port = 8000, Protocol = TCP }. Sanitized list of ports is: 8000. Resolved main port to 8000.
+2026-03-29T22:48:55.8074105Z Setting value of PORT variable to 8000
+2026-03-29T22:48:55.8076044Z Creating container with image: ghcr.io/raakshass/truthmesh:latest from registry: ghcr.io and fully qualified image name: ghcr.io/raakshass/truthmesh:latest
+2026-03-29T22:48:56.3535121Z Starting container: f82f61f05835_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:48:56.4708947Z Starting watchers and probes.
+2026-03-29T22:48:56.4800094Z Starting metrics collection.
+2026-03-29T22:48:56.4813529Z Container is running.
+2026-03-29T22:48:56.4818738Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:48:56.6712355Z Container start method finished after 2654 ms.
+2026-03-29T22:48:56.7018981Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:48:56.7019583Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-03-29T22:49:42.7884335Z Container has finished running with exit code: 3.
+2026-03-29T22:49:42.7987413Z Container is terminating. Grace period: 5 seconds.
+2026-03-29T22:49:42.8074263Z Stop and delete container. Retry count = 0
+2026-03-29T22:49:42.8087968Z Stopping container: f82f61f05835_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:49:42.9603212Z Deleting container: f82f61f05835_truthmesh-qktpe5frtvy5w. Retry count = 0
+2026-03-29T22:49:43.1910295Z Container spec TerminationMessagePolicy  path 
+2026-03-29T22:49:43.1995908Z Container is terminated. Total time elapsed: 392 ms.
+2026-03-29T22:49:43.2002013Z Site container: truthmesh-qktpe5frtvy5w terminated during site startup.
+2026-03-29T22:49:43.2018943Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:43:59, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:49:43.2399193Z Site startup probe failed after 46.5301866 seconds.
+2026-03-29T22:49:43.4518527Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:49:43.5229175Z Failed to start site. Revert by stopping site.
+2026-03-29T22:49:43.5236716Z State: Stopping, Action: StoppingSite, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:49:43.5406851Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:49:43.5407284Z Site: truthmesh-qktpe5frtvy5w stopped.
+2026-03-29T22:49:43.5434952Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:49:44.8898421Z Site container: truthmesh-qktpe5frtvy5w_managedIdentity terminated during site startup.
+2026-03-29T22:49:44.8900024Z State: Stopping, Action: UnmountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:49:45.0113580Z State: Stopping, Action: StoppingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:49:45.6477162Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:49:45 (UTC), DetailsLevel: ERR
+2026-03-29T22:49:46.0094633Z State: Stopped, Action: None, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:49:45 (UTC), DetailsLevel: ERR
+2026-03-29T22:49:46.3316033Z State: Starting, Action: EstablishingSiteNetworks, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:49:45 (UTC), DetailsLevel: ERR
+2026-03-29T22:49:49.6413787Z State: Starting, Action: StartingMsiContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:49:45 (UTC), DetailsLevel: ERR
+2026-03-29T22:49:59.7509370Z State: Starting, Action: StartingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site stopped at 03/29/2026 22:49:45 (UTC), DetailsLevel: ERR
+2026-03-29T22:49:59.7532683Z Container start method called.
+2026-03-29T22:49:59.7536519Z State: Starting, Action: PullingImage, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pulling image ghcr.io/raakshass/truthmesh:latest for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:49:59.7613054Z Establishing network.
+2026-03-29T22:49:59.7618823Z Pulling image: ghcr.io/raakshass/truthmesh:latest.
+2026-03-29T22:50:00.9568010Z Container is starting.
+2026-03-29T22:50:00.9568977Z State: Starting, Action: MountingVolumes, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Mounting volumes for truthmesh-qktpe5frtvy5w., DetailsLevel: INFO
+2026-03-29T22:50:00.9570043Z Establishing user namespace if not established already.
+2026-03-29T22:50:00.9570823Z Establishing network if not established already.
+2026-03-29T22:50:00.9571747Z Mounting volumes.
+2026-03-29T22:50:00.9572985Z Nested mountpoint 
+2026-03-29T22:50:01.0077492Z Nested mountpoint volatile/logs
+2026-03-29T22:50:01.0269818Z Nested mountpoint 
+2026-03-29T22:50:01.1766806Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Finished pulling container image and mounting volumes for truthmesh-qktpe5frtvy5w. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-03-29T22:50:01.1770138Z Creating container.
+2026-03-29T22:50:01.1771828Z Creating pipes for streaming container io.
+2026-03-29T22:50:01.1773270Z Creating stdout named pipe at /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stdout_2e78a3c8da8e4f45abc9f2087ae20648.
+2026-03-29T22:50:01.1775822Z Successfully created stdout named pipe at: /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stdout_2e78a3c8da8e4f45abc9f2087ae20648.
+2026-03-29T22:50:01.1776923Z Opening named pipe /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stdout_2e78a3c8da8e4f45abc9f2087ae20648 for reading in non-blocking mode.
+2026-03-29T22:50:01.1778180Z Successfully opened named pipe: /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stdout_2e78a3c8da8e4f45abc9f2087ae20648.
+2026-03-29T22:50:01.1793832Z Successfully removed non-blocking flag from /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stdout_2e78a3c8da8e4f45abc9f2087ae20648.
+2026-03-29T22:50:01.1972509Z Creating stderr named pipe at /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stderr_4e25ee6217954878b1edae0eb1c14908.
+2026-03-29T22:50:01.1974614Z Successfully created stderr named pipe at: /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stderr_4e25ee6217954878b1edae0eb1c14908.
+2026-03-29T22:50:01.1975429Z Opening named pipe /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stderr_4e25ee6217954878b1edae0eb1c14908 for reading in non-blocking mode.
+2026-03-29T22:50:01.1976362Z Successfully opened named pipe: /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stderr_4e25ee6217954878b1edae0eb1c14908.
+2026-03-29T22:50:01.1977086Z Successfully removed non-blocking flag from /podr/container/pipe/774c7d5deb6a_truthmesh-qktpe5frtvy5w/stderr_4e25ee6217954878b1edae0eb1c14908.
+2026-03-29T22:50:01.1978483Z Overriding PORT environment variable with port exposed by container image.
+2026-03-29T22:50:01.2588371Z Container image exposes ports: ContainerExposedPort { Port = 8000, Protocol = TCP }. Sanitized list of ports is: 8000. Resolved main port to 8000.
+2026-03-29T22:50:01.2597074Z Setting value of PORT variable to 8000
+2026-03-29T22:50:01.2679746Z Creating container with image: ghcr.io/raakshass/truthmesh:latest from registry: ghcr.io and fully qualified image name: ghcr.io/raakshass/truthmesh:latest
+2026-03-29T22:50:02.2226888Z Starting container: 774c7d5deb6a_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:50:02.3519893Z Starting watchers and probes.
+2026-03-29T22:50:02.3724469Z Starting metrics collection.
+2026-03-29T22:50:02.3727445Z Container is running.
+2026-03-29T22:50:02.3728324Z State: Starting, Action: CreatingContainer, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:50:02.5137678Z Container start method finished after 2760 ms.
+2026-03-29T22:50:02.6215330Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Container truthmesh-qktpe5frtvy5w successfully created and is running., DetailsLevel: INFO
+2026-03-29T22:50:02.6219371Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-03-29T22:50:51.7993380Z Container has finished running with exit code: 3.
+2026-03-29T22:50:51.7999028Z Container is terminating. Grace period: 5 seconds.
+2026-03-29T22:50:51.8201446Z Stop and delete container. Retry count = 0
+2026-03-29T22:50:51.8205561Z Stopping container: 774c7d5deb6a_truthmesh-qktpe5frtvy5w.
+2026-03-29T22:50:51.9624986Z Deleting container: 774c7d5deb6a_truthmesh-qktpe5frtvy5w. Retry count = 0
+2026-03-29T22:50:52.1851224Z Container spec TerminationMessagePolicy  path 
+2026-03-29T22:50:52.1940369Z Container is terminated. Total time elapsed: 393 ms.
+2026-03-29T22:50:52.1943928Z Site container: truthmesh-qktpe5frtvy5w terminated during site startup.
+2026-03-29T22:50:52.2027199Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:49:43, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:50:52.2239417Z Site startup probe failed after 49.6005234 seconds.
+2026-03-29T22:50:52.4952633Z State: Stopping, Action: CancellingStartup, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:50:52, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:50:52.5250562Z Failed to start site. Revert by stopping site.
+2026-03-29T22:50:52.5256938Z State: Stopping, Action: StoppingSite, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:50:52, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:50:52.5264969Z State: Stopping, Action: StoppingSiteContainers, LastError: ContainerTimeout, LastErrorTimestamp: 03/29/2026 22:50:52, LastErrorDetails: Container did not start within expected time limit of 230s. Please inspect your container logs for more details., Details: Site container: truthmesh-qktpe5frtvy5w terminated during site startup. Cancelling site startup., DetailsLevel: ERR
+2026-03-29T22:50:52.5265149Z Site: truthmesh-qktpe5frtvy5w stopped.

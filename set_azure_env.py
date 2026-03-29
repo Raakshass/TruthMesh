@@ -16,10 +16,10 @@ def set_env():
     # Disable buffering for Python stdout in Azure logging temporarily
     env_vars.append("PYTHONUNBUFFERED=1")
 
-    cmd = ["az", "webapp", "config", "appsettings", "set", "-g", "Siddhant-Jain-RG", "-n", "truthmesh-api-zam6l", "--settings"] + env_vars
+    cmd = ["az", "webapp", "config", "appsettings", "set", "-g", "Siddhant-Jain-RG", "-n", "truthmesh-qktpe5frtvy5w", "--settings"] + env_vars
     print("Running az webapp config appsettings set...")
     subprocess.run(cmd, check=True, shell=True)
-    print("Done configuring environment variables for truthmesh-api-zam6l.")
+    print("Done configuring environment variables for truthmesh-qktpe5frtvy5w.")
 
 if __name__ == "__main__":
     set_env()

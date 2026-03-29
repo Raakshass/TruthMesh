@@ -3,8 +3,8 @@ import json
 import sys
 
 BASE_URL = "https://truthmesh-api-zam6l.azurewebsites.net"
-USERNAME = "demo"
-PASSWORD = "demo"
+USERNAME = "admin"
+PASSWORD = "admin"
 CLAIM = "Python is a compiled programming language"
 
 def run_e2e():

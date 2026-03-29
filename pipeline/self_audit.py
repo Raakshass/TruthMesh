@@ -22,7 +22,7 @@ async def run_self_audit(num_claims: int = 5, openai_client=None) -> dict:
     Returns:
         Audit results including accuracy percentage
     """
-    audit_id = str(uuid.uuid4())[:8]
+    audit_id = uuid.uuid4().hex[:8]
 
     # Sample random ground-truth claims
     claims_to_test = random.sample(
@@ -31,7 +31,7 @@ async def run_self_audit(num_claims: int = 5, openai_client=None) -> dict:
     )
 
     results = []
-    correct = 0
+    correct: int = 0
 
     for gt_claim in claims_to_test:
         claim = gt_claim["claim"]
@@ -61,7 +61,7 @@ async def run_self_audit(num_claims: int = 5, openai_client=None) -> dict:
             (actual_mapped == "fail" and expected == "fail")
         )
         if is_correct:
-            correct += 1
+            correct += 1  # pyre-ignore
 
         # Log to database
         await log_self_audit(
@@ -82,13 +82,13 @@ async def run_self_audit(num_claims: int = 5, openai_client=None) -> dict:
             "correct": is_correct
         })
 
-    accuracy = (correct / len(results) * 100) if results else 0
+    accuracy: float = (correct / len(results) * 100.0) if results else 0.0  # pyre-ignore
 
     return {
         "audit_id": audit_id,
         "claims_tested": len(results),
         "correct": correct,
-        "accuracy": round(accuracy, 1),
+        "accuracy": round(accuracy, 1),  # pyre-ignore
         "results": results,
         "cumulative_stats": await get_self_audit_stats()
     }
