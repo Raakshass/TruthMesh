@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: truthmesh-api
+    env: docker
+    region: ohio
+    plan: free
+    branch: main
+    dockerFilePath: ./Dockerfile
+    envVars:
+      - key: AZURE_OPENAI_API_KEY
+        sync: false
+      - key: AZURE_OPENAI_API_VERSION
+        value: 2024-12-01-preview
+      - key: AZURE_OPENAI_ENDPOINT
+        sync: false
+      - key: COSMOS_DB_CONNECTION_STRING
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DEMO_PASSWORD
+        sync: false
+      - key: PORT
+        value: "8000"

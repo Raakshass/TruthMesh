@@ -130,6 +130,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://truthmeshsjain.azurewebsites.net",
+        "https://truthmesh-api.onrender.com",
     ],
     allow_methods=["GET", "POST"],
     allow_headers=["Authorization", "Content-Type"],
@@ -139,6 +140,7 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=[
     "localhost", "127.0.0.1",
     "truthmeshsjain.azurewebsites.net",
     "*.azurewebsites.net",  # Azure health probes and SCM
+    "*.onrender.com",       # Render domains
 ])
 
 @app.middleware("http")
