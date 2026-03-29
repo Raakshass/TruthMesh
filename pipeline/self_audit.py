@@ -48,7 +48,7 @@ async def run_self_audit(num_claims: int = 5, openai_client=None) -> dict:
         )
 
         # Get consensus
-        consensus = compute_consensus(verification_results, domain)
+        consensus = await compute_consensus(verification_results, domain)
         actual_verdict = consensus["final_verdict"]
 
         # Map consensus verdict to expected format
