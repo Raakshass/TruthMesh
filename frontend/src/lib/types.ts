@@ -71,11 +71,14 @@ export interface TopographyEntry {
 }
 
 export interface AuditEntry {
+  query_id: string;
   timestamp: string;
   query: string;
   domain: string;
   model: string;
   trust_score: number;
+  verification_complete: boolean;
+  routing_reason: string;
 }
 
 export interface AuditData {

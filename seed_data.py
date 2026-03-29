@@ -4,8 +4,7 @@ These represent realistic baseline reliability scores per model per domain,
 labeled as 'BASE PROFILE' to distinguish from production-updated scores.
 """
 import asyncio
-import aiosqlite
-from config import Config
+from config import Config  # type: ignore
 
 # Synthetic reliability data derived from MMLU/TruthfulQA benchmark analysis
 # Format: (model, domain, reliability_score, confidence_lower, confidence_upper, sample_count)
@@ -35,19 +34,23 @@ SEED_DATA = [
 
 async def seed_topography():
     """Seed the topography map with baseline benchmark data."""
-    async with aiosqlite.connect(Config.DB_PATH) as db:
-        for model, domain, score, lower, upper, count in SEED_DATA:
-            await db.execute(
-                """INSERT OR REPLACE INTO topography_scores
-                   (model, domain, reliability_score, confidence_lower,
-                    confidence_upper, sample_count, source_label)
-                   VALUES (?, ?, ?, ?, ?, ?, 'BASE')""",
-                (model, domain, score, lower, upper, count)
-            )
-        await db.commit()
+    import database  # type: ignore
+    if not database.db:
+        return
+    for model, domain, score, lower, upper, count in SEED_DATA:
+        await database.db.topography_scores.update_one(
+            {"model": model, "domain": domain},
+            {"$set": {
+                "reliability_score": float(score),
+                "confidence_lower": float(lower),
+                "confidence_upper": float(upper),
+                "sample_count": int(count),
+                "source_label": 'BASE'
+            }},
+            upsert=True
+        )
     print(f"[SEED] Loaded {len(SEED_DATA)} topography scores across "
           f"{len(Config.MODELS)} models × {len(Config.DOMAINS)} domains")
-
 
 # Pre-built ground truth claims for the self-audit engine
 GROUND_TRUTH_CLAIMS = [
@@ -94,35 +97,35 @@ GROUND_TRUTH_CLAIMS = [
     {"claim": "The Industrial Revolution began in France", "expected": "fail", "domain": "History"},
 ]
 
-
 async def seed_self_audit_claims():
     """Seed pre-built self-audit results to show the engine working."""
     import uuid
-    async with aiosqlite.connect(Config.DB_PATH) as db:
-        audit_id = str(uuid.uuid4())[:8]
-        correct_count = 0
-        for i, gt in enumerate(GROUND_TRUTH_CLAIMS[:20]):
-            # Simulate 85% verifier accuracy
-            import random
-            random.seed(42 + i)
-            is_correct = random.random() < 0.85
-            actual = gt["expected"] if is_correct else ("fail" if gt["expected"] == "pass" else "pass")
-            if is_correct:
-                correct_count += 1
+    import database  # type: ignore
+    if not database.db:
+        return
+        
+    correct_count = 0
+    for i, gt in enumerate(GROUND_TRUTH_CLAIMS[:20]):  # type: ignore
+        audit_id = str(uuid.uuid4())[:8]  # type: ignore
+        import random
+        random.seed(42 + i)
+        is_correct = random.random() < 0.85
+        actual = gt["expected"] if is_correct else ("fail" if gt["expected"] == "pass" else "pass")
+        if is_correct:
+            correct_count += 1  # type: ignore
 
-            await db.execute(
-                """INSERT INTO self_audit_results
-                   (audit_id, injected_claim, expected_verdict, actual_verdict, correct, domain)
-                   VALUES (?, ?, ?, ?, ?, ?)""",
-                (audit_id, gt["claim"], gt["expected"], actual,
-                 1 if is_correct else 0, gt["domain"])
-            )
-        await db.commit()
-    print(f"[SEED] Loaded {20} self-audit results (accuracy: {correct_count/20*100:.0f}%)")
-
+        await database.db.self_audit_results.insert_one({
+            "audit_id": audit_id,
+            "injected_claim": gt["claim"],
+            "expected_verdict": gt["expected"],
+            "actual_verdict": actual,
+            "correct": 1 if is_correct else 0,
+            "domain": gt["domain"]
+        })
+    print(f"[SEED] Loaded {min(20, len(GROUND_TRUTH_CLAIMS))} self-audit results")
 
 if __name__ == "__main__":
-    from database import init_db
+    from database import init_db  # type: ignore
     asyncio.run(init_db())
     asyncio.run(seed_topography())
     asyncio.run(seed_self_audit_claims())

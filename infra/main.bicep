@@ -143,15 +143,23 @@ resource webApp 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-// 8. Key Vault Role Assignment for Web App Managed Identity
-var roleDefinitionId = resourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6') // Key Vault Secrets User
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(keyVault.id, webApp.id, roleDefinitionId)
-  scope: keyVault
+// 8. Key Vault Native Access Policy (Bypass RBAC Restrictions)
+resource kvAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-02-01' = {
+  name: 'add'
+  parent: keyVault
   properties: {
-    roleDefinitionId: roleDefinitionId
-    principalId: webApp.identity.principalId
-    principalType: 'ServicePrincipal'
+    accessPolicies: [
+      {
+        tenantId: subscription().tenantId
+        objectId: webApp.identity.principalId
+        permissions: {
+          secrets: [
+            'get'
+            'list'
+          ]
+        }
+      }
+    ]
   }
 }
 

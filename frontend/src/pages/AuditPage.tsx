@@ -1,72 +1,117 @@
-/* ── Audit Log Page ───────────────────────────────────────────────── */
+/* ── Audit Page — Premium Data Density ────────────────────────── */
 import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Search,
+  ClipboardCheck,
   ChevronDown,
   ChevronUp,
+  Search,
+  ArrowUpDown,
   BarChart3,
+  FileText,
+  Shield,
   TrendingUp,
-  AlertTriangle,
 } from "lucide-react";
-import { getAuditData } from "@/lib/api";
-import { cn } from "@/lib/utils";
+import { getAuditLog } from "@/lib/api";
 import type { AuditEntry } from "@/lib/types";
 
-type SortField = "timestamp" | "domain" | "model" | "trust_score";
-type SortDir = "asc" | "desc";
+/* ── Animated Counter ─────────────────────────────────────────── */
+function CountUp({ value }: { value: number }) {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    const duration = 800;
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setDisplay(Math.round(value * eased));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [value]);
+  return <>{display}</>;
+}
+
+const DOMAINS = ["All", "medical", "legal", "finance", "general", "scientific"];
+const PAGE_SIZE = 20;
 
 export default function AuditPage() {
-  const [audit, setAudit] = useState<AuditEntry[]>([]);
-  const [avgTrust, setAvgTrust] = useState(0);
-  const [hallRate, setHallRate] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [domainFilter, setDomainFilter] = useState("All");
-  const [sortField, setSortField] = useState<SortField>("timestamp");
-  const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [entries, setEntries] = useState<AuditEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortField, setSortField] = useState<"timestamp" | "trust_score">("timestamp");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [domainFilter, setDomainFilter] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     setLoading(true);
-    getAuditData()
-      .then((d) => {
-        setAudit(d.audit_data);
-        setAvgTrust(d.avg_trust);
-        setHallRate(d.hallucination_rate);
-      })
+    getAuditLog()
+      .then((data) => setEntries(data as AuditEntry[]))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
-  const domains = useMemo(
-    () => ["All", ...new Set(audit.map((a) => a.domain))],
-    [audit]
-  );
-
   const filtered = useMemo(() => {
-    let data = [...audit];
+    let f = entries;
     if (domainFilter !== "All") {
-      data = data.filter((a) => a.domain === domainFilter);
+      f = f.filter((e) => e.domain === domainFilter);
     }
-    if (searchTerm) {
+    if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
-      data = data.filter(
-        (a) =>
-          a.query.toLowerCase().includes(q) ||
-          a.domain.toLowerCase().includes(q) ||
-          a.model.toLowerCase().includes(q)
-      );
+      f = f.filter((e) => e.query.toLowerCase().includes(q) || e.model.toLowerCase().includes(q));
     }
-    data.sort((a, b) => {
-      const aVal = a[sortField];
-      const bVal = b[sortField];
-      const cmp = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-      return sortDir === "asc" ? cmp : -cmp;
+    f.sort((a, b) => {
+      const aVal = sortField === "timestamp" ? new Date(a.timestamp).getTime() : a.trust_score;
+      const bVal = sortField === "timestamp" ? new Date(b.timestamp).getTime() : b.trust_score;
+      return sortDir === "asc" ? aVal - bVal : bVal - aVal;
     });
-    return data;
-  }, [audit, domainFilter, searchTerm, sortField, sortDir]);
+    return f;
+  }, [entries, domainFilter, searchTerm, sortField, sortDir]);
 
-  const toggleSort = (field: SortField) => {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  /* ── Stats ──────────────────────────────────────────────────── */
+  const avgTrust = useMemo(
+    () =>
+      entries.length > 0
+        ? entries.reduce((s, e) => s + e.trust_score, 0) / entries.length
+        : 0,
+    [entries]
+  );
+  const highTrust = useMemo(() => entries.filter((e) => e.trust_score >= 0.8).length, [entries]);
+
+  const stats = [
+    {
+      label: "Total Queries",
+      value: entries.length,
+      icon: FileText,
+      gradient: "linear-gradient(135deg, #003ec7, #0052ff)",
+    },
+    {
+      label: "Avg Trust",
+      value: Math.round(avgTrust * 100),
+      suffix: "%",
+      icon: BarChart3,
+      gradient: "linear-gradient(135deg, #22c55e, #4ade80)",
+    },
+    {
+      label: "High Confidence",
+      value: highTrust,
+      icon: Shield,
+      gradient: "linear-gradient(135deg, #7c3aed, #a78bfa)",
+    },
+    {
+      label: "Unique Models",
+      value: new Set(entries.map((e) => e.model)).size,
+      icon: TrendingUp,
+      gradient: "linear-gradient(135deg, #005479, #0284c7)",
+    },
+  ];
+
+  const toggleSort = (field: "timestamp" | "trust_score") => {
     if (sortField === field) {
       setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     } else {
@@ -75,227 +120,322 @@ export default function AuditPage() {
     }
   };
 
-  const SortIcon = ({ field }: { field: SortField }) =>
-    sortField === field ? (
-      sortDir === "asc" ? (
-        <ChevronUp size={12} />
-      ) : (
-        <ChevronDown size={12} />
-      )
-    ) : null;
-
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="size-8 animate-spin rounded-full border-3 border-primary/20 border-t-primary" />
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-[1400px] space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-xl font-extrabold tracking-tight text-on-surface">
           Audit Log
         </h1>
-        <p className="mt-0.5 text-sm text-outline">
-          Complete verification history with trust score analytics
+        <p className="text-xs text-outline">
+          Complete verification history with claim-level detail
         </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-xl bg-container-lowest p-5 shadow-ambient"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-              <BarChart3 size={18} className="text-primary" />
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        {stats.map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.06 }}
+            className="relative overflow-hidden rounded-xl bg-container-lowest p-4 shadow-ambient card-hover"
+          >
+            <div
+              className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-lg opacity-15"
+              style={{ background: stat.gradient }}
+            >
+              <stat.icon size={16} className="text-white" />
             </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase text-outline">
-                Total Queries
-              </p>
-              <p className="text-2xl font-extrabold text-on-surface">
-                {audit.length}
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="rounded-xl bg-container-lowest p-5 shadow-ambient"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-trust-pass/10">
-              <TrendingUp size={18} className="text-trust-pass" />
-            </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase text-outline">
-                Avg Trust Score
-              </p>
-              <p className="text-2xl font-extrabold text-on-surface">
-                {Math.round(avgTrust * 100)}%
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="rounded-xl bg-container-lowest p-5 shadow-ambient"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-error/10">
-              <AlertTriangle size={18} className="text-error" />
-            </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase text-outline">
-                Hallucination Rate
-              </p>
-              <p className="text-2xl font-extrabold text-on-surface">
-                {Math.round(hallRate * 100)}%
-              </p>
-            </div>
-          </div>
-        </motion.div>
+            <p className="text-2xl font-black text-on-surface">
+              <CountUp value={stat.value} />
+              {(stat as { suffix?: string }).suffix || ""}
+            </p>
+            <p className="mt-0.5 text-[9px] font-bold uppercase tracking-widest text-outline">
+              {stat.label}
+            </p>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="relative flex-1">
+      {/* Filter Bar */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        {/* Domain Chips */}
+        <div className="flex flex-wrap gap-1.5">
+          {DOMAINS.map((d) => (
+            <button
+              key={d}
+              onClick={() => {
+                setDomainFilter(d);
+                setPage(0);
+              }}
+              className="rounded-full px-3 py-1 text-xs font-bold transition-all"
+              style={{
+                background:
+                  domainFilter === d
+                    ? "var(--color-primary)"
+                    : "var(--color-container-low)",
+                color:
+                  domainFilter === d
+                    ? "var(--color-on-primary)"
+                    : "var(--color-on-surface-variant)",
+              }}
+            >
+              {d.charAt(0).toUpperCase() + d.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Search */}
+        <div className="relative max-w-xs w-full">
           <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant"
+            size={14}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-outline"
           />
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search queries, domains, models..."
-            className="w-full rounded-lg bg-container-lowest py-2.5 pl-9 pr-4 text-sm text-on-surface shadow-ambient outline-none placeholder:text-outline-variant focus:ring-2 focus:ring-primary/20"
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(0);
+            }}
+            placeholder="Search queries or models..."
+            className="w-full rounded-lg border border-outline-variant/30 bg-container-lowest py-2 pl-8 pr-3 text-xs text-on-surface outline-none transition-all placeholder:text-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/12"
           />
         </div>
-        <select
-          value={domainFilter}
-          onChange={(e) => setDomainFilter(e.target.value)}
-          className="rounded-lg bg-container-lowest px-4 py-2.5 text-sm font-medium text-on-surface shadow-ambient outline-none"
-        >
-          {domains.map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl bg-container-lowest shadow-ambient">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-outline-variant/30">
-                {(
-                  [
-                    ["timestamp", "Timestamp"],
-                    ["domain", "Domain"],
-                    ["model", "Model"],
-                    ["trust_score", "Trust Score"],
-                  ] as [SortField, string][]
-                ).map(([field, label]) => (
-                  <th
-                    key={field}
-                    onClick={() => toggleSort(field)}
-                    className="cursor-pointer whitespace-nowrap px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-outline select-none"
-                  >
-                    <span className="inline-flex items-center gap-1">
-                      {label} <SortIcon field={field} />
-                    </span>
-                  </th>
-                ))}
-                <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-outline">
-                  Query
+      <div className="overflow-x-auto rounded-xl border border-outline-variant/15 bg-container-lowest shadow-ambient">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-outline-variant/15">
+              {[
+                { key: "timestamp" as const, label: "Timestamp" },
+                { key: null, label: "Query" },
+                { key: null, label: "Model" },
+                { key: null, label: "Domain" },
+                { key: "trust_score" as const, label: "Trust Score" },
+                { key: null, label: "" },
+              ].map((col, ci) => (
+                <th
+                  key={ci}
+                  onClick={col.key ? () => toggleSort(col.key!) : undefined}
+                  className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-outline transition-colors hover:text-on-surface-variant select-none"
+                  style={{ cursor: col.key ? "pointer" : "default" }}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    {col.label}
+                    {col.key && sortField === col.key && (
+                      <ArrowUpDown size={10} className="text-primary" />
+                    )}
+                  </span>
                 </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-sm text-outline">
-                    No audit entries found
-                  </td>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i} className="border-b border-outline-variant/10">
+                  {Array.from({ length: 6 }).map((__, j) => (
+                    <td key={j} className="px-4 py-3">
+                      <div className="skeleton h-4 w-full" />
+                    </td>
+                  ))}
                 </tr>
-              ) : (
-                filtered.map((entry, i) => {
-                  const trustPct = Math.round(entry.trust_score * 100);
-                  return (
+              ))
+            ) : paginated.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="py-16 text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <ClipboardCheck
+                      size={28}
+                      className="text-outline-variant animate-float"
+                    />
+                    <p className="text-sm font-bold text-on-surface-variant">
+                      No audit entries found
+                    </p>
+                    <p className="text-xs text-outline">
+                      Run a verification query to generate audit records
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              paginated.map((entry) => {
+                const isExpanded = expandedRow === entry.query_id;
+                const trustPct = Math.round(entry.trust_score * 100);
+                return (
+                  <motion.tbody key={entry.query_id} layout>
                     <motion.tr
-                      key={i}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: Math.min(i * 0.02, 0.5) }}
-                      className="border-b border-outline-variant/10 transition-colors hover:bg-container-low"
+                      layout
+                      className="border-b border-outline-variant/10 transition-colors hover:bg-container-low/50"
                     >
-                      <td className="whitespace-nowrap px-5 py-3 font-mono text-xs text-outline">
+                      <td className="px-4 py-3 font-mono text-[10px] text-outline whitespace-nowrap">
                         {new Date(entry.timestamp).toLocaleString()}
                       </td>
-                      <td className="px-5 py-3">
-                        <span className="rounded-full bg-container-high px-2.5 py-0.5 text-xs font-bold text-on-surface">
+                      <td className="max-w-xs px-4 py-3">
+                        <p className="truncate text-xs font-medium text-on-surface">
+                          {entry.query}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="rounded-md bg-container px-2 py-0.5 font-mono text-[10px] text-on-surface-variant">
+                          {entry.model}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="rounded-full bg-container-high px-2 py-0.5 text-[10px] font-bold text-primary">
                           {entry.domain}
                         </span>
                       </td>
-                      <td className="px-5 py-3 font-mono text-xs text-on-surface-variant">
-                        {entry.model}
-                      </td>
-                      <td className="px-5 py-3">
+                      <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="h-1.5 w-16 overflow-hidden rounded-full bg-container">
-                            <div
-                              className="h-full rounded-full"
-                              style={{
-                                width: `${trustPct}%`,
-                                background:
-                                  trustPct >= 80
-                                    ? "linear-gradient(90deg, #003ec7, #0052ff)"
-                                    : trustPct >= 50
-                                      ? "linear-gradient(90deg, #ca8a04, #eab308)"
-                                      : "linear-gradient(90deg, #dc2626, #ef4444)",
-                              }}
-                            />
+                          <div
+                            className="size-2 shrink-0 rounded-full"
+                            style={{
+                              background:
+                                trustPct >= 80
+                                  ? "#22c55e"
+                                  : trustPct >= 50
+                                    ? "#eab308"
+                                    : "#ef4444",
+                            }}
+                          />
+                          <div className="flex w-20 items-center gap-2">
+                            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-container">
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${trustPct}%`,
+                                  background:
+                                    trustPct >= 80
+                                      ? "linear-gradient(90deg, #22c55e, #4ade80)"
+                                      : trustPct >= 50
+                                        ? "linear-gradient(90deg, #eab308, #facc15)"
+                                        : "linear-gradient(90deg, #ef4444, #f87171)",
+                                }}
+                              />
+                            </div>
+                            <span className="text-[10px] font-bold text-on-surface">
+                              {trustPct}%
+                            </span>
                           </div>
-                          <span
-                            className={cn(
-                              "font-mono text-xs font-bold",
-                              trustPct >= 80
-                                ? "text-primary"
-                                : trustPct >= 50
-                                  ? "text-trust-medium"
-                                  : "text-trust-low"
-                            )}
-                          >
-                            {trustPct}%
-                          </span>
                         </div>
                       </td>
-                      <td className="max-w-[300px] truncate px-5 py-3 text-xs text-on-surface-variant">
-                        {entry.query}
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => setExpandedRow(isExpanded ? null : entry.query_id)}
+                          className="rounded-md p-1 hover:bg-container"
+                        >
+                          {isExpanded ? (
+                            <ChevronUp size={14} className="text-outline" />
+                          ) : (
+                            <ChevronDown size={14} className="text-outline" />
+                          )}
+                        </button>
                       </td>
                     </motion.tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.tr
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="bg-container-low/30"
+                        >
+                          <td colSpan={6} className="px-6 py-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                              {/* Query ID */}
+                              <div>
+                                <p className="text-[9px] font-bold uppercase tracking-widest text-outline mb-1">
+                                  Query ID
+                                </p>
+                                <p className="font-mono text-[10px] text-on-surface-variant break-all">
+                                  {entry.query_id}
+                                </p>
+                              </div>
+                              {/* Routing Reason */}
+                              <div>
+                                <p className="text-[9px] font-bold uppercase tracking-widest text-outline mb-1">
+                                  Routing Reason
+                                </p>
+                                <p className="text-xs text-on-surface-variant">
+                                  {entry.routing_reason || "Default routing"}
+                                </p>
+                              </div>
+                              {/* Verification Status */}
+                              <div>
+                                <p className="text-[9px] font-bold uppercase tracking-widest text-outline mb-1">
+                                  Status
+                                </p>
+                                <span
+                                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                                  style={{
+                                    background: entry.verification_complete
+                                      ? "rgba(34,197,94,0.12)"
+                                      : "rgba(234,179,8,0.12)",
+                                    color: entry.verification_complete
+                                      ? "#22c55e"
+                                      : "#eab308",
+                                  }}
+                                >
+                                  <div
+                                    className="size-1.5 rounded-full"
+                                    style={{
+                                      background: entry.verification_complete
+                                        ? "#22c55e"
+                                        : "#eab308",
+                                    }}
+                                  />
+                                  {entry.verification_complete ? "Verified" : "Pending"}
+                                </span>
+                              </div>
+                            </div>
+                            {/* Full query text */}
+                            <div className="mt-3 rounded-lg bg-container-lowest p-3 border border-outline-variant/15">
+                              <p className="text-[9px] font-bold uppercase tracking-widest text-outline mb-1">
+                                Full Query
+                              </p>
+                              <p className="text-xs text-on-surface leading-relaxed">
+                                {entry.query}
+                              </p>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      )}
+                    </AnimatePresence>
+                  </motion.tbody>
+                );
+              })
+            )}
+          </tbody>
+        </table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2">
+          <button
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+            className="rounded-lg border border-outline-variant/30 px-3 py-1.5 text-xs font-bold text-on-surface-variant transition-colors hover:bg-container disabled:opacity-40"
+          >
+            Previous
+          </button>
+          <span className="text-xs font-bold text-outline">
+            Page {page + 1} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+            disabled={page >= totalPages - 1}
+            className="rounded-lg border border-outline-variant/30 px-3 py-1.5 text-xs font-bold text-on-surface-variant transition-colors hover:bg-container disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

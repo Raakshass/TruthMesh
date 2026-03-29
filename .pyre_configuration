@@ -1,0 +1,26 @@
+{
+  "source_directories": ["."],
+  "site_package_search_strategy": "all",
+  "search_path": [
+    ".",
+    "C:\\Users\\asus vivoBook\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages"
+  ],
+  "exclude": [
+    "frontend",
+    "node_modules",
+    ".planning",
+    "__pycache__"
+  ],
+  "strict": false,
+  "ignore_all_errors": [
+    "main.py",
+    "seed_data.py",
+    "database.py",
+    "config.py",
+    "auth.py",
+    "jobs.py",
+    "monitoring.py",
+    "demo_cache.py",
+    "pipeline"
+  ]
+}

@@ -1,0 +1,579 @@
+﻿python : INFO:     Started server process [28456]
+At line:1 char:1
++ python -m uvicorn main:app --host 127.0.0.1 --port 8000 > startup_log ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started server process  
+   [28456]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+INFO:     Waiting for application startup.
+WARNING:root:COSMOS_DB_CONNECTION_STRING missing. Falling back to local 
+mongomock database for demo purposes.
+{"timestamp": "2026-03-29T16:46:29.241171Z", "level": "INFO", "logger": 
+"truthmesh", "message": "[STARTUP] Database seeded with baseline topography 
+data"}
+INFO:truthmesh:[STARTUP] Database seeded with baseline topography data
+{"timestamp": "2026-03-29T16:46:29.496411Z", "level": "INFO", "logger": 
+"truthmesh", "message": "[STARTUP] Admin user created from ADMIN_PASSWORD env 
+var"}
+INFO:truthmesh:[STARTUP] Admin user created from ADMIN_PASSWORD env var
+{"timestamp": "2026-03-29T16:46:29.744008Z", "level": "INFO", "logger": 
+"truthmesh", "message": "[STARTUP] Demo user created from DEMO_PASSWORD env 
+var"}
+INFO:truthmesh:[STARTUP] Demo user created from DEMO_PASSWORD env var
+{"timestamp": "2026-03-29T16:46:29.748634Z", "level": "INFO", "logger": 
+"truthmesh", "message": "[STARTUP] Background data governance scheduler 
+started"}
+INFO:truthmesh:[STARTUP] Background data governance scheduler started
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+[SEED] Loaded 15 topography scores across 3 models ╫ 7 domains
+[SEED] Loaded 20 self-audit results
+INFO:     127.0.0.1:64726 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64731 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64731 - "GET /assets/DashboardPage-rOMSbVnB.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58222 - "GET /assets/api-B3uTe3Px.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65390 - "GET /assets/check-DPyB4vJ7.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63126 - "GET /assets/shield-DvciK-NG.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53605 - "GET /assets/useEventStream-bMs7hbUD.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53636 - "GET /assets/search-9kKRFvoz.js HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60789 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60789 - "GET /assets/index-nj5x6F80.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62101 - "GET /assets/proxy-CmsNi0gu.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56509 - "GET /assets/index-DvvWkXC7.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52357 - "GET /assets/createLucideIcon-Ba3GDi2V.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62101 - "GET /assets/vanilla-BubpB5wC.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60789 - "GET /assets/LoginPage-D7py9fN_.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49897 - "POST /token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49897 - "GET /api/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49897 - "GET /assets/DashboardPage-CAs8Yi2N.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49398 - "GET /assets/check-GRw35NFX.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49670 - "GET /assets/shield-C5RD7gVs.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51792 - "GET /assets/search-DGNaBi79.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57812 - "GET /assets/useEventStream-B58BjkXw.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57812 - "GET /api/topography HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49398 - "GET /api/self-audit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49897 - "GET /api/dashboard HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57196 - "POST /api/query HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57196 - "GET /api/verify/d76e7201-9cf7-4d74-a7ac-ab274b421f0b HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\starlette\_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\starlette\middleware\base.py", line 178, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\anyio\_backends\_asyncio.py", line 783, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 180, in __call__
+    |     await response(scope, wrapped_receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 215, in __call__
+    |     async for chunk in self.body_iterator:
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 169, in body_stream
+    |     raise app_exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 141, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\trustedhost.py", line 51, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, 
+send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 715, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 735, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, 
+send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 74, in app
+    |     await response(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\sse_starlette\sse.py", line 255, in __call__
+    |     async with anyio.create_task_group() as task_group:
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\anyio\_backends\_asyncio.py", line 783, in __aexit__
+    |     raise BaseExceptionGroup(
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in 
+run_asgi
+      |     result = await app(  # type: ignore[func-returns-value]
+      |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+      |     return await self.app(scope, receive, send)
+      |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+      |     await super().__call__(scope, receive, send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\applications.py", line 112, in __call__
+      |     await self.middleware_stack(scope, receive, send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+      |     raise exc
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+      |     await self.app(scope, receive, _send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\base.py", line 177, in __call__
+      |     with recv_stream, send_stream, collapse_excgroups():
+      |                                    ^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus 
+vivoBook\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, 
+in __exit__
+      |     self.gen.throw(value)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+      |     raise exc
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\sse_starlette\sse.py", line 258, in cancel_on_finish
+      |     await coro()
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\sse_starlette\sse.py", line 177, in _stream_response
+      |     async for data in self.body_iterator:
+      |   File "D:\Microsoft_AI_Unlocked\main.py", line 584, in event_generator
+      |     async for r_event in _generate_raw():
+      |   File "D:\Microsoft_AI_Unlocked\main.py", line 494, in _generate_raw
+      |     yield {"event": step, "data": json.dumps({"step": step, "status": 
+"done"})}
+      |                                   ^^^^
+      | UnboundLocalError: cannot access local variable 'json' where it is not 
+associated with a value
+      +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus 
+vivoBook\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, 
+in __exit__
+    self.gen.throw(value)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\sse_starlette\sse.py", line 258, in cancel_on_finish
+    await coro()
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\sse_starlette\sse.py", line 177, in _stream_response
+    async for data in self.body_iterator:
+  File "D:\Microsoft_AI_Unlocked\main.py", line 584, in event_generator
+    async for r_event in _generate_raw():
+  File "D:\Microsoft_AI_Unlocked\main.py", line 494, in _generate_raw
+    yield {"event": step, "data": json.dumps({"step": step, "status": "done"})}
+                                  ^^^^
+UnboundLocalError: cannot access local variable 'json' where it is not 
+associated with a value
+INFO:     127.0.0.1:60715 - "POST /api/query HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60715 - "GET /api/verify/84a8401b-ec4b-40ce-ad54-2314902b45c4 HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\starlette\_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\starlette\middleware\base.py", line 178, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\anyio\_backends\_asyncio.py", line 783, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 180, in __call__
+    |     await response(scope, wrapped_receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 215, in __call__
+    |     async for chunk in self.body_iterator:
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 169, in body_stream
+    |     raise app_exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 141, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\trustedhost.py", line 51, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, 
+send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 715, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 735, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, 
+send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 74, in app
+    |     await response(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\sse_starlette\sse.py", line 255, in __call__
+    |     async with anyio.create_task_group() as task_group:
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\anyio\_backends\_asyncio.py", line 783, in __aexit__
+    |     raise BaseExceptionGroup(
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in 
+run_asgi
+      |     result = await app(  # type: ignore[func-returns-value]
+      |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+      |     return await self.app(scope, receive, send)
+      |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+      |     await super().__call__(scope, receive, send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\applications.py", line 112, in __call__
+      |     await self.middleware_stack(scope, receive, send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+      |     raise exc
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+      |     await self.app(scope, receive, _send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\base.py", line 177, in __call__
+      |     with recv_stream, send_stream, collapse_excgroups():
+      |                                    ^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus 
+vivoBook\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, 
+in __exit__
+      |     self.gen.throw(value)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+      |     raise exc
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\sse_starlette\sse.py", line 258, in cancel_on_finish
+      |     await coro()
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\sse_starlette\sse.py", line 177, in _stream_response
+      |     async for data in self.body_iterator:
+      |   File "D:\Microsoft_AI_Unlocked\main.py", line 584, in event_generator
+      |     async for r_event in _generate_raw():
+      |   File "D:\Microsoft_AI_Unlocked\main.py", line 427, in _generate_raw
+      |     yield {"event": step, "data": json.dumps({"step": step, "status": 
+"done"})}
+      |                                   ^^^^
+      | UnboundLocalError: cannot access local variable 'json' where it is not 
+associated with a value
+      +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus 
+vivoBook\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, 
+in __exit__
+    self.gen.throw(value)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\sse_starlette\sse.py", line 258, in cancel_on_finish
+    await coro()
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\sse_starlette\sse.py", line 177, in _stream_response
+    async for data in self.body_iterator:
+  File "D:\Microsoft_AI_Unlocked\main.py", line 584, in event_generator
+    async for r_event in _generate_raw():
+  File "D:\Microsoft_AI_Unlocked\main.py", line 427, in _generate_raw
+    yield {"event": step, "data": json.dumps({"step": step, "status": "done"})}
+                                  ^^^^
+UnboundLocalError: cannot access local variable 'json' where it is not 
+associated with a value
+INFO:     127.0.0.1:57339 - "POST /api/query HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57339 - "GET /api/verify/39436e54-e49a-437b-8d2d-7fbeffce03c1 HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+  + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\starlette\_utils.py", line 76, in collapse_excgroups
+  |     yield
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\starlette\middleware\base.py", line 178, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\
+site-packages\anyio\_backends\_asyncio.py", line 783, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Exception Group Traceback (most recent call last):
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 180, in __call__
+    |     await response(scope, wrapped_receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 215, in __call__
+    |     async for chunk in self.body_iterator:
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 169, in body_stream
+    |     raise app_exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\base.py", line 141, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\trustedhost.py", line 51, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\middleware\exceptions.py", line 62, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, 
+send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 715, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 735, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 288, in handle
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 76, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, 
+send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\starlette\routing.py", line 74, in app
+    |     await response(scope, receive, send)
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\sse_starlette\sse.py", line 255, in __call__
+    |     async with anyio.create_task_group() as task_group:
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Li
+b\site-packages\anyio\_backends\_asyncio.py", line 783, in __aexit__
+    |     raise BaseExceptionGroup(
+    | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | Traceback (most recent call last):
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in 
+run_asgi
+      |     result = await app(  # type: ignore[func-returns-value]
+      |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+      |     return await self.app(scope, receive, send)
+      |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\fastapi\applications.py", line 1054, in __call__
+      |     await super().__call__(scope, receive, send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\applications.py", line 112, in __call__
+      |     await self.middleware_stack(scope, receive, send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\errors.py", line 187, in __call__
+      |     raise exc
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\errors.py", line 165, in __call__
+      |     await self.app(scope, receive, _send)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\middleware\base.py", line 177, in __call__
+      |     with recv_stream, send_stream, collapse_excgroups():
+      |                                    ^^^^^^^^^^^^^^^^^^^^
+      |   File "C:\Users\asus 
+vivoBook\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, 
+in __exit__
+      |     self.gen.throw(value)
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\starlette\_utils.py", line 82, in collapse_excgroups
+      |     raise exc
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\sse_starlette\sse.py", line 258, in cancel_on_finish
+      |     await coro()
+      |   File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\
+Lib\site-packages\sse_starlette\sse.py", line 177, in _stream_response
+      |     async for data in self.body_iterator:
+      |   File "D:\Microsoft_AI_Unlocked\main.py", line 584, in event_generator
+      |     async for r_event in _generate_raw():
+      |   File "D:\Microsoft_AI_Unlocked\main.py", line 427, in _generate_raw
+      |     yield {"event": step, "data": json.dumps({"step": step, "status": 
+"done"})}
+      |                                   ^^^^
+      | UnboundLocalError: cannot access local variable 'json' where it is not 
+associated with a value
+      +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\uvicorn\protocols\http\httptools_impl.py", line 409, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\uvicorn\middleware\proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\fastapi\applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\applications.py", line 112, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\errors.py", line 187, in __call__
+    raise exc
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\middleware\base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus 
+vivoBook\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, 
+in __exit__
+    self.gen.throw(value)
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\starlette\_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\sse_starlette\sse.py", line 258, in cancel_on_finish
+    await coro()
+  File "C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\Lib\site
+-packages\sse_starlette\sse.py", line 177, in _stream_response
+    async for data in self.body_iterator:
+  File "D:\Microsoft_AI_Unlocked\main.py", line 584, in event_generator
+    async for r_event in _generate_raw():
+  File "D:\Microsoft_AI_Unlocked\main.py", line 427, in _generate_raw
+    yield {"event": step, "data": json.dumps({"step": step, "status": "done"})}
+                                  ^^^^
+UnboundLocalError: cannot access local variable 'json' where it is not 
+associated with a value
+INFO:     127.0.0.1:60092 - "POST /api/run-self-audit HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:53354 - "GET /assets/SettingsPage-Cz0RX_Cv.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53354 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57812 - "GET /api/topography HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57812 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53354 - "GET /api/topography HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60808 - "GET /logout HTTP/1.1" 200 OK

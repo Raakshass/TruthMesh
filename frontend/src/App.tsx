@@ -4,6 +4,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 import { AuthProvider, ProtectedRoute } from "@/lib/auth";
 import { AppShell } from "@/components/layout/AppShell";
@@ -44,6 +45,7 @@ export default function App() {
               <Route path="audit" element={<AuditPage />} />
               <Route path="settings" element={<SettingsPage />} />
             </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </AuthProvider>

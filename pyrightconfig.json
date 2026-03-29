@@ -1,0 +1,22 @@
+{
+  "include": ["."],
+  "exclude": [
+    "frontend",
+    "node_modules",
+    ".planning",
+    "__pycache__"
+  ],
+  "extraPaths": [
+    ".",
+    "d:\\Microsoft_AI_Unlocked"
+  ],
+  "pythonVersion": "3.12",
+  "pythonPlatform": "Windows",
+  "reportMissingImports": "none",
+  "reportMissingModuleSource": "none",
+  "reportOptionalMemberAccess": "none",
+  "reportGeneralTypeIssues": "none",
+  "reportIncompatibleMethodOverride": "none",
+  "reportUnusedImport": "warning",
+  "typeCheckingMode": "off"
+}

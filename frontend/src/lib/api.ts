@@ -86,10 +86,6 @@ export async function getSettingsData(): Promise<SettingsData> {
 
 /* ── SSE Stream ───────────────────────────────────────────────── */
 
-export function createVerifyStream(queryId: string): EventSource {
-  return new EventSource(`/api/verify/${queryId}`);
-}
-
 /* ── Pipeline ─────────────────────────────────────────────────── */
 
 export async function getRecentQuery() {
@@ -102,6 +98,21 @@ export async function getRecentQuery() {
     complete?: boolean;
     log?: { type: string; text: string }[];
   }>();
+}
+
+/* ── Settings Mutations ───────────────────────────────────────── */
+
+export async function getSettings() {
+  return api.get("api/settings").json();
+}
+
+export async function updateSettings(payload: Record<string, unknown>) {
+  return api.post("api/settings", { json: payload }).json();
+}
+
+export async function getAuditLog() {
+  const data = await getAuditData();
+  return data.audit_data;
 }
 
 export default api;

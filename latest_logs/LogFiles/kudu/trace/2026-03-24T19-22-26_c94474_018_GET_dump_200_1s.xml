@@ -1,4 +1,0 @@
-<step title="Incoming Request" date="2026-03-24T19:22:26.938" instance="c94474" url="/dump" method="GET" type="request" pid="770,1,32" Host="truthmeshsjain.scm.azurewebsites.net" User-Agent="AZURECLI/2.84.0 (PIP)" Accept-Encoding="identity" Authorization="Bas..." x-ms-client-request-id="c8a7a139-27b6-11f1-a90a-505a65c7f3b3" X-ARR-LOG-ID="c8a7a139-27b6-11f1-a90a-505a65c7f3b3" CLIENT-IP="103.37.201.191:58336" X-SITE-DEPLOYMENT-ID="truthmeshsjain" WAS-DEFAULT-HOSTNAME="truthmeshsjain.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/dump" X-Client-IP="103.37.201.191" X-Client-Port="58336" >
-  <step title="Cleanup Xml Logs" date="2026-03-24T19:22:26.965" /><!-- duration: 5ms -->
-  <step title="Outgoing response" date="2026-03-24T19:22:27.531" type="response" statusCode="200" statusText="OK" /><!-- duration: 3ms -->
-</step><!-- duration: 599ms -->

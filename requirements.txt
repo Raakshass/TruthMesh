@@ -9,6 +9,7 @@ motor
 azure-search-documents
 sse-starlette
 slowapi
+limits[sqlalchemy]
 cryptography
 bcrypt
 python-jose[cryptography]

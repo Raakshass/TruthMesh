@@ -1,390 +1,445 @@
-/* ── Pipeline Page ────────────────────────────────────────────────── */
-import { useState, useEffect } from "react";
+/* ── Pipeline Page — Premium Visualization ────────────────────── */
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import {
-  Shield,
-  Layers,
-  GitBranch,
-  Bot,
-  Scissors,
   Search,
-  Scale,
-  BarChart3,
+  Play,
+  CheckCircle2,
+  Clock,
+  Loader2,
   Terminal,
+  Zap,
   Activity,
+  ChevronRight,
 } from "lucide-react";
 import { useEventStream } from "@/hooks/useEventStream";
-import { getRecentQuery, getTopography, submitQuery } from "@/lib/api";
-import { cn } from "@/lib/utils";
-import type { PipelineStep, TopographyEntry } from "@/lib/types";
+import { submitQuery } from "@/lib/api";
+import type { PipelineStep } from "@/lib/types";
 
-const STEPS: { key: PipelineStep; label: string; icon: typeof Shield; desc: string }[] = [
-  { key: "shield", label: "Shield Agent", icon: Shield, desc: "Content safety & input sanitization" },
-  { key: "classify", label: "Domain Classifier", icon: Layers, desc: "Multi-label classification" },
-  { key: "route", label: "Smart Router", icon: GitBranch, desc: "Model selection & optimization" },
-  { key: "llm", label: "LLM Processing", icon: Bot, desc: "Response generation" },
-  { key: "decompose", label: "Decomposition", icon: Scissors, desc: "Atomic claim extraction" },
-  { key: "verify", label: "Multi-Source Verify", icon: Search, desc: "Cross-reference validation" },
-  { key: "consensus", label: "Consensus Engine", icon: Scale, desc: "Weighted agreement scoring" },
-  { key: "profile", label: "Topography", icon: BarChart3, desc: "Reliability profiling" },
+const STEPS: { key: PipelineStep; label: string; desc: string }[] = [
+  { key: "shield", label: "Shield Agent", desc: "Content safety & input validation" },
+  { key: "classify", label: "Domain Classification", desc: "Identify domain context" },
+  { key: "route", label: "Intelligent Routing", desc: "Select optimal model" },
+  { key: "llm", label: "LLM Generation", desc: "Generate response" },
+  { key: "decompose", label: "Claim Decomposition", desc: "Extract atomic sub-claims" },
+  { key: "verify", label: "Multi-Source Verification", desc: "Cross-reference sources" },
+  { key: "consensus", label: "Weighted Consensus", desc: "Aggregate trust scores" },
+  { key: "profile", label: "Bayesian Profiling", desc: "Update model reliability" },
 ];
 
 export default function PipelinePage() {
-  const [topography, setTopography] = useState<TopographyEntry[]>([]);
-  const [recentQuery, setRecentQuery] = useState<string>("");
-  const [queryInput, setQueryInput] = useState("");
+  const [queryText, setQueryText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const termRef = useRef<HTMLDivElement>(null);
   const stream = useEventStream();
 
-  useEffect(() => {
-    getTopography()
-      .then((d) => setTopography(d.topography as TopographyEntry[]))
-      .catch(console.error);
-    getRecentQuery()
-      .then((d) => {
-        if (d.query) setRecentQuery(d.query);
-      })
-      .catch(console.error);
-  }, []);
-
-  const handleSubmit = async () => {
-    const q = queryInput.trim();
-    if (!q) return;
-    stream.reset();
-    try {
-      const res = await submitQuery(q);
-      if (!res.blocked) stream.startStream(res.query_id);
-    } catch (err) {
-      console.error(err);
+  /* Derive terminal logs from step state */
+  const terminalLogs: string[] = useMemo(() => {
+    const logs: string[] = [];
+    const allSteps: PipelineStep[] = ["shield", "classify", "route", "llm", "decompose", "verify", "consensus", "profile"];
+    for (const step of allSteps) {
+      if (stream.completedSteps.has(step)) {
+        logs.push(`[DONE] ${step} completed`);
+      } else if (stream.activeSteps.has(step)) {
+        logs.push(`[INFO] Processing ${step}...`);
+      }
     }
+    if (stream.error) logs.push(`[ERROR] ${stream.error}`);
+    if (stream.status === "done") logs.push("[SUCCESS] Pipeline complete");
+    return logs;
+  }, [stream.completedSteps, stream.activeSteps, stream.error, stream.status]);
+
+  /* Auto-scroll terminal */
+  useEffect(() => {
+    if (termRef.current) {
+      termRef.current.scrollTop = termRef.current.scrollHeight;
+    }
+  }, [terminalLogs]);
+
+  const handleSubmit = useCallback(
+    async (q: string) => {
+      if (!q.trim() || submitting) return;
+      setSubmitting(true);
+      stream.reset();
+      try {
+        const res = await submitQuery(q);
+        if (res.blocked) {
+          toast.error("Query blocked by Shield Agent", {
+            description: res.shield?.reason || "Content safety violation",
+          });
+          return;
+        }
+        toast.info("Pipeline initiated");
+        stream.startStream(res.query_id);
+      } catch {
+        toast.error("Failed to submit query");
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    [submitting, stream]
+  );
+
+  const getStepStatus = (key: PipelineStep) => {
+    if (stream.completedSteps.has(key)) return "done";
+    if (stream.activeSteps.has(key)) return "active";
+    return "pending";
   };
 
   return (
     <div className="mx-auto max-w-[1400px] space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      {/* Page Header */}
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-extrabold tracking-tight text-on-surface">
             Verification Pipeline
           </h1>
-          <p className="mt-0.5 text-sm text-outline">
-            Real-time 8-step verification with live status tracking
+          <p className="text-xs text-outline">
+            Real-time 8-stage hallucination detection workflow
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <div
-            className={cn(
-              "flex items-center gap-2 rounded-full px-3 py-1.5",
-              stream.status === "streaming"
-                ? "bg-primary/10 text-primary"
-                : stream.status === "done"
-                  ? "bg-trust-pass/10 text-trust-pass"
-                  : "bg-container-high text-outline"
-            )}
-          >
-            <div
-              className={cn(
-                "size-2 rounded-full",
+        {/* Status Badge */}
+        <div className="flex items-center gap-2">
+          {stream.status === "streaming" && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="relative flex size-2"
+            >
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/50" />
+              <span className="relative inline-flex size-2 rounded-full bg-primary" />
+            </motion.span>
+          )}
+          <span
+            className="rounded-full px-3 py-1 text-xs font-bold uppercase"
+            style={{
+              background:
                 stream.status === "streaming"
-                  ? "animate-pulse bg-primary"
+                  ? "var(--color-container-high)"
                   : stream.status === "done"
-                    ? "bg-trust-pass"
-                    : "bg-outline"
-              )}
-            />
-            <span className="text-xs font-bold uppercase tracking-wider">
-              {stream.status === "streaming"
-                ? "Processing"
-                : stream.status === "done"
-                  ? "Complete"
-                  : "Idle"}
-            </span>
-          </div>
+                    ? "#dcfce7"
+                    : "var(--color-container)",
+              color:
+                stream.status === "streaming"
+                  ? "var(--color-primary)"
+                  : stream.status === "done"
+                    ? "#166534"
+                    : "var(--color-outline)",
+            }}
+          >
+            {stream.status === "streaming"
+              ? "Processing"
+              : stream.status === "done"
+                ? "Complete"
+                : "Idle"}
+          </span>
         </div>
       </div>
 
-      {/* Quick query bar */}
-      <div className="flex gap-3 rounded-xl bg-container-lowest p-3 shadow-ambient">
-        <input
-          type="text"
-          value={queryInput}
-          onChange={(e) => setQueryInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-          placeholder="Quick verify: Enter a claim or question..."
-          className="flex-1 rounded-lg bg-container-low px-4 py-2.5 text-sm text-on-surface outline-none placeholder:text-outline-variant focus:bg-container"
-        />
+      {/* Query Input Bar */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(queryText);
+        }}
+        className="flex items-center gap-3"
+      >
+        <div className="relative flex-1">
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-outline"
+          />
+          <input
+            type="text"
+            value={queryText}
+            onChange={(e) => setQueryText(e.target.value)}
+            placeholder="Enter a claim or hypothesis to verify..."
+            className="w-full rounded-lg border-[1.5px] border-outline-variant bg-container-lowest py-2.5 pl-10 pr-16 text-sm text-on-surface outline-none transition-all placeholder:text-outline-variant focus:border-primary focus:ring-3 focus:ring-primary/12 focus:shadow-glow-sm"
+          />
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[9px] text-outline-variant">
+            {queryText.length}
+          </span>
+        </div>
         <button
-          onClick={handleSubmit}
-          disabled={stream.status === "streaming"}
-          className="rounded-lg px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition-all hover:-translate-y-0.5 hover:shadow-glow disabled:opacity-60"
-          style={{ background: "linear-gradient(135deg, #003ec7, #0052ff)" }}
+          type="submit"
+          disabled={submitting || stream.status === "streaming"}
+          className="flex items-center gap-2 rounded-lg px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-on-primary transition-all hover:-translate-y-0.5 hover:shadow-glow disabled:opacity-60 gradient-primary"
         >
-          Verify
+          <Play size={14} />
+          Run
         </button>
-      </div>
+      </form>
 
       <div className="grid grid-cols-12 gap-5">
-        {/* ═══ Pipeline Steps ═══ */}
-        <div className="col-span-12 space-y-3 lg:col-span-8">
-          <h3 className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-            Pipeline Steps
-          </h3>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {STEPS.map(({ key, label, icon: Icon, desc }, i) => {
-              const isDone = stream.completedSteps.has(key);
-              const isActive = stream.activeSteps.has(key);
-
-              return (
-                <motion.div
-                  key={key}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className={cn(
-                    "relative overflow-hidden rounded-xl border-[1.5px] p-4 transition-all duration-500",
-                    isDone
-                      ? "border-primary/30 bg-container-lowest shadow-glow-sm"
-                      : isActive
-                        ? "border-primary/20 bg-container-lowest shadow-ambient"
-                        : "border-transparent bg-container-low"
-                  )}
-                >
-                  {isActive && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent"
-                    />
-                  )}
-                  <div className="relative flex items-start gap-3">
+        {/* ── Pipeline Steps ────────────────────────────────── */}
+        <div className="col-span-12 space-y-0 lg:col-span-5">
+          {STEPS.map((step, i) => {
+            const status = getStepStatus(step.key);
+            return (
+              <div key={step.key}>
+                {/* Connector Line */}
+                {i > 0 && (
+                  <div className="ml-5 flex h-5 items-center">
                     <div
-                      className={cn(
-                        "flex size-9 shrink-0 items-center justify-center rounded-lg transition-all duration-500",
-                        isDone
-                          ? "bg-primary text-white"
-                          : isActive
-                            ? "bg-primary/15 text-primary"
-                            : "bg-container text-outline"
-                      )}
-                    >
-                      <Icon size={16} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-bold text-on-surface">
-                          {label}
-                        </p>
-                        <span
-                          className={cn(
-                            "rounded-full px-2 py-0.5 text-[9px] font-bold uppercase",
-                            isDone
-                              ? "bg-primary/10 text-primary"
-                              : isActive
-                                ? "bg-trust-medium/10 text-trust-medium"
-                                : "bg-container text-outline"
-                          )}
-                        >
-                          {isDone ? "Done" : isActive ? "Active" : "Pending"}
-                        </span>
-                      </div>
-                      <p className="mt-0.5 text-xs text-outline">{desc}</p>
-                    </div>
-                  </div>
-                  {/* Progress bar */}
-                  <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-container">
-                    <motion.div
-                      className="h-full rounded-full"
-                      initial={{ width: "0%" }}
-                      animate={{
-                        width: isDone ? "100%" : isActive ? "60%" : "0%",
-                      }}
-                      transition={{ duration: 0.6, ease: "easeOut" }}
-                      style={{
-                        background:
-                          "linear-gradient(90deg, #003ec7, #0052ff)",
-                      }}
+                      className={
+                        status === "done" || getStepStatus(STEPS[i - 1].key) === "done"
+                          ? "connector-line-active h-full"
+                          : "connector-line h-full"
+                      }
                     />
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
+                )}
 
-          {/* Live Terminal */}
-          <div className="mt-4 rounded-xl bg-[#0f172a] p-4 shadow-ambient-lg">
-            <div className="mb-3 flex items-center gap-2">
-              <Terminal size={14} className="text-slate-400" />
-              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
-                Live Terminal
-              </span>
-              <div className="ml-auto flex gap-1.5">
-                <span className="size-2.5 rounded-full bg-red-500/60" />
-                <span className="size-2.5 rounded-full bg-yellow-500/60" />
-                <span className="size-2.5 rounded-full bg-green-500/60" />
+                {/* Step Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                  className="relative flex items-center gap-3 rounded-xl p-3 transition-all card-hover"
+                  style={{
+                    background:
+                      status === "active"
+                        ? "var(--color-container-high)"
+                        : status === "done"
+                          ? "var(--color-container-lowest)"
+                          : "transparent",
+                    border:
+                      status === "active"
+                        ? "1.5px solid var(--color-primary)"
+                        : "1.5px solid transparent",
+                    ...(status === "active"
+                      ? { boxShadow: "var(--shadow-glow-sm)" }
+                      : {}),
+                  }}
+                >
+                  {/* Step icon */}
+                  <div
+                    className="flex size-10 shrink-0 items-center justify-center rounded-lg"
+                    style={{
+                      background:
+                        status === "done"
+                          ? "#dcfce7"
+                          : status === "active"
+                            ? "var(--color-primary)"
+                            : "var(--color-container)",
+                    }}
+                  >
+                    {status === "done" ? (
+                      <CheckCircle2 size={18} className="text-green-700" />
+                    ) : status === "active" ? (
+                      <Loader2
+                        size={18}
+                        className="animate-spin text-on-primary"
+                      />
+                    ) : (
+                      <Clock size={16} className="text-outline" />
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="text-sm font-bold"
+                        style={{
+                          color:
+                            status === "done"
+                              ? "var(--color-on-surface)"
+                              : status === "active"
+                                ? "var(--color-primary)"
+                                : "var(--color-on-surface-variant)",
+                        }}
+                      >
+                        {step.label}
+                      </span>
+                      <span className="rounded-full bg-container px-1.5 text-[8px] font-mono font-bold text-outline">
+                        {i + 1}/8
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-outline">{step.desc}</p>
+                  </div>
+
+                  {status === "active" && (
+                    <motion.div
+                      animate={{ x: [0, 3, 0] }}
+                      transition={{ repeat: Infinity, duration: 1 }}
+                    >
+                      <ChevronRight size={14} className="text-primary" />
+                    </motion.div>
+                  )}
+                </motion.div>
               </div>
-            </div>
-            <div className="h-[200px] overflow-y-auto font-mono text-xs">
-              <AnimatePresence>
-                {stream.status === "idle" && !recentQuery && (
-                  <p className="text-slate-600">
-                    {">"} Waiting for query input...
-                  </p>
-                )}
-                {stream.status === "idle" && recentQuery && (
-                  <p className="text-slate-500">
-                    {">"} Last query: {recentQuery}
-                  </p>
-                )}
-                {Array.from(stream.completedSteps).map((step) => (
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex gap-2 py-0.5"
-                  >
-                    <span className="text-green-400">✓</span>
-                    <span className="text-slate-400">
-                      [{step.toUpperCase()}]
-                    </span>
-                    <span className="text-slate-300">completed</span>
-                  </motion.div>
-                ))}
-                {Array.from(stream.activeSteps).map((step) => (
-                  <motion.div
-                    key={`active-${step}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0.4, 1, 0.4] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                    className="flex gap-2 py-0.5"
-                  >
-                    <span className="text-blue-400">⟳</span>
-                    <span className="text-blue-300">
-                      [{step.toUpperCase()}]
-                    </span>
-                    <span className="text-blue-200">processing...</span>
-                  </motion.div>
-                ))}
-                {stream.overallTrust && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="mt-2 border-t border-slate-700 pt-2"
-                  >
-                    <p className="text-emerald-400">
-                      ✓ Trust Score:{" "}
-                      {Math.round(stream.overallTrust.overall_score * 100)}%
-                    </p>
-                    <p className="text-slate-500">
-                      {">"} {stream.overallTrust.verified_claims}/
-                      {stream.overallTrust.total_claims} claims verified
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
+            );
+          })}
         </div>
 
-        {/* ═══ Right: Decision Matrix + Topography ═══ */}
-        <div className="col-span-12 space-y-5 lg:col-span-4">
-          {/* Decision Matrix */}
-          <div className="rounded-xl bg-container-lowest p-5 shadow-ambient">
-            <h3 className="mb-3 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-              Decision Matrix
-            </h3>
-            <AnimatePresence>
-              {stream.responseModel ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="space-y-3"
-                >
-                  <div className="rounded-lg bg-container-low p-3">
-                    <p className="text-[10px] font-bold uppercase text-outline">
-                      Selected Model
-                    </p>
-                    <p className="mt-1 text-sm font-bold text-primary">
-                      {stream.responseModel}
-                    </p>
-                  </div>
-                  {stream.overallTrust && (
-                    <div className="rounded-lg bg-container-low p-3">
-                      <p className="text-[10px] font-bold uppercase text-outline">
-                        Confidence
-                      </p>
-                      <p className="mt-1 text-sm font-bold text-on-surface">
-                        {Math.round(
-                          stream.overallTrust.average_confidence * 100
-                        )}
-                        %
-                      </p>
+        {/* ── Terminal + Results ─────────────────────────────── */}
+        <div className="col-span-12 space-y-5 lg:col-span-7">
+          {/* Live Terminal */}
+          <div className="overflow-hidden rounded-xl border border-slate-700/50 shadow-ambient-lg">
+            <div className="flex items-center gap-2 bg-slate-800 px-4 py-2">
+              <div className="flex gap-1.5">
+                <div className="size-2.5 rounded-full bg-red-500/60" />
+                <div className="size-2.5 rounded-full bg-yellow-500/60" />
+                <div className="size-2.5 rounded-full bg-green-500/60" />
+              </div>
+              <Terminal size={12} className="ml-2 text-slate-400" />
+              <span className="text-[10px] font-mono font-bold text-slate-400">
+                truthmesh-pipeline
+              </span>
+              {stream.status === "streaming" && (
+                <span className="ml-auto text-[9px] font-mono text-green-400 animate-pulse">
+                  ● LIVE
+                </span>
+              )}
+            </div>
+            <div
+              ref={termRef}
+              className="terminal-body h-64 overflow-y-auto p-4 text-[11px] leading-relaxed font-mono"
+            >
+              {terminalLogs.length === 0 ? (
+                <div className="flex h-full items-center justify-center text-slate-500">
+                  <Activity size={14} className="mr-2 animate-pulse" />
+                  Awaiting pipeline execution...
+                </div>
+              ) : (
+                <>
+                  {terminalLogs.map((log: string, i: number) => (
+                    <div key={i} className="flex gap-3 py-0.5 hover:bg-white/[0.02] rounded">
+                      <span className="w-6 shrink-0 text-right text-slate-600 select-none">
+                        {i + 1}
+                      </span>
+                      <span
+                        className={
+                          log.includes("[ERROR]")
+                            ? "terminal-line-error"
+                            : log.includes("[DONE]") || log.includes("[SUCCESS]")
+                              ? "terminal-line-success"
+                              : log.includes("Processing") || log.includes("[INFO]")
+                                ? "terminal-line-processing"
+                                : "terminal-line-info"
+                        }
+                      >
+                        {log}
+                      </span>
+                    </div>
+                  ))}
+                  {stream.status === "streaming" && (
+                    <div className="flex gap-3 py-0.5">
+                      <span className="w-6 shrink-0 text-right text-slate-600 select-none">
+                        {terminalLogs.length + 1}
+                      </span>
+                      <span className="terminal-cursor" />
                     </div>
                   )}
-                </motion.div>
-              ) : (
-                <div className="flex h-24 items-center justify-center rounded-lg bg-container-low">
-                  <p className="text-xs text-outline">
-                    Run a query to see decisions
-                  </p>
-                </div>
+                </>
               )}
-            </AnimatePresence>
+            </div>
           </div>
 
-          {/* Topography Map */}
-          <div className="rounded-xl bg-container-lowest p-5 shadow-ambient">
-            <div className="mb-3 flex items-center gap-2">
-              <Activity size={14} className="text-primary" />
-              <h3 className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-                Domain Reliability
-              </h3>
-            </div>
-            <div className="space-y-2.5">
-              {topography.length > 0 ? (
-                topography.slice(0, 6).map((entry, i) => (
-                  <motion.div
-                    key={`${entry.domain}-${entry.model}`}
-                    initial={{ opacity: 0, x: 8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <div className="flex justify-between text-xs">
-                      <span className="font-bold text-on-surface">
-                        {entry.domain}
-                      </span>
-                      <span className="font-mono text-outline">
-                        {Math.round(entry.reliability_score * 100)}%
-                      </span>
+          {/* Decision Matrix */}
+          <AnimatePresence>
+            {stream.overallTrust && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl bg-container-lowest p-5 shadow-ambient"
+              >
+                <h3 className="mb-4 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                  <Zap size={12} className="text-primary" />
+                  Decision Matrix
+                </h3>
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                  {[
+                    { label: "Overall Trust", value: `${Math.round(stream.overallTrust.overall_score * 100)}%`, accent: "#003ec7" },
+                    { label: "Verified Claims", value: `${stream.overallTrust.verified_claims}/${stream.overallTrust.total_claims}`, accent: "#22c55e" },
+                    {
+                      label: "Avg Confidence",
+                      value: stream.verifications.length > 0
+                        ? `${Math.round((stream.verifications.reduce((s, v) => s + v.consensus.confidence, 0) / stream.verifications.length) * 100)}%`
+                        : "--",
+                      accent: "#eab308",
+                    },
+                    {
+                      label: "Agreement Ratio",
+                      value: stream.verifications.length > 0
+                        ? `${Math.round((stream.verifications.reduce((s, v) => s + v.consensus.agreement_ratio, 0) / stream.verifications.length) * 100)}%`
+                        : "--",
+                      accent: "#0052ff",
+                    },
+                  ].map((stat) => (
+                    <div
+                      key={stat.label}
+                      className="rounded-lg border border-outline-variant/15 bg-surface p-4 text-center"
+                    >
+                      <p className="text-2xl font-black text-on-surface">
+                        {stat.value}
+                      </p>
+                      <p className="mt-1 text-[9px] font-bold uppercase tracking-widest text-outline">
+                        {stat.label}
+                      </p>
                     </div>
-                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-container">
-                      <motion.div
-                        className="h-full rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{
-                          width: `${entry.reliability_score * 100}%`,
-                        }}
-                        transition={{ duration: 0.8, delay: i * 0.1 }}
-                        style={{
-                          background:
-                            entry.reliability_score >= 0.8
-                              ? "linear-gradient(90deg, #003ec7, #0052ff)"
-                              : entry.reliability_score >= 0.5
-                                ? "linear-gradient(90deg, #ca8a04, #eab308)"
-                                : "linear-gradient(90deg, #dc2626, #ef4444)",
-                        }}
-                      />
-                    </div>
-                    <p className="mt-0.5 text-[9px] text-outline">
-                      {entry.model} · {entry.total_queries} queries
-                    </p>
-                  </motion.div>
-                ))
-              ) : (
-                <div className="flex h-24 items-center justify-center rounded-lg bg-container-low">
-                  <p className="text-xs text-outline">No topography data</p>
+                  ))}
                 </div>
-              )}
-            </div>
-          </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Domain Reliability */}
+          <AnimatePresence>
+            {stream.verifications.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl bg-container-lowest p-5 shadow-ambient"
+              >
+                <h3 className="mb-3 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
+                  Source Reliability
+                </h3>
+                <div className="space-y-3">
+                  {(() => {
+                    const sourceScores: Record<string, { total: number; count: number }> = {};
+                    stream.verifications.forEach((v) => {
+                      v.sources.forEach((s) => {
+                        if (!sourceScores[s.source]) {
+                          sourceScores[s.source] = { total: 0, count: 0 };
+                        }
+                        sourceScores[s.source].total += s.confidence;
+                        sourceScores[s.source].count += 1;
+                      });
+                    });
+                    return Object.entries(sourceScores).map(([src, { total, count }]) => {
+                      const avg = Math.round((total / count) * 100);
+                      return (
+                        <div key={src}>
+                          <div className="flex justify-between text-xs font-bold text-on-surface-variant mb-1">
+                            <span>{src}</span>
+                            <span>{avg}%</span>
+                          </div>
+                          <div className="h-2 overflow-hidden rounded-full bg-container">
+                            <motion.div
+                              className="h-full rounded-full"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${avg}%` }}
+                              transition={{ duration: 0.6, delay: 0.1 }}
+                              style={{
+                                background:
+                                  avg >= 75
+                                    ? "linear-gradient(90deg, #22c55e, #4ade80)"
+                                    : avg >= 45
+                                      ? "linear-gradient(90deg, #eab308, #facc15)"
+                                      : "linear-gradient(90deg, #ef4444, #f87171)",
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    });
+                  })()}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

@@ -22,23 +22,48 @@ const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // On mount: check for existing token and restore session
   useEffect(() => {
-    // Disabled token verification for hackathon demo access
+    const token = sessionStorage.getItem("tm_token");
+    if (token) {
+      getMe()
+        .then((me) => setUser(me))
+        .catch(() => {
+          sessionStorage.removeItem("tm_token");
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const login = async (username: string, password: string) => {
-    // Instantly bypass login with a mock admin user
-    setUser({
-      user_id: 1,
-      username: username || "Admin",
-      role: "Admin"
-    });
+    setError(null);
+    setLoading(true);
+    try {
+      await apiLogin(username, password);
+      const me = await getMe();
+      setUser(me);
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Login failed";
+      setError(msg);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await fetch("/logout", { method: "GET", credentials: "include" });
+    } catch {
+      // best-effort
+    }
+    sessionStorage.removeItem("tm_token");
     setUser(null);
   };
 

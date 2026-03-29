@@ -3,48 +3,64 @@
 Applies domain-specific source weights to produce a final confidence score
 and pass/partial/fail verdict per claim.
 """
+from config import Config
 
-# Domain-specific source weights
-SOURCE_WEIGHTS = {
-    "Medical": {"bing": 0.35, "wikipedia": 0.20, "cross_model": 0.25, "wolfram": 0.20},
-    "Legal": {"bing": 0.40, "wikipedia": 0.15, "cross_model": 0.30, "wolfram": 0.15},
-    "Finance": {"bing": 0.30, "wikipedia": 0.15, "cross_model": 0.25, "wolfram": 0.30},
-    "Science": {"bing": 0.25, "wikipedia": 0.25, "cross_model": 0.25, "wolfram": 0.25},
-    "History": {"bing": 0.25, "wikipedia": 0.35, "cross_model": 0.30, "wolfram": 0.10},
-}
-
-# Default weights if domain not found
-DEFAULT_WEIGHTS = {"bing": 0.30, "wikipedia": 0.25, "cross_model": 0.25, "wolfram": 0.20}
+# Import from single source of truth
+SOURCE_WEIGHTS = Config.SOURCE_WEIGHTS
+DEFAULT_WEIGHTS = Config.DEFAULT_WEIGHTS
 
 
-def compute_consensus(verification_results: list, domain: str,
-                       domain_vector: dict = None) -> dict:
+async def compute_consensus(verification_results: list, domain: str,
+                       domain_vector: dict = None,
+                       settings: dict = None) -> dict:
     """Compute domain-weighted consensus from multiple verification sources.
 
     Args:
         verification_results: List of dicts from verifier.verify_claim()
         domain: Primary domain for weight selection
         domain_vector: Optional probability vector for cross-domain weighting
+        settings: Optional pre-fetched settings dict to avoid DB round-trip
 
     Returns:
         Dict with final confidence, verdict, and per-source breakdown
     """
-    weights = SOURCE_WEIGHTS.get(domain, DEFAULT_WEIGHTS)
+    if not settings:
+        from database import get_settings
+        settings = await get_settings()
+    source_weights = settings.get("source_weights") if settings else None
+    if not source_weights:
+        source_weights = Config.SOURCE_WEIGHTS
+        
+    weights = source_weights.get(domain, Config.DEFAULT_WEIGHTS)
 
     # If we have a domain vector with multiple significant domains,
     # blend the weights proportionally
     if domain_vector:
-        blended_weights = {"bing": 0, "wikipedia": 0, "cross_model": 0, "wolfram": 0}
+        # Dynamically derive all source keys from all domain weights
+        all_sources = set()
+        for dw in source_weights.values():
+            all_sources.update(dw.keys())
+        blended_weights = {s: 0.0 for s in all_sources}
+
         for d, prob in domain_vector.items():
             if prob > 0.1:  # Only blend domains with >10% probability
-                dw = SOURCE_WEIGHTS.get(d, DEFAULT_WEIGHTS)
+                dw = source_weights.get(d, Config.DEFAULT_WEIGHTS)
                 for source in blended_weights:
-                    blended_weights[source] += prob * dw[source]
+                    blended_weights[source] += prob * dw.get(source, 0.0)
         # Normalize
         total = sum(blended_weights.values())
         if total > 0:
             weights = {s: w / total for s, w in blended_weights.items()}
 
+    if not verification_results:
+        return {
+            "final_confidence": 0.0,
+            "final_verdict": "fail",
+            "source_breakdown": [],
+            "weights_used": {k: round(v, 3) for k, v in weights.items()},
+            "verdict_distribution": {}
+        }
+    
     # Aggregate
     weighted_confidence = 0.0
     total_weight = 0.0
@@ -55,6 +71,8 @@ def compute_consensus(verification_results: list, domain: str,
         source = result["source"]
         weight = weights.get(source, 0.1)
         verdict = result["verdict"]
+        if verdict == "neutral":
+            verdict = "inconclusive"
         confidence = result["confidence"]
 
         # Skip not_applicable sources

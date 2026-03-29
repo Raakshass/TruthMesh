@@ -1,5 +1,5 @@
-/* ── SSE Event Stream Hook ───────────────────────────────────────── */
-import { useCallback, useRef, useState } from "react";
+/* ── SSE Event Stream Store (Zustand) ────────────────────────────── */
+import { create } from "zustand";
 import type {
   PipelineStep,
   ClaimVerification,
@@ -19,12 +19,14 @@ interface StreamState {
   verifications: ClaimVerification[];
   overallTrust: OverallTrust | null;
   error: string | null;
+  startStream: (queryId: string) => void;
+  reset: () => void;
 }
 
-const INITIAL_STATE: StreamState = {
-  status: "idle",
-  activeSteps: new Set(),
-  completedSteps: new Set(),
+const INITIAL_STATE = {
+  status: "idle" as StreamStatus,
+  activeSteps: new Set<PipelineStep>(),
+  completedSteps: new Set<PipelineStep>(),
   responseText: null,
   responseModel: null,
   claims: [],
@@ -33,34 +35,32 @@ const INITIAL_STATE: StreamState = {
   error: null,
 };
 
-export function useEventStream() {
-  const [state, setState] = useState<StreamState>(INITIAL_STATE);
-  const esRef = useRef<EventSource | null>(null);
+let esRef: EventSource | null = null;
 
-  const reset = useCallback(() => {
-    esRef.current?.close();
-    esRef.current = null;
-    setState(INITIAL_STATE);
-  }, []);
+export const useEventStream = create<StreamState>((set) => ({
+  ...INITIAL_STATE,
 
-  const startStream = useCallback((queryId: string) => {
-    esRef.current?.close();
-    setState({
-      ...INITIAL_STATE,
-      status: "connecting",
-    });
+  reset: () => {
+    esRef?.close();
+    esRef = null;
+    set(INITIAL_STATE);
+  },
+
+  startStream: (queryId: string) => {
+    esRef?.close();
+    set({ ...INITIAL_STATE, status: "connecting" });
 
     const es = new EventSource(`/api/verify/${queryId}`);
-    esRef.current = es;
+    esRef = es;
 
     es.onopen = () => {
-      setState((s) => ({ ...s, status: "streaming" }));
+      set({ status: "streaming" });
     };
 
     // Pipeline step events
     const stepHandler = (stepName: PipelineStep) => (e: MessageEvent) => {
       const data = JSON.parse(e.data);
-      setState((s) => {
+      set((s) => {
         const completed = new Set(s.completedSteps);
         const active = new Set(s.activeSteps);
 
@@ -71,7 +71,7 @@ export function useEventStream() {
           active.add(stepName);
         }
 
-        return { ...s, completedSteps: completed, activeSteps: active };
+        return { completedSteps: completed, activeSteps: active };
       });
     };
 
@@ -87,24 +87,22 @@ export function useEventStream() {
     // Response
     es.addEventListener("response", (e: MessageEvent) => {
       const data = JSON.parse(e.data);
-      setState((s) => ({
-        ...s,
+      set({
         responseText: data.response_text,
         responseModel: data.model,
-      }));
+      });
     });
 
     // Claims
     es.addEventListener("claims", (e: MessageEvent) => {
       const data = JSON.parse(e.data);
-      setState((s) => ({ ...s, claims: data.claims }));
+      set({ claims: data.claims });
     });
 
     // Individual verification
     es.addEventListener("verification", (e: MessageEvent) => {
       const data: ClaimVerification = JSON.parse(e.data);
-      setState((s) => ({
-        ...s,
+      set((s) => ({
         verifications: [...s.verifications, data],
       }));
     });
@@ -112,37 +110,46 @@ export function useEventStream() {
     // Overall trust score
     es.addEventListener("overall_trust", (e: MessageEvent) => {
       const data: OverallTrust = JSON.parse(e.data);
-      setState((s) => ({ ...s, overallTrust: data }));
+      set({ overallTrust: data });
     });
 
     // Done
     es.addEventListener("done", () => {
-      setState((s) => ({ ...s, status: "done" }));
+      set({ status: "done" });
       es.close();
     });
 
-    // Error
+    // Custom application error event from server
     es.addEventListener("error", (e: MessageEvent) => {
-      const data = JSON.parse(e.data);
-      setState((s) => ({
-        ...s,
-        status: "error",
-        error: data.error || "Stream error",
-      }));
+      try {
+        const data = JSON.parse(e.data);
+        set({
+          status: "error",
+          error: data.error || "Stream error",
+        });
+      } catch {
+        set({
+          status: "error",
+          error: "Unknown stream error",
+        });
+      }
       es.close();
     });
 
     es.onerror = () => {
+      // Native EventSource error — connection dropped
       if (es.readyState === EventSource.CLOSED) {
-        setState((s) => {
-          if (s.status === "streaming") {
-            return { ...s, status: "done" };
+        set((s) => {
+          if (s.status === "streaming" || s.status === "connecting") {
+            // Stream was in progress; treat as done if we had data, error otherwise
+            if (s.verifications.length > 0 || s.overallTrust) {
+              return { status: "done" };
+            }
+            return { status: "error", error: "Connection lost. Please retry." };
           }
-          return { ...s, status: "error", error: "Connection lost" };
+          return {};
         });
       }
     };
-  }, []);
-
-  return { ...state, startStream, reset };
-}
+  },
+}));

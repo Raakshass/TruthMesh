@@ -1,3 +1,0 @@
-2026-03-24T18:35:57.2660557Z,Fetching changes.,00a73223-fb89-453c-a338-21ce7a0b4a90,0
-	2026-03-24T18:35:58.3605199Z,Starting  LocalZipHandler,,0
-	2026-03-24T18:35:58.4893039Z,Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/2083905f-435f-4a54-99d5-bd7962a15229.zip (0.31 MB) to /tmp/zipdeploy/extracted,,0

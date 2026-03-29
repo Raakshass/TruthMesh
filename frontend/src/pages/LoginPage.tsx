@@ -133,7 +133,7 @@ export default function LoginPage() {
             <p className="text-[11px] text-slate-400">
               Demo credentials: <br className="lg:hidden"/>
               <code className="font-mono mt-1 inline-block font-semibold text-[#4ade80] bg-[#4ade80]/10 px-1.5 py-0.5 rounded">
-                demo / demo123
+                demo / demo
               </code>
             </p>
           </div>

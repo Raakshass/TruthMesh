@@ -7,14 +7,73 @@ Sources:
   4. Wikidata SPARQL (History/Science/General facts)
   5. Cross-Model (Consistency check)
   6. Wolfram Alpha (Numeric claims - Short Answers API)
+
+Resilience: Circuit breaker pattern per source — after 3 consecutive failures,
+the circuit trips and returns fallback results immediately for 10 minutes,
+preventing dead APIs from exhausting the Uvicorn worker pool.
 """
 import httpx
 import json
 import re
 import os
+import time
 import urllib.parse
 from config import Config
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+
+
+# ── Circuit Breaker ──────────────────────────────────────────────────────
+class CircuitBreaker:
+    """Lightweight in-process circuit breaker per verification source.
+
+    States: CLOSED (normal) → OPEN (tripped) → HALF-OPEN (testing recovery)
+    - Trips after `failure_threshold` consecutive failures
+    - Auto-recovers after `recovery_timeout` seconds
+    - No external dependencies (Redis, etc.) — runs in-process
+    """
+
+    def __init__(self, failure_threshold: int = 3, recovery_timeout: int = 600):
+        self._failure_threshold = failure_threshold
+        self._recovery_timeout = recovery_timeout
+        self._failures: dict[str, int] = {}          # source → consecutive failure count
+        self._tripped_at: dict[str, float] = {}      # source → timestamp when tripped
+
+    def is_open(self, source: str) -> bool:
+        """Check if circuit is open (tripped) for a source."""
+        if source not in self._tripped_at:
+            return False
+        elapsed = time.time() - self._tripped_at[source]
+        if elapsed >= self._recovery_timeout:
+            # Auto-recover: move to HALF-OPEN (allow one attempt)
+            del self._tripped_at[source]
+            self._failures[source] = self._failure_threshold - 1  # One more failure re-trips
+            return False
+        return True
+
+    def record_success(self, source: str):
+        """Reset failure count on success."""
+        self._failures[source] = 0
+        self._tripped_at.pop(source, None)
+
+    def record_failure(self, source: str):
+        """Increment failure count; trip if threshold exceeded."""
+        self._failures[source] = self._failures.get(source, 0) + 1
+        if self._failures[source] >= self._failure_threshold:
+            self._tripped_at[source] = time.time()
+            print(f"[CIRCUIT-BREAKER] ⚡ {source} tripped after {self._failures[source]} consecutive failures. "
+                  f"Recovering in {self._recovery_timeout}s.")
+
+    def status(self) -> dict:
+        """Return current state of all tracked sources."""
+        return {
+            src: "OPEN" if self.is_open(src) else "CLOSED"
+            for src in set(list(self._failures.keys()) + list(self._tripped_at.keys()))
+        }
+
+
+# Global circuit breaker instance (shared across all requests in this worker)
+_circuit = CircuitBreaker(failure_threshold=3, recovery_timeout=600)
+
 
 @retry(
     stop=stop_after_attempt(3),
@@ -23,7 +82,12 @@ from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_excep
     reraise=True
 )
 async def fetch_with_backoff(client: httpx.AsyncClient, method: str, url: str, **kwargs):
-    response = await client.request(method, url, **kwargs)
+    if method.upper() == "GET":
+        response = await client.get(url, **kwargs)
+    elif method.upper() == "POST":
+        response = await client.post(url, **kwargs)
+    else:
+        response = await client.request(method, url, **kwargs)
     response.raise_for_status()
     return response
 # Domain-specific Bing site scoping
@@ -35,15 +99,7 @@ DOMAIN_SITES = {
     "History": "site:britannica.com OR site:nationalarchives.gov.uk",
 }
 
-# Source Weights (Enterprise Configuration via Azure AI Search)
-SOURCE_WEIGHTS = {
-    "Medical": {"ai_search": 0.50, "pubmed": 0.15, "bing": 0.15, "cross_model": 0.10, "wolfram": 0.10},
-    "Legal": {"bing": 0.40, "factcheck": 0.30, "cross_model": 0.30},
-    "Finance": {"bing": 0.30, "wolfram": 0.30, "factcheck": 0.20, "cross_model": 0.20},
-    "Science": {"wikidata": 0.30, "ai_search": 0.25, "bing": 0.20, "wolfram": 0.15, "cross_model": 0.10},
-    "History": {"wikidata": 0.40, "bing": 0.30, "factcheck": 0.20, "cross_model": 0.10},
-    "General": {"factcheck": 0.35, "bing": 0.35, "cross_model": 0.20, "wikidata": 0.10}
-}
+# Source Weights are now fetched dynamically from the DB via get_settings()
 
 
 async def evaluate_entailment(claim: str, evidence: str, openai_client) -> dict:
@@ -346,7 +402,12 @@ async def verify_cross_model(claim: str, primary_model: str, openai_client=None)
 
 async def verify_claim(claim: str, claim_type: str, domain: str,
                        primary_model: str, openai_client=None) -> list:
-    """Run concurrent domain-specific source verification."""
+    """Run concurrent domain-specific source verification with circuit breaker.
+
+    Each source is checked against the circuit breaker before dispatch.
+    If a source's circuit is OPEN (tripped), a fallback result is returned
+    immediately, saving ~30s of retry time on dead APIs.
+    """
     import asyncio
     try:
         import database
@@ -363,35 +424,67 @@ async def verify_claim(claim: str, claim_type: str, domain: str,
     except Exception as e:
         print(f"[VERIFIER] Ground truth cache lookup failed: {e}")
 
-    weights = SOURCE_WEIGHTS.get(domain, SOURCE_WEIGHTS["General"])
+    from database import get_settings
+    settings = await get_settings()
+    source_weights = settings.get("source_weights") if settings else None
+    if not source_weights:
+        source_weights = Config.SOURCE_WEIGHTS
+        
+    weights = source_weights.get(domain, source_weights.get("General", {}))
+
+    # ── Circuit Breaker: skip tripped sources ────────────────────────────
+    source_map = {
+        "ai_search": lambda: verify_ai_search(claim, domain, openai_client),
+        "pubmed": lambda: verify_pubmed(claim, openai_client),
+        "bing": lambda: verify_with_bing(claim, domain, openai_client),
+        "factcheck": lambda: verify_factcheck(claim, openai_client),
+        "wikidata": lambda: verify_wikidata(claim, openai_client),
+        "cross_model": lambda: verify_cross_model(claim, primary_model, openai_client),
+        "wolfram": lambda: verify_wolfram(claim),
+    }
+
+    async def _async_mock(s, c, d):
+        """Async wrapper for mock results when circuit breaker is open."""
+        return _mock_result(s, c, d)
+
     tasks = []
-    
-    if "ai_search" in weights:
-        tasks.append(verify_ai_search(claim, domain, openai_client))
-    if "pubmed" in weights:
-        tasks.append(verify_pubmed(claim, openai_client))
-    if "bing" in weights:
-        tasks.append(verify_with_bing(claim, domain, openai_client))
-    if "factcheck" in weights:
-        tasks.append(verify_factcheck(claim, openai_client))
-    if "wikidata" in weights:
-        tasks.append(verify_wikidata(claim, openai_client))
-    if "cross_model" in weights:
-        tasks.append(verify_cross_model(claim, primary_model, openai_client))
-    if "wolfram" in weights or claim_type == "numerical":
-        tasks.append(verify_wolfram(claim))
+    task_sources = []  # Track which source each task index maps to
+
+    for src in weights:
+        if src not in source_map and src != "wolfram":
+            continue
+        if _circuit.is_open(src):
+            print(f"[CIRCUIT-BREAKER] ⏭ Skipping {src} (circuit OPEN)")
+            tasks.append(_async_mock(src, claim, domain))
+            task_sources.append(src)
+        else:
+            tasks.append(source_map[src]())
+            task_sources.append(src)
+
+    # Wolfram for numerical claims (if not already added via weights)
+    if claim_type == "numerical" and "wolfram" not in task_sources:
+        if _circuit.is_open("wolfram"):
+            tasks.append(_async_mock("wolfram", claim, domain))
+        else:
+            tasks.append(verify_wolfram(claim))
+        task_sources.append("wolfram")
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
     clean_results = []
-    for r in results:
+    for idx, r in enumerate(results):
+        src = task_sources[idx] if idx < len(task_sources) else "unknown"
         if isinstance(r, Exception):
-            print(f"[VERIFIER] Task exception: {r}")
+            print(f"[VERIFIER] Task exception ({src}): {r}")
+            _circuit.record_failure(src)
             clean_results.append({
-                "source": "unknown", "source_detail": "Error handling source",
+                "source": src, "source_detail": f"Error in {src}",
                 "verdict": "inconclusive", "confidence": 0.3, "evidence_snippet": "Timeout or error"
             })
         elif r:
+            # Only record success if it's not a mock/fallback result
+            if isinstance(r, dict) and "Synthetic response" not in r.get("evidence_snippet", ""):
+                _circuit.record_success(src)
             clean_results.append(r)
 
     # For demo mode: inject fallback mocks for any failed sources

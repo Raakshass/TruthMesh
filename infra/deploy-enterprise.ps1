@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$RG = "TruthMesh-AI-Prod"
+$RG = "Budget-RG"
 $Location = "centralindia"
 
 Write-Host "----------------------------------------" -ForegroundColor Cyan

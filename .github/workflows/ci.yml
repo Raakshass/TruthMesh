@@ -1,0 +1,95 @@
+name: CI — Test & Build
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ─── Stage 1: Backend Tests ──────────────────────────────────────────
+  test-backend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run pytest with coverage
+        env:
+          # Stub env vars — tests mock external APIs
+          JWT_SECRET_KEY: ci-test-secret-key-not-real
+          ADMIN_PASSWORD: ci-admin
+          DEMO_PASSWORD: ci-demo
+          DEMO_MODE: "true"
+        run: |
+          python -m pytest pipeline/tests/ \
+            -v \
+            --tb=short \
+            --strict-markers \
+            -x \
+            --co -q 2>/dev/null | head -20
+          python -m pytest pipeline/tests/ \
+            -v \
+            --tb=short \
+            --strict-markers
+
+  # ─── Stage 2: Frontend Lint & Build ──────────────────────────────────
+  test-frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+
+      - name: Production build
+        run: npm run build
+
+  # ─── Stage 3: Docker Build (no push) ────────────────────────────────
+  docker-build:
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image (verify Dockerfile)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: truthmesh:ci-${{ github.sha }}

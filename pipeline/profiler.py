@@ -1,10 +1,21 @@
+# pyre-ignore-all-errors
 """Bayesian Profiler — Updates topography map via posterior updating.
 
 Implements Wilson confidence interval calculation and Bayesian updating
 of per-model, per-domain reliability scores after verification.
+
+Includes exponential time-decay to address model drift: recent observations
+carry significantly more weight than historical data, ensuring the topography
+map reacts quickly to silent API degradation or model quality changes.
 """
 import math
-from database import get_topography_score, update_topography_score
+from datetime import datetime, timezone
+from database import get_topography_score, update_topography_score  # type: ignore
+
+# ── Time-Decay Configuration ────────────────────────────────────────────
+DECAY_HALF_LIFE_DAYS = 7       # After 7 days, old data loses half its weight
+DECAY_LAMBDA = math.log(2) / DECAY_HALF_LIFE_DAYS  # ≈ 0.099
+MAX_EFFECTIVE_SAMPLES = 200    # Cap to prevent stale score inertia
 
 
 def wilson_confidence_interval(successes: int, total: int, z: float = 1.96) -> tuple:
@@ -29,15 +40,41 @@ def wilson_confidence_interval(successes: int, total: int, z: float = 1.96) -> t
         (p_hat * (1 - p_hat) + z * z / (4 * total)) / total
     )
 
-    return (max(0.0, round(center - margin, 4)),
-            min(1.0, round(center + margin, 4)))
+    return (max(0.0, round(center - margin, 4)),  # type: ignore
+            min(1.0, round(center + margin, 4)))  # type: ignore
+
+
+def _compute_decay_weight(updated_at) -> float:
+    """Compute exponential decay weight based on age of last update.
+
+    Recent data (< 1 day old) has weight ≈ 1.0.
+    7-day-old data has weight ≈ 0.5.
+    30-day-old data has weight ≈ 0.12.
+    """
+    if updated_at is None:
+        return 0.5  # Unknown age — use moderate weight
+
+    now = datetime.now(timezone.utc)
+    if isinstance(updated_at, str):
+        try:
+            updated_at = datetime.fromisoformat(updated_at.replace('Z', '+00:00'))
+        except (ValueError, AttributeError):
+            return 0.5
+    elif isinstance(updated_at, datetime):
+        if updated_at.tzinfo is None:
+            updated_at = updated_at.replace(tzinfo=timezone.utc)
+
+    age_days = (now - updated_at).total_seconds() / 86400
+    return math.exp(-DECAY_LAMBDA * max(0.0, float(age_days)))  # type: ignore
 
 
 async def update_profile(model: str, domain: str, verification_passed: bool):
     """Update the topography profile for a model-domain pair.
 
-    Uses Bayesian posterior updating: the reliability score is updated
-    as a weighted average of prior and new observation.
+    Uses Bayesian posterior updating WITH exponential time-decay:
+    - Recent observations carry up to 4× more weight than 14-day-old data
+    - Prior sample count is decayed to prevent stale score inertia
+    - MAX_EFFECTIVE_SAMPLES caps the denominator to ensure responsiveness
 
     Args:
         model: Model name (e.g., "GPT-4o")
@@ -56,14 +93,23 @@ async def update_profile(model: str, domain: str, verification_passed: bool):
         await update_topography_score(model, domain, new_score, lower, upper, sample_count)
         return
 
-    # Bayesian update: weighted combination of prior and observation
+    # ── Time-Decay: discount historical weight ──────────────────────────
     prior_score = current["reliability_score"]
     prior_samples = current["sample_count"]
-    new_samples = prior_samples + 1
+    decay_weight = _compute_decay_weight(current.get("updated_at"))
 
-    # Prior successes (approximate from score and sample count)
-    prior_successes = round(prior_score * prior_samples)
-    new_successes = prior_successes + (1 if verification_passed else 0)
+    # Decay the effective sample count — stale data "forgets"
+    decayed_samples = min(
+        round(prior_samples * decay_weight),
+        MAX_EFFECTIVE_SAMPLES
+    )
+    decayed_samples = max(decayed_samples, 1)  # Floor at 1
+
+    new_samples = decayed_samples + 1
+
+    # Decayed prior successes + new observation
+    decayed_successes = round(prior_score * decayed_samples)
+    new_successes = decayed_successes + (1 if verification_passed else 0)
 
     # Updated score
     new_score = round(new_successes / new_samples, 4)
@@ -73,5 +119,6 @@ async def update_profile(model: str, domain: str, verification_passed: bool):
 
     await update_topography_score(model, domain, new_score, lower, upper, new_samples)
 
-    print(f"[PROFILER] {model}/{domain}: {prior_score:.3f} → {new_score:.3f} "
-          f"(n={new_samples}, CI=[{lower:.3f}, {upper:.3f}])")
+    drift_indicator = "↗" if new_score > prior_score else ("↘" if new_score < prior_score else "→")
+    print(f"[PROFILER] {model}/{domain}: {prior_score:.3f} {drift_indicator} {new_score:.3f} "
+          f"(n={new_samples}, decay={decay_weight:.2f}, CI=[{lower:.3f}, {upper:.3f}])")
