@@ -46,7 +46,6 @@ export default function AuditPage() {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    setLoading(true);
     getAuditLog()
       .then((data) => setEntries(data as AuditEntry[]))
       .catch(console.error)

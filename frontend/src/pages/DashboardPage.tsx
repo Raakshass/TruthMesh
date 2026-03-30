@@ -19,9 +19,9 @@ import {
   Zap,
 } from "lucide-react";
 import { useEventStream } from "@/hooks/useEventStream";
-import { submitQuery, getDashboardData, getTopography, getSelfAuditStats, runSelfAudit } from "@/lib/api";
+import { submitQuery, getDashboardData, getSelfAuditStats, runSelfAudit } from "@/lib/api";
 import { useNavigate } from "react-router-dom";
-import type { PipelineStep, DashboardData, ClaimVerification, TopographyEntry } from "@/lib/types";
+import type { PipelineStep, DashboardData, ClaimVerification } from "@/lib/types";
 import ExportButton from "@/components/ExportButton";
 
 const DEMO_SCENARIOS = [
@@ -123,22 +123,12 @@ export default function DashboardPage() {
   const queryInputRef = useRef<HTMLTextAreaElement>(null);
 
   /* ── Live data ──────────────────────────────────────────────── */
-  const [topography, setTopography] = useState<TopographyEntry[]>([]);
-  const [topoModels, setTopoModels] = useState<string[]>([]);
-  const [topoDomains, setTopoDomains] = useState<string[]>([]);
   const [selfAudit, setSelfAudit] = useState<{ total: number; correct_count: number; accuracy: number } | null>(null);
 
   const stream = useEventStream();
 
   useEffect(() => {
     getDashboardData().then(setDashData).catch(console.error);
-    getTopography()
-      .then((res) => {
-        setTopography(res.topography as TopographyEntry[]);
-        setTopoModels(res.models);
-        setTopoDomains(res.domains);
-      })
-      .catch(console.error);
     getSelfAuditStats()
       .then((res) => setSelfAudit(res as { total: number; correct_count: number; accuracy: number }))
       .catch(console.error);
@@ -146,17 +136,9 @@ export default function DashboardPage() {
 
   const navigate = useNavigate();
 
-  /* ── Refresh topography after stream completes ────────────── */
+  /* ── Refresh stream completes ────────────── */
   useEffect(() => {
-    if (stream.status === "done") {
-      getTopography()
-        .then((res) => {
-          setTopography(res.topography as TopographyEntry[]);
-          setTopoModels(res.models);
-          setTopoDomains(res.domains);
-        })
-        .catch(console.error);
-    }
+    // No-op for now unless topology needs re-fetching
   }, [stream.status]);
 
   const handleSubmit = useCallback(

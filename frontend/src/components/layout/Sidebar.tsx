@@ -1,5 +1,5 @@
 /* ── Sidebar Navigation — Premium ─────────────────────────────────── */
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAuth } from "@/lib/auth";
 import {
@@ -23,12 +23,9 @@ const NAV_ITEMS = [
 
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { user, logout } = useAuth();
-  const location = useLocation();
 
-  /* Determine which nav item is active for the animated pill */
-  const activeIdx = NAV_ITEMS.findIndex((item) =>
-    item.end ? location.pathname === item.to : location.pathname.startsWith(item.to)
-  );
+
+
 
   return (
     <>
@@ -84,7 +81,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
 
         {/* Nav Links */}
         <nav className="flex-1 space-y-0.5 px-3">
-          {NAV_ITEMS.map(({ to, icon: Icon, label, end }, i) => (
+          {NAV_ITEMS.map(({ to, icon: Icon, label, end }) => (
             <NavLink
               key={to}
               to={to}

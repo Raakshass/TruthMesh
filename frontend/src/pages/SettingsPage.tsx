@@ -3,16 +3,12 @@ import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import {
-  SlidersHorizontal,
   Cpu,
   Database,
   Globe,
   Gauge,
-  Sparkles,
   Save,
   Check,
-  ToggleLeft,
-  ToggleRight,
 } from "lucide-react";
 import { getSettings, updateSettings, getTopography } from "@/lib/api";
 
@@ -63,7 +59,6 @@ function Toggle({
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("trust");
   const [threshold, setThreshold] = useState(0.6);
-  const [settings, setSettings] = useState<Record<string, unknown> | null>(null);
   
   const [sourceWeights, setSourceWeights] = useState<Record<string, Record<string, number>>>({
     Medical: { ai_search: 0.0, pubmed: 0.4, wikidata: 0.1, factcheck: 0.1, wolfram: 0.1, bing: 0.15, cross_model: 0.15 },
@@ -93,12 +88,12 @@ export default function SettingsPage() {
   useEffect(() => {
     getSettings()
       .then((s) => {
-        setSettings(s as Record<string, unknown>);
-        if ((s as Record<string, number>)?.trust_threshold) {
-          setThreshold((s as Record<string, number>).trust_threshold);
+        const sRecord = s as Record<string, unknown>;
+        if (typeof sRecord?.trust_threshold === "number") {
+          setThreshold(sRecord.trust_threshold);
         }
-        if ((s as any)?.source_weights) {
-          setSourceWeights((s as any).source_weights);
+        if (sRecord?.source_weights) {
+          setSourceWeights(sRecord.source_weights as Record<string, Record<string, number>>);
         }
       })
       .catch(console.error);

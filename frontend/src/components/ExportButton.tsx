@@ -1,7 +1,7 @@
 /* ── Export Button — Premium ───────────────────────────────────── */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, Check, FileDown } from "lucide-react";
+import { Check, FileDown } from "lucide-react";
 import type { ClaimVerification, OverallTrust } from "@/lib/types";
 
 interface Props {

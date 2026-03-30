@@ -72,6 +72,9 @@ async def init_db():
     await db.query_log.create_index("query_id", unique=True)
     await db.users.create_index("username", unique=True)
     await db.ground_truth_repository.create_index("claim_hash", unique=True)
+    await db.query_log.create_index([("user_id", 1), ("created_at", -1)])
+    await db.query_log.create_index("created_at")
+    await db.verification_history.create_index("query_id")
     logging.info("Cosmos DB Engine initialized successfully.")
 
 

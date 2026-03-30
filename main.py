@@ -49,7 +49,7 @@ from slowapi.errors import RateLimitExceeded # type: ignore
 from config import Config
 from database import (
     init_db, get_topography_data, get_self_audit_stats,
-    get_recent_queries, log_query, update_query_trust,
+    get_recent_queries, log_query, update_query_trust, get_query_by_id,
     get_user_by_username, create_user,
     save_refresh_token, revoke_refresh_token, validate_refresh_token
 )
@@ -71,6 +71,7 @@ from pipeline.consensus import compute_consensus, compute_overall_trust
 from pipeline.profiler import update_profile
 from pipeline.self_audit import run_self_audit
 from pipeline.shield import check_input
+from pipeline.generator import generate_response
 
 
 @asynccontextmanager
@@ -438,15 +439,11 @@ async def api_verify_stream(request: Request, query_id: str, user: dict = Depend
         current_event_id = [0]
         
         async def _sleep(seconds):
-            if current_event_id[0] < last_id:
-                return
-            import asyncio
-            await asyncio.sleep(seconds)
+            # ARTIFICIAL LATENCY REMOVED
+            pass
 
         async def _generate_raw():
-            import json
             # Look up from Cosmos DB query_log collection
-            from database import get_query_by_id
             row = await get_query_by_id(query_id)
 
             if not row:
@@ -456,7 +453,6 @@ async def api_verify_stream(request: Request, query_id: str, user: dict = Depend
             query_text = row["query_text"]
             domain_vector = row.get("domain_vector", {})
             if isinstance(domain_vector, str):
-                import json
                 domain_vector = json.loads(domain_vector)
             primary_domain = max(domain_vector, key=domain_vector.get) if domain_vector else "General"
             model_used = row["routed_model"]
@@ -545,7 +541,6 @@ async def api_verify_stream(request: Request, query_id: str, user: dict = Depend
 
                 yield {"event": "llm", "data": json.dumps({"step": "llm", "status": "active", "model": model_used})}
                 
-                from pipeline.generator import generate_response # type: ignore
                 response_text = await generate_response(query_text, primary_domain, model_used, Config.get_azure_openai_client())
                 
                 yield {"event": "llm", "data": json.dumps({"step": "llm", "status": "done", "model": model_used})}
@@ -595,7 +590,6 @@ async def api_verify_stream(request: Request, query_id: str, user: dict = Depend
                 verification_tasks = [
                     _verify_single(cd, i) for i, cd in enumerate(claims)
                 ]
-                import asyncio
                 parallel_results = await asyncio.gather(*verification_tasks, return_exceptions=True)
 
                 for res in parallel_results:

@@ -1,7 +1,7 @@
 /* ── Hallucination Heatmap — Premium ──────────────────────────── */
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, Grid3x3 } from "lucide-react";
+import { Grid3x3 } from "lucide-react";
 import type { TopographyEntry } from "@/lib/types";
 
 interface Props {
