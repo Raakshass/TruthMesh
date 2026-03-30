@@ -32,17 +32,17 @@ TruthMesh solves latency via an event-driven Server-Sent Events (SSE) pipeline, 
 graph TD
     User((Client))
     Gateway[FastAPI Gateway]
-    Cache[(Cosmos DB - Async Motor)]
-    Router[Domain Router / Vector Space]
+    Cache[(Cosmos DB)]
+    Router[Domain Router]
     LLM_Generate[GPT-4o Generator]
     Decomposer[Atomic Decomposer]
     CrossCheck[Cross-Reference Verifier]
     Consensus[Bayesian Consensus Engine]
 
     User -->|POST /api/query| Gateway
-    Gateway -->|Hash Lookup O(1)| Cache
-    Cache -- Hit --> User
-    Cache -- Miss --> Router
+    Gateway -->|Hash Lookup| Cache
+    Cache -->|Hit| User
+    Cache -->|Miss| Router
     
     Router -->|Contextualize| LLM_Generate
     LLM_Generate --> Decomposer
