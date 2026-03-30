@@ -352,18 +352,18 @@ export default function PipelinePage() {
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                   {[
                     { label: "Overall Trust", value: `${Math.round(stream.overallTrust.overall_score * 100)}%`, accent: "#003ec7" },
-                    { label: "Verified Claims", value: `${stream.overallTrust.verified_claims}/${stream.overallTrust.total_claims}`, accent: "#22c55e" },
+                    { label: "Verified Claims", value: `${stream.overallTrust.pass_count}/${stream.overallTrust.claim_count}`, accent: "#22c55e" },
                     {
                       label: "Avg Confidence",
                       value: stream.verifications.length > 0
-                        ? `${Math.round((stream.verifications.reduce((s, v) => s + v.consensus.confidence, 0) / stream.verifications.length) * 100)}%`
+                        ? `${Math.round((stream.verifications.reduce((s, v) => s + v.consensus.final_confidence, 0) / stream.verifications.length) * 100)}%`
                         : "--",
                       accent: "#eab308",
                     },
                     {
                       label: "Agreement Ratio",
                       value: stream.verifications.length > 0
-                        ? `${Math.round((stream.verifications.reduce((s, v) => s + v.consensus.agreement_ratio, 0) / stream.verifications.length) * 100)}%`
+                        ? `${Math.round((stream.verifications.reduce((s, v) => s + Math.max(...Object.values(v.consensus.verdict_distribution || { default: 0 }), 0), 0) / stream.verifications.length) * 100)}%`
                         : "--",
                       accent: "#0052ff",
                     },

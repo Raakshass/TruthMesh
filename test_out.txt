@@ -1,166 +1,59 @@
-============================= test session starts =============================
-platform win32 -- Python 3.12.6, pytest-8.1.1, pluggy-1.6.0 -- C:\Users\asus vivoBook\AppData\Local\Programs\Python\Python312\python.exe
-cachedir: .pytest_cache
-rootdir: D:\Microsoft_AI_Unlocked
-configfile: pyproject.toml
-plugins: anyio-4.12.0, Faker-40.1.2, hydra-core-1.3.2, langsmith-0.6.5, asyncio-0.23.6, cov-7.0.0, env-1.2.0, mock-3.15.1
-asyncio: mode=Mode.AUTO
-collecting ... collected 30 items
+1. Authenticating with Live Azure API...
+   Success! Token acquired: eyJhbGciOiJIUzI...
 
-pipeline/tests/test_consensus.py::TestComputeConsensus::test_all_supported_yields_pass PASSED [  3%]
-pipeline/tests/test_consensus.py::TestComputeConsensus::test_all_refuted_yields_fail PASSED [  6%]
-pipeline/tests/test_consensus.py::TestComputeConsensus::test_mixed_yields_partial PASSED [ 10%]
-pipeline/tests/test_consensus.py::TestComputeConsensus::test_empty_results PASSED [ 13%]
-pipeline/tests/test_consensus.py::TestComputeConsensus::test_unknown_domain_uses_defaults PASSED [ 16%]
-pipeline/tests/test_consensus.py::TestComputeConsensus::test_cross_domain_blending PASSED [ 20%]
-pipeline/tests/test_consensus.py::TestComputeOverallTrust::test_single_claim_pass PASSED [ 23%]
-pipeline/tests/test_consensus.py::TestComputeOverallTrust::test_mixed_claims PASSED [ 26%]
-pipeline/tests/test_consensus.py::TestComputeOverallTrust::test_empty_claims PASSED [ 30%]
-pipeline/tests/test_decomposer.py::TestDecomposeBySentences::test_extracts_factual_claims PASSED [ 33%]
-pipeline/tests/test_decomposer.py::TestDecomposeBySentences::test_skips_hedging_language PASSED [ 36%]
-pipeline/tests/test_decomposer.py::TestDecomposeBySentences::test_numerical_classification PASSED [ 40%]
-pipeline/tests/test_decomposer.py::TestDecomposeBySentences::test_short_text_skipped PASSED [ 43%]
-pipeline/tests/test_decomposer.py::TestDecomposeBySentences::test_cap_at_eight_claims PASSED [ 46%]
-pipeline/tests/test_decomposer.py::TestDecomposeBySentences::test_empty_text PASSED [ 50%]
-pipeline/tests/test_decomposer.py::TestDecomposeClaimsAsync::test_fallback_without_client PASSED [ 53%]
-pipeline/tests/test_profiler.py::TestWilsonConfidenceInterval::test_zero_total_returns_full_range PASSED [ 56%]
-pipeline/tests/test_profiler.py::TestWilsonConfidenceInterval::test_all_successes PASSED [ 60%]
-pipeline/tests/test_profiler.py::TestWilsonConfidenceInterval::test_no_successes PASSED [ 63%]
-pipeline/tests/test_profiler.py::TestWilsonConfidenceInterval::test_half_successes PASSED [ 66%]
-pipeline/tests/test_profiler.py::TestWilsonConfidenceInterval::test_small_sample_wide_interval PASSED [ 70%]
-pipeline/tests/test_profiler.py::TestWilsonConfidenceInterval::test_large_sample_narrow_interval PASSED [ 73%]
-pipeline/tests/test_profiler.py::TestWilsonConfidenceInterval::test_bounds_never_exceed_zero_one PASSED [ 76%]
-pipeline/tests/test_profiler.py::TestBayesianLabels::test_seed_data_format PASSED [ 80%]
-pipeline/tests/test_profiler.py::TestBayesianLabels::test_ground_truth_claims_format PASSED [ 83%]
-pipeline/tests/test_verifier.py::test_evaluate_entailment PASSED         [ 86%]
-pipeline/tests/test_verifier.py::test_verify_pubmed PASSED               [ 90%]
-pipeline/tests/test_verifier.py::test_verify_factcheck PASSED            [ 93%]
-pipeline/tests/test_verifier.py::test_verify_wikidata PASSED             [ 96%]
-pipeline/tests/test_verifier.py::test_verify_claim_routing FAILED        [100%]
+2. Submitting test claim to Production Pipeline: 'Python is a compiled programming language'...
+   -> [OK] Query accepted. Query ID: 71f14070-e30f-4680-9581-a94392897c80
 
-================================== FAILURES ===================================
-__________________________ test_verify_claim_routing __________________________
+3. Connecting to SSE Stream from Cloud Runtime...
+RAW SSE: id: 1
+RAW SSE: event: shield
+RAW SSE: data: {"step": "shield", "status": "done"}
+RAW SSE: id: 2
+RAW SSE: event: classify
+RAW SSE: data: {"step": "classify", "status": "done"}
+RAW SSE: id: 3
+RAW SSE: event: route
+RAW SSE: data: {"step": "route", "status": "done"}
+RAW SSE: id: 4
+RAW SSE: event: llm
+RAW SSE: data: {"step": "llm", "status": "active", "model": "Claude-3.5-Sonnet"}
+RAW SSE: id: 5
+RAW SSE: event: llm
+RAW SSE: data: {"step": "llm", "status": "done", "model": "Claude-3.5-Sonnet"}
+RAW SSE: id: 6
+RAW SSE: event: response
+RAW SSE: data: {"response_text": "[Live Response] Processing query about Technology. This response was generated through the TruthMesh pipeline with Claude-3.5-Sonnet.", "model": "Claude-3.5-Sonnet", "cached": false}
+RAW SSE: id: 7
+RAW SSE: event: decompose
+RAW SSE: data: {"step": "decompose", "status": "done"}
+   -> [OK] Received Decomposition Step
+RAW SSE: id: 8
+RAW SSE: event: claims
+RAW SSE: data: {"claims": [{"claim": "[Live Response] Processing query about Technology.", "type": "factual"}, {"claim": "This response was generated through the TruthMesh pipeline with Claude-3.5-Sonnet.", "type": "numerical"}], "total": 2}
+RAW SSE: id: 9
+RAW SSE: event: verify
+RAW SSE: data: {"step": "verify", "status": "active"}
+   -> [OK] Received Verification/Evidence Step
+RAW SSE: id: 10
+RAW SSE: event: verification
+RAW SSE: data: {"index": 0, "claim": "[Live Response] Processing query about Technology.", "consensus": {"final_confidence": 0.8, "final_verdict": "pass", "source_breakdown": [{"source": "bing", "source_detail": "Bing Search (Technology-scoped)", "verdict": "supported", "confidence": 0.8, "evidence_snippet": "Synthetic response for bing verification due to missing integration keys.", "weight": 0.3, "weighted_contribution": 0.24}, {"source": "ai_search", "source_detail": "External Authority", "verdict": "supported", "confidence": 0.8, "evidence_snippet": "Synthetic response for ai_search verification due to missing integration keys.", "weight": 0.25, "weighted_contribution": 0.2}, {"source": "cross_model", "source_detail": "Cross-Model (GPT-4o-mini)", "verdict": "supported", "confidence": 0.8, "evidence_snippet": "Synthetic response for cross_model verification due to missing integration keys.", "weight": 0.25, "weighted_contribution": 0.2}, {"source": "wikidata", "source_detail": "Wikidata Knowledge Graph", "verdict": "supported", "confidence": 0.8, "evidence_snippet": "Synthetic response for wikidata verification due to missing integration keys.", "weight": 0.2, "weighted_contribution": 0.16}], "weights_used": {"bing": 0.3, "pubmed": 0.0, "wikidata": 0.2, "factcheck": 0.0, "cross_model": 0.25, "wolfram": 0.0, "ai_search": 0.25}, "verdict_distribution": {"supported": 1.0}}, "sources": [{"source": "bing", "source_detail": "Bing Search (Technology-scoped)", "verdict": "supported", "confidence": 0.8}, {"source": "ai_search", "source_detail": "External Authority", "verdict": "supported", "confidence": 0.8}, {"source": "cross_model", "source_detail": "Cross-Model (GPT-4o-mini)", "verdict": "supported", "confidence": 0.8}, {"source": "wikidata", "source_detail": "Wikidata Knowledge Graph", "verdict": "supported", "confidence": 0.8}]}
+RAW SSE: id: 11
+RAW SSE: event: verification
+RAW SSE: data: {"index": 1, "claim": "This response was generated through the TruthMesh pipeline with Claude-3.5-Sonnet.", "consensus": {"final_confidence": 0.67, "final_verdict": "partial", "source_breakdown": [{"source": "bing", "source_detail": "Bing Search (Technology-scoped)", "verdict": "supported", "confidence": 0.67, "evidence_snippet": "Synthetic response for bing verification due to missing integration keys.", "weight": 0.3, "weighted_contribution": 0.201}, {"source": "ai_search", "source_detail": "External Authority", "verdict": "supported", "confidence": 0.67, "evidence_snippet": "Synthetic response for ai_search verification due to missing integration keys.", "weight": 0.25, "weighted_contribution": 0.1675}, {"source": "cross_model", "source_detail": "Cross-Model (GPT-4o-mini)", "verdict": "supported", "confidence": 0.67, "evidence_snippet": "Synthetic response for cross_model verification due to missing integration keys.", "weight": 0.25, "weighted_contribution": 0.1675}, {"source": "wikidata", "source_detail": "Wikidata Knowledge Graph", "verdict": "supported", "confidence": 0.67, "evidence_snippet": "Synthetic response for wikidata verification due to missing integration keys.", "weight": 0.2, "weighted_contribution": 0.134}, {"source": "wolfram", "source_detail": "Wolfram Computational Knowledge", "verdict": "supported", "confidence": 0.67, "evidence_snippet": "Synthetic response for wolfram verification due to missing integration keys.", "weight": 0.0, "weighted_contribution": 0.0}], "weights_used": {"bing": 0.3, "pubmed": 0.0, "wikidata": 0.2, "factcheck": 0.0, "cross_model": 0.25, "wolfram": 0.0, "ai_search": 0.25}, "verdict_distribution": {"supported": 1.0}}, "sources": [{"source": "bing", "source_detail": "Bing Search (Technology-scoped)", "verdict": "supported", "confidence": 0.67}, {"source": "ai_search", "source_detail": "External Authority", "verdict": "supported", "confidence": 0.67}, {"source": "cross_model", "source_detail": "Cross-Model (GPT-4o-mini)", "verdict": "supported", "confidence": 0.67}, {"source": "wikidata", "source_detail": "Wikidata Knowledge Graph", "verdict": "supported", "confidence": 0.67}, {"source": "wolfram", "source_detail": "Wolfram Computational Knowledge", "verdict": "supported", "confidence": 0.67}]}
+RAW SSE: id: 12
+RAW SSE: event: consensus
+RAW SSE: data: {"step": "consensus", "status": "done"}
+   -> [OK] Received Consensus Step
+RAW SSE: id: 13
+RAW SSE: event: overall_trust
+RAW SSE: data: {"overall_score": 0.735, "verdict": "pass", "claim_count": 2, "pass_count": 1, "partial_count": 1, "fail_count": 0}
+RAW SSE: id: 14
+RAW SSE: event: profile
+RAW SSE: data: {"step": "profile", "status": "done"}
+RAW SSE: id: 15
+RAW SSE: event: done
+RAW SSE: data: {"status": "complete"}
 
-mock_cross = <AsyncMock name='verify_cross_model' id='1833243214384'>
-mock_wolfram = <AsyncMock name='verify_wolfram' id='1833243130576'>
-mock_bing = <AsyncMock name='verify_with_bing' id='1833243119008'>
-mock_wikidata = <AsyncMock name='verify_wikidata' id='1833243129472'>
-mock_factcheck = <AsyncMock name='verify_factcheck' id='1833243125584'>
-mock_pubmed = <AsyncMock name='verify_pubmed' id='1833242344096'>
-mock_openai_client = <MagicMock id='1833243265888'>
-
-    @pytest.mark.asyncio
-    @patch("pipeline.verifier.verify_pubmed", new_callable=AsyncMock)
-    @patch("pipeline.verifier.verify_factcheck", new_callable=AsyncMock)
-    @patch("pipeline.verifier.verify_wikidata", new_callable=AsyncMock)
-    @patch("pipeline.verifier.verify_with_bing", new_callable=AsyncMock)
-    @patch("pipeline.verifier.verify_wolfram", new_callable=AsyncMock)
-    @patch("pipeline.verifier.verify_cross_model", new_callable=AsyncMock)
-    async def test_verify_claim_routing(mock_cross, mock_wolfram, mock_bing, mock_wikidata, mock_factcheck, mock_pubmed, mock_openai_client):
-        # Medical domain should hit pubmed, bing, factcheck, cross_model, wolfram
-        mock_pubmed.return_value = {"source": "pubmed", "verdict": "supported"}
-        mock_bing.return_value = {"source": "bing", "verdict": "supported"}
-    
->       results = await verify_claim("Aspirin helps", "medical", "Medical", "gpt-4o-mini", mock_openai_client)
-
-pipeline\tests\test_verifier.py:102: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-
-claim = 'Aspirin helps', claim_type = 'medical', domain = 'Medical'
-primary_model = 'gpt-4o-mini', openai_client = <MagicMock id='1833243265888'>
-
-    async def verify_claim(claim: str, claim_type: str, domain: str,
-                           primary_model: str, openai_client=None) -> list:
-        """Run concurrent domain-specific source verification with circuit breaker.
-    
-        Each source is checked against the circuit breaker before dispatch.
-        If a source's circuit is OPEN (tripped), a fallback result is returned
-        immediately, saving ~30s of retry time on dead APIs.
-        """
-        import asyncio
-        try:
-            import database
-            gt_cache = await database.get_ground_truth_claim(claim)
-            if gt_cache:
-                print(f"[VERIFIER] Ground Truth cache hit for claim: {claim[:50]}...")
-                return [{
-                    "source": "ground_truth",
-                    "source_detail": f"Local Ground Truth Cache ({gt_cache['source_dataset']})",
-                    "verdict": gt_cache["expected_verdict"],
-                    "confidence": 1.0,
-                    "evidence_snippet": "Exact match found in localized Ground Truth Repository. Bypassing live API fetches for O(1) latency."
-                }]
-        except Exception as e:
-            print(f"[VERIFIER] Ground truth cache lookup failed: {e}")
-    
-        weights = SOURCE_WEIGHTS.get(domain, SOURCE_WEIGHTS["General"])
-    
-        # \u2500\u2500 Circuit Breaker: skip tripped sources \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-        source_map = {
-            "ai_search": lambda: verify_ai_search(claim, domain, openai_client),
-            "pubmed": lambda: verify_pubmed(claim, openai_client),
-            "bing": lambda: verify_with_bing(claim, domain, openai_client),
-            "factcheck": lambda: verify_factcheck(claim, openai_client),
-            "wikidata": lambda: verify_wikidata(claim, openai_client),
-            "cross_model": lambda: verify_cross_model(claim, primary_model, openai_client),
-            "wolfram": lambda: verify_wolfram(claim),
-        }
-    
-        async def _async_mock(s, c, d):
-            """Async wrapper for mock results when circuit breaker is open."""
-            return _mock_result(s, c, d)
-    
-        tasks = []
-        task_sources = []  # Track which source each task index maps to
-    
-        for src in weights:
-            if src not in source_map and src != "wolfram":
-                continue
-            if _circuit.is_open(src):
-                print(f"[CIRCUIT-BREAKER] \u23ed Skipping {src} (circuit OPEN)")
-                tasks.append(_async_mock(src, claim, domain))
-                task_sources.append(src)
-            else:
-                tasks.append(source_map[src]())
-                task_sources.append(src)
-    
-        # Wolfram for numerical claims (if not already added via weights)
-        if claim_type == "numerical" and "wolfram" not in task_sources:
-            if _circuit.is_open("wolfram"):
-                tasks.append(_async_mock("wolfram", claim, domain))
-            else:
-                tasks.append(verify_wolfram(claim))
-            task_sources.append("wolfram")
-    
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-    
-        clean_results = []
-        for idx, r in enumerate(results):
-            src = task_sources[idx] if idx < len(task_sources) else "unknown"
-            if isinstance(r, Exception):
-                print(f"[VERIFIER] Task exception ({src}): {r}")
-                _circuit.record_failure(src)
-                clean_results.append({
-                    "source": src, "source_detail": f"Error in {src}",
-                    "verdict": "inconclusive", "confidence": 0.3, "evidence_snippet": "Timeout or error"
-                })
-            elif r:
-                # Only record success if it's not a mock/fallback result
->               if "Synthetic response" not in r.get("evidence_snippet", ""):
-E               TypeError: argument of type 'coroutine' is not iterable
-
-pipeline\verifier.py:481: TypeError
----------------------------- Captured stdout call -----------------------------
-[VERIFIER] Ground truth cache lookup failed: 'NoneType' object has no attribute 'ground_truth_repository'
-============================== warnings summary ===============================
-pipeline/tests/test_verifier.py::test_verify_claim_routing
-  D:\Microsoft_AI_Unlocked\pipeline\verifier.py:481: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
-    if "Synthetic response" not in r.get("evidence_snippet", ""):
-  Enable tracemalloc to get traceback where the object was allocated.
-  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
-
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-=========================== short test summary info ===========================
-FAILED pipeline/tests/test_verifier.py::test_verify_claim_routing - TypeError...
-=================== 1 failed, 29 passed, 1 warning in 1.69s ===================
-
+4. Validating Pipeline Execution Integrity...
+WARNING: Pipeline might not have completed all conceptual stages natively, missing: {'final_result'}. Allowed if cache hit occurred.
+ERROR: Pipeline did not return a final_result payload!

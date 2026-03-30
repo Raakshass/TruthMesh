@@ -32,9 +32,8 @@ export default function ExportButton({
         index: v.index,
         claim: v.claim,
         verdict: v.consensus.final_verdict,
-        confidence: v.consensus.confidence,
-        agreement: v.consensus.agreement_ratio,
-        weighted_score: v.consensus.weighted_score,
+        final_confidence: v.consensus.final_confidence,
+        agreement: Math.max(...Object.values(v.consensus.verdict_distribution || { default: 0 }), 0),
         sources: v.sources.map((s) => ({
           source: s.source,
           verdict: s.verdict,

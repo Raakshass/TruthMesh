@@ -411,7 +411,7 @@ export default function DashboardPage() {
                 className="flex items-center gap-4"
               >
                 <span className="flex items-center gap-1.5 rounded-full bg-container-high px-3 py-1 text-xs font-bold text-primary">
-                  ✓ {stream.overallTrust.verified_claims}/{stream.overallTrust.total_claims} verified
+                  ✓ {stream.overallTrust.pass_count}/{stream.overallTrust.claim_count} verified
                 </span>
                 <ExportButton
                   queryText={queryText}
@@ -608,19 +608,19 @@ export default function DashboardPage() {
                               <div>
                                 <p className="text-[9px] font-bold uppercase text-outline">Confidence</p>
                                 <p className="text-sm font-bold text-on-surface">
-                                  {Math.round(v.consensus.confidence * 100)}%
+                                  {Math.round((v.sources.reduce((sum, s) => sum + s.confidence, 0) / (v.sources.length || 1)) * 100)}%
                                 </p>
                               </div>
                               <div>
                                 <p className="text-[9px] font-bold uppercase text-outline">Agreement</p>
                                 <p className="text-sm font-bold text-on-surface">
-                                  {Math.round(v.consensus.agreement_ratio * 100)}%
+                                  {Math.round(Math.max(...Object.values(v.consensus.verdict_distribution || { default: 0 }), 0) * 100)}%
                                 </p>
                               </div>
                               <div>
-                                <p className="text-[9px] font-bold uppercase text-outline">Weighted</p>
+                                <p className="text-[9px] font-bold uppercase text-outline">Weighted (Final)</p>
                                 <p className="text-sm font-bold text-on-surface">
-                                  {Math.round(v.consensus.weighted_score * 100)}%
+                                  {Math.round(v.consensus.final_confidence * 100)}%
                                 </p>
                               </div>
                             </div>

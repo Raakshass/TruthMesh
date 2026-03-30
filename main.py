@@ -489,6 +489,10 @@ async def api_verify_stream(request: Request, query_id: str, user: dict = Depend
                         "data": json.dumps(claim_result)
                     }
 
+                yield {"event": "verify", "data": json.dumps({"step": "verify", "status": "done"})}
+                await _sleep(0.3)
+                yield {"event": "consensus", "data": json.dumps({"step": "consensus", "status": "active"})}
+                await _sleep(0.3)
                 yield {"event": "consensus", "data": json.dumps({"step": "consensus", "status": "done"})}
 
                 await _sleep(0.5)
@@ -588,6 +592,10 @@ async def api_verify_stream(request: Request, query_id: str, user: dict = Depend
                     passed = res_dict["consensus"]["final_verdict"] == "pass"  # type: ignore
                     await update_profile(model_used, primary_domain, passed)
 
+                yield {"event": "verify", "data": json.dumps({"step": "verify", "status": "done"})}
+                await _sleep(0.3)
+                yield {"event": "consensus", "data": json.dumps({"step": "consensus", "status": "active"})}
+                await _sleep(0.3)
                 yield {"event": "consensus", "data": json.dumps({"step": "consensus", "status": "done"})}
 
                 await _sleep(0.3)

@@ -42,10 +42,10 @@ export interface VerificationSource {
 }
 
 export interface ClaimConsensus {
-  final_verdict: "pass" | "fail" | "inconclusive";
-  confidence: number;
-  agreement_ratio: number;
-  weighted_score: number;
+  final_verdict: "pass" | "fail" | "inconclusive" | "partial";
+  final_confidence: number;
+  verdict_distribution?: Record<string, number>;
+  weights_used?: Record<string, number>;
 }
 
 export interface ClaimVerification {
@@ -57,10 +57,10 @@ export interface ClaimVerification {
 
 export interface OverallTrust {
   overall_score: number;
-  total_claims: number;
-  verified_claims: number;
-  failed_claims: number;
-  average_confidence: number;
+  claim_count: number;
+  pass_count: number;
+  partial_count: number;
+  fail_count: number;
 }
 
 export interface TopographyEntry {
