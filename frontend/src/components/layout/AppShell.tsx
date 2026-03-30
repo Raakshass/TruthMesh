@@ -7,6 +7,7 @@ import { Sidebar } from "./Sidebar";
 
 const PAGE_META: Record<string, { title: string; breadcrumb: string }> = {
   "/": { title: "Dashboard", breadcrumb: "Dashboard" },
+  "/topography": { title: "Topography Engine", breadcrumb: "Topography Map" },
   "/pipeline": { title: "Verification Pipeline", breadcrumb: "Pipeline" },
   "/audit": { title: "Audit Log", breadcrumb: "Audit Log" },
   "/settings": { title: "Settings", breadcrumb: "Settings" },

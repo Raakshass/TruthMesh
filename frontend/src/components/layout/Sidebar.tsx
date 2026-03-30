@@ -9,11 +9,13 @@ import {
   SlidersHorizontal,
   LogOut,
   Sparkles,
+  Map,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard", end: true },
+  { to: "/topography", icon: Map, label: "Topography", end: false },
   { to: "/pipeline", icon: GitBranch, label: "Pipeline", end: false },
   { to: "/audit", icon: ClipboardCheck, label: "Audit Log", end: false },
   { to: "/settings", icon: SlidersHorizontal, label: "Settings", end: false },

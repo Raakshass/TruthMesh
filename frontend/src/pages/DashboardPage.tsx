@@ -20,8 +20,8 @@ import {
 } from "lucide-react";
 import { useEventStream } from "@/hooks/useEventStream";
 import { submitQuery, getDashboardData, getTopography, getSelfAuditStats, runSelfAudit } from "@/lib/api";
+import { useNavigate } from "react-router-dom";
 import type { PipelineStep, DashboardData, ClaimVerification, TopographyEntry } from "@/lib/types";
-import HallucinationHeatmap from "@/components/HallucinationHeatmap";
 import ExportButton from "@/components/ExportButton";
 
 const DEMO_SCENARIOS = [
@@ -143,6 +143,8 @@ export default function DashboardPage() {
       .then((res) => setSelfAudit(res as { total: number; correct_count: number; accuracy: number }))
       .catch(console.error);
   }, []);
+
+  const navigate = useNavigate();
 
   /* ── Refresh topography after stream completes ────────────── */
   useEffect(() => {
@@ -660,17 +662,27 @@ export default function DashboardPage() {
 
       {/* ═══ RIGHT: Heatmap & Audit ═══ */}
       <aside className="col-span-12 space-y-5 lg:col-span-3">
-        {/* Hallucination Heatmap — LIVE */}
-        <div className="rounded-xl bg-container-lowest p-5 shadow-ambient card-hover">
-          <h3 className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">
-            <Zap size={12} className="text-primary" />
-            Hallucination Topography
+        {/* Topography CTA */}
+        <div className="relative overflow-hidden rounded-xl bg-container-lowest p-6 shadow-ambient card-hover group">
+          <div className="absolute -right-10 -top-10 size-32 rounded-full bg-primary/10 blur-3xl" />
+          <h3 className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-primary">
+            <Zap size={12} />
+            Topography Engine
           </h3>
-          <HallucinationHeatmap
-            data={topography}
-            models={topoModels}
-            domains={topoDomains}
-          />
+          <p className="mb-4 text-xs leading-relaxed text-on-surface-variant">
+            Explore our proprietary multi-model hallucination terrain map. Interactive and real-time.
+          </p>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="rounded bg-primary/20 px-2 py-1 text-[10px] font-bold text-primary">4 Models</span>
+            <span className="rounded bg-container-high px-2 py-1 text-[10px] font-bold text-outline">7 Domains</span>
+          </div>
+          <button
+            onClick={() => navigate('/topography')}
+            className="flex w-full items-center justify-between rounded-lg bg-surface px-4 py-2.5 text-xs font-bold text-on-surface shadow-sm transition-all group-hover:bg-primary group-hover:text-white"
+          >
+            Explore Map
+            <Sparkles size={14} className="opacity-70" />
+          </button>
         </div>
 
         {/* Self-Audit Engine — LIVE */}

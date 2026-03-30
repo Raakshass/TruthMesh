@@ -11,6 +11,7 @@ import { AppShell } from "@/components/layout/AppShell";
 
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const DashboardPage = lazy(() => import("@/pages/DashboardPage"));
+const TopographyPage = lazy(() => import("@/pages/TopographyPage"));
 const PipelinePage = lazy(() => import("@/pages/PipelinePage"));
 const AuditPage = lazy(() => import("@/pages/AuditPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
@@ -41,6 +42,7 @@ export default function App() {
               }
             >
               <Route index element={<DashboardPage />} />
+              <Route path="topography" element={<TopographyPage />} />
               <Route path="pipeline" element={<PipelinePage />} />
               <Route path="audit" element={<AuditPage />} />
               <Route path="settings" element={<SettingsPage />} />
