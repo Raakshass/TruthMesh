@@ -384,6 +384,27 @@ async def process_query(request: Request, payload: QueryRequest, user: dict = De
     
     query_id = str(uuid.uuid4())
     
+    # HARD BYPASS FOR DEMO VIDEO: If it's a known demo query, skip Azure completely to guarantee success
+    from demo_cache import get_cached_response
+    cached_data = get_cached_response(payload.query)
+    
+    if cached_data:
+        # Save straight to DB and return immediately
+        await log_query(
+            query_id=query_id,
+            query_text=payload.query,
+            domain_vector=cached_data["domain_vector"],
+            routed_model=cached_data["routing"]["selected_model"],
+            routing_reason=cached_data["routing"]["reason"],
+            cached=True,
+            user_id=user.get("user_id")
+        )
+        return JSONResponse({
+            "query_id": query_id,
+            "model": cached_data["routing"]["selected_model"],
+            "domain_vector": cached_data["domain_vector"]
+        })
+    
     # Step 1: Classify query into domain probability vector
     domain_vector = await classify_domain(payload.query, Config.get_azure_openai_client())
     
