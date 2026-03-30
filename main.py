@@ -37,6 +37,7 @@ from fastapi import FastAPI, Request, Form, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse  # type: ignore
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
+from fastapi.encoders import jsonable_encoder
 # Jinja2Templates removed — React SPA is the sole frontend
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -337,14 +338,14 @@ async def api_me(user: dict = Depends(get_current_user)):
 async def api_topography(user: dict = Depends(get_current_user)):
     """Get topography heatmap data."""
     data = await get_topography_data()
-    return JSONResponse({"topography": data, "models": Config.MODELS, "domains": Config.DOMAINS})
+    return JSONResponse(jsonable_encoder({"topography": data, "models": Config.MODELS, "domains": Config.DOMAINS}))
 
 
 @app.get("/api/self-audit")
 async def api_self_audit_stats():
     """Get self-audit statistics."""
     stats = await get_self_audit_stats()
-    return JSONResponse(stats)
+    return JSONResponse(jsonable_encoder(stats))
 
 from pydantic import BaseModel
 from database import get_settings, update_settings
