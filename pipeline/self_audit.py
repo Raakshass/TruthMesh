@@ -6,6 +6,11 @@ of the verification process itself.
 """
 import uuid
 import random
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from database import log_self_audit, get_self_audit_stats
 from pipeline.verifier import verify_claim
 from pipeline.consensus import compute_consensus
@@ -22,7 +27,7 @@ async def run_self_audit(num_claims: int = 5, openai_client=None) -> dict:
     Returns:
         Audit results including accuracy percentage
     """
-    audit_id = uuid.uuid4().hex[:8]
+    audit_id = str(uuid.uuid4())[:8]
 
     # Sample random ground-truth claims
     claims_to_test = random.sample(
