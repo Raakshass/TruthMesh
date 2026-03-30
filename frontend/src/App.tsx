@@ -15,6 +15,7 @@ const TopographyPage = lazy(() => import("@/pages/TopographyPage"));
 const PipelinePage = lazy(() => import("@/pages/PipelinePage"));
 const AuditPage = lazy(() => import("@/pages/AuditPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
+const PitchDeckPage = lazy(() => import("@/pages/PitchDeckPage"));
 
 function PageLoader() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/pitch" element={<PitchDeckPage />} />
             <Route
               element={
                 <ProtectedRoute>
